@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>黒の猫窝 - 配色方案预览</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Noto Serif SC', Georgia, serif; background: #1a1816; color: #e8e4de; padding: 40px 20px; line-height: 1.8; }
+  .container { max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 1.8rem; text-align: center; margin-bottom: 8px; }
+  .subtitle { text-align: center; color: #7a746c; font-size: 0.9rem; margin-bottom: 50px; }
+  .scheme { margin-bottom: 60px; }
+  .scheme-title { font-size: 1.3rem; margin-bottom: 6px; display: flex; align-items: center; gap: 12px; }
+  .scheme-source { font-size: 0.8rem; color: #7a746c; margin-bottom: 20px; }
+  .scheme-desc { font-size: 0.85rem; color: #b8b0a8; margin-bottom: 24px; }
+  
+  .preview-card { border-radius: 8px; overflow: hidden; margin-bottom: 20px; }
+  .preview-header { padding: 30px; display: flex; gap: 20px; align-items: center; }
+  .preview-avatar { width: 60px; height: 60px; border-radius: 50%; flex-shrink: 0; }
+  .preview-content h2 { font-size: 1.2rem; margin-bottom: 4px; }
+  .preview-content p { font-size: 0.85rem; opacity: 0.8; }
+  .preview-tags { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .preview-tag { padding: 4px 12px; font-size: 0.75rem; border-radius: 20px; }
+  
+  .preview-body { padding: 0 30px 30px; }
+  .preview-stats { display: flex; gap: 24px; margin-bottom: 24px; }
+  .preview-stat { text-align: center; }
+  .preview-stat .num { font-size: 1.6rem; font-weight: 700; }
+  .preview-stat .label { font-size: 0.75rem; opacity: 0.6; }
+  
+  .preview-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .preview-mini-card { padding: 16px; border-radius: 6px; }
+  .preview-mini-card h4 { font-size: 0.9rem; margin-bottom: 4px; }
+  .preview-mini-card p { font-size: 0.75rem; opacity: 0.6; }
+  
+  .color-row { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+  .color-swatch { width: 48px; height: 48px; border-radius: 6px; position: relative; }
+  .color-swatch span { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 0.65rem; white-space: nowrap; color: #7a746c; }
+  .color-swatch { margin-bottom: 20px; }
+  
+  .btn-row { display: flex; gap: 12px; margin-top: 16px; }
+  .btn { padding: 8px 20px; font-size: 0.85rem; border: none; border-radius: 6px; cursor: default; font-family: inherit; }
+  .btn-primary { color: white; }
+  .btn-outline { background: transparent; }
+  
+  .dark-light { margin-top: 30px; }
+  .dark-light-toggle { display: flex; gap: 0; border-radius: 6px; overflow: hidden; }
+  .dark-light-toggle span { padding: 6px 16px; font-size: 0.8rem; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>✦ 黒の猫窝 配色方案 ✦</h1>
+  <p class="subtitle">三套主题配色方案预览 · 点击色块查看色值</p>
+
+  <!-- 方案1: Miku Teal -->
+  <div class="scheme" id="scheme1">
+    <div class="scheme-title">
+      <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#39c5bb;"></span>
+      方案一：Miku 青绿
+    </div>
+    <div class="scheme-source">灵感色：#39c5bb（初音未来青）</div>
+    <div class="scheme-desc">清新通透的青绿色调，适合轻松愉快的阅读氛围。保留了初音未来的标志性颜色，但降低了饱和度使其不刺眼。</div>
+    
+    <div class="preview-card" style="background:#faf9f7;">
+      <div class="preview-header">
+        <div class="preview-avatar" style="background:linear-gradient(135deg,#5bbfb8,#7ad4cd);"></div>
+        <div class="preview-content" style="color:#2d2a26;">
+          <h2>欢迎来到黒の猫窝</h2>
+          <p>这里是我收藏的同人小说集</p>
+          <div class="preview-tags">
+            <span class="preview-tag" style="border:1px solid rgba(57,197,187,0.3);color:#39c5bb;">VOCALOID</span>
+            <span class="preview-tag" style="border:1px solid rgba(57,197,187,0.3);color:#39c5bb;">偶像梦幻祭</span>
+            <span class="preview-tag" style="border:1px solid rgba(57,197,187,0.3);color:#39c5bb;">同人小说</span>
+          </div>
+        </div>
+      </div>
+      <div class="preview-body">
+        <div class="preview-stats">
+          <div class="preview-stat"><div class="num" style="color:#39c5bb;">3</div><div class="label">分类</div></div>
+          <div class="preview-stat"><div class="num" style="color:#39c5bb;">4</div><div class="label">小说</div></div>
+          <div class="preview-stat"><div class="num" style="color:#39c5bb;">3</div><div class="label">作者</div></div>
+        </div>
+        <div class="preview-cards">
+          <div class="preview-mini-card" style="background:#fff;border:1px solid rgba(57,197,187,0.15);box-shadow:0 2px 8px rgba(57,197,187,0.08);">
+            <h4 style="color:#2d2a26;">星之声</h4>
+            <p style="color:#9a958d;">2026-06-10 · 2800字</p>
+          </div>
+          <div class="preview-mini-card" style="background:#fff;border:1px solid rgba(57,197,187,0.15);box-shadow:0 2px 8px rgba(57,197,187,0.08);">
+            <h4 style="color:#2d2a26;">虚拟歌姬的梦境</h4>
+            <p style="color:#9a958d;">2026-06-08 · 1500字</p>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" style="background:#39c5bb;">主要按钮</button>
+          <button class="btn btn-outline" style="border:1px solid #39c5bb;color:#39c5bb;">次要按钮</button>
+        </div>
+      </div>
+    </div>
+    <div class="color-row">
+      <div class="color-swatch" style="background:#faf9f7;border:1px solid #e0ddd8;"><span>#faf9f7</span></div>
+      <div class="color-swatch" style="background:#f0eeea;border:1px solid #e0ddd8;"><span>#f0eeea</span></div>
+      <div class="color-swatch" style="background:#ffffff;border:1px solid #e0ddd8;"><span>#ffffff</span></div>
+      <div class="color-swatch" style="background:#2d2a26;"><span>#2d2a26</span></div>
+      <div class="color-swatch" style="background:#5a5650;"><span>#5a5650</span></div>
+      <div class="color-swatch" style="background:#9a958d;"><span>#9a958d</span></div>
+      <div class="color-swatch" style="background:#39c5bb;"><span>#39c5bb 主色</span></div>
+      <div class="color-swatch" style="background:#5bbfb8;"><span>#5bbfb8 辅助</span></div>
+      <div class="color-swatch" style="background:#8dd8d2;"><span>#8dd8d2 浅色</span></div>
+      <div class="color-swatch" style="background:#2a9d96;"><span>#2a9d96 深色</span></div>
+    </div>
+  </div>
+
+  <!-- 方案2: Rose Pink -->
+  <div class="scheme" id="scheme2">
+    <div class="scheme-title">
+      <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#F23172;"></span>
+      方案二：蔷薇粉红
+    </div>
+    <div class="scheme-source">灵感色：#F23172（蔷薇粉）</div>
+    <div class="scheme-desc">温暖浪漫的粉红色调，适合少女感、情感向的同人小说站。粉色降低饱和度后变为优雅的玫瑰色，搭配暖灰背景营造温馨感。</div>
+    
+    <div class="preview-card" style="background:#faf8f7;">
+      <div class="preview-header">
+        <div class="preview-avatar" style="background:linear-gradient(135deg,#e8618a,#f2a0b8);"></div>
+        <div class="preview-content" style="color:#2d2626;">
+          <h2>欢迎来到黒の猫窝</h2>
+          <p>这里是我收藏的同人小说集</p>
+          <div class="preview-tags">
+            <span class="preview-tag" style="border:1px solid rgba(242,49,114,0.25);color:#d4567e;">VOCALOID</span>
+            <span class="preview-tag" style="border:1px solid rgba(242,49,114,0.25);color:#d4567e;">偶像梦幻祭</span>
+            <span class="preview-tag" style="border:1px solid rgba(242,49,114,0.25);color:#d4567e;">同人小说</span>
+          </div>
+        </div>
+      </div>
+      <div class="preview-body">
+        <div class="preview-stats">
+          <div class="preview-stat"><div class="num" style="color:#d4567e;">3</div><div class="label">分类</div></div>
+          <div class="preview-stat"><div class="num" style="color:#d4567e;">4</div><div class="label">小说</div></div>
+          <div class="preview-stat"><div class="num" style="color:#d4567e;">3</div><div class="label">作者</div></div>
+        </div>
+        <div class="preview-cards">
+          <div class="preview-mini-card" style="background:#fff;border:1px solid rgba(212,86,126,0.12);box-shadow:0 2px 8px rgba(212,86,126,0.06);">
+            <h4 style="color:#2d2626;">星之声</h4>
+            <p style="color:#9a8d8d;">2026-06-10 · 2800字</p>
+          </div>
+          <div class="preview-mini-card" style="background:#fff;border:1px solid rgba(212,86,126,0.12);box-shadow:0 2px 8px rgba(212,86,126,0.06);">
+            <h4 style="color:#2d2626;">虚拟歌姬的梦境</h4>
+            <p style="color:#9a8d8d;">2026-06-08 · 1500字</p>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" style="background:#d4567e;">主要按钮</button>
+          <button class="btn btn-outline" style="border:1px solid #d4567e;color:#d4567e;">次要按钮</button>
+        </div>
+      </div>
+    </div>
+    <div class="color-row">
+      <div class="color-swatch" style="background:#faf8f7;border:1px solid #e8e0dd;"><span>#faf8f7</span></div>
+      <div class="color-swatch" style="background:#f2ecea;border:1px solid #e8e0dd;"><span>#f2ecea</span></div>
+      <div class="color-swatch" style="background:#ffffff;border:1px solid #e8e0dd;"><span>#ffffff</span></div>
+      <div class="color-swatch" style="background:#2d2626;"><span>#2d2626</span></div>
+      <div class="color-swatch" style="background:#5a5050;"><span>#5a5050</span></div>
+      <div class="color-swatch" style="background:#9a8d8d;"><span>#9a8d8d</span></div>
+      <div class="color-swatch" style="background:#d4567e;"><span>#d4567e 主色</span></div>
+      <div class="color-swatch" style="background:#e88a9e;"><span>#e88a9e 辅助</span></div>
+      <div class="color-swatch" style="background:#f2c4d0;"><span>#f2c4d0 浅色</span></div>
+      <div class="color-swatch" style="background:#b8406a;"><span>#b8406a 深色</span></div>
+    </div>
+  </div>
+
+  <!-- 方案3: Warm Coral -->
+  <div class="scheme" id="scheme3">
+    <div class="scheme-title">
+      <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#ED6D52;"></span>
+      方案三：暖珊瑚橘
+    </div>
+    <div class="scheme-source">灵感色：#ED6D52（珊瑚橘）</div>
+    <div class="scheme-desc">温暖活力的橘色调，适合热情奔放的同人创作站。珊瑚橘降低饱和度后变为柔和的陶土色，搭配暖白背景营造舒适感，适合长时间阅读。</div>
+    
+    <div class="preview-card" style="background:#faf8f6;">
+      <div class="preview-header">
+        <div class="preview-avatar" style="background:linear-gradient(135deg,#d4856e,#e8a898);"></div>
+        <div class="preview-content" style="color:#2d2826;">
+          <h2>欢迎来到黒の猫窝</h2>
+          <p>这里是我收藏的同人小说集</p>
+          <div class="preview-tags">
+            <span class="preview-tag" style="border:1px solid rgba(212,109,82,0.25);color:#c47a5e;">VOCALOID</span>
+            <span class="preview-tag" style="border:1px solid rgba(212,109,82,0.25);color:#c47a5e;">偶像梦幻祭</span>
+            <span class="preview-tag" style="border:1px solid rgba(212,109,82,0.25);color:#c47a5e;">同人小说</span>
+          </div>
+        </div>
+      </div>
+      <div class="preview-body">
+        <div class="preview-stats">
+          <div class="preview-stat"><div class="num" style="color:#c47a5e;">3</div><div class="label">分类</div></div>
+          <div class="preview-stat"><div class="num" style="color:#c47a5e;">4</div><div class="label">小说</div></div>
+          <div class="preview-stat"><div class="num" style="color:#c47a5e;">3</div><div class="label">作者</div></div>
+        </div>
+        <div class="preview-cards">
+          <div class="preview-mini-card" style="background:#fff;border:1px solid rgba(196,122,94,0.12);box-shadow:0 2px 8px rgba(196,122,94,0.06);">
+            <h4 style="color:#2d2826;">星之声</h4>
+            <p style="color:#9a8d85;">2026-06-10 · 2800字</p>
+          </div>
+          <div class="preview-mini-card" style="background:#fff;border:1px solid rgba(196,122,94,0.12);box-shadow:0 2px 8px rgba(196,122,94,0.06);">
+            <h4 style="color:#2d2826;">虚拟歌姬的梦境</h4>
+            <p style="color:#9a8d85;">2026-06-08 · 1500字</p>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" style="background:#c47a5e;">主要按钮</button>
+          <button class="btn btn-outline" style="border:1px solid #c47a5e;color:#c47a5e;">次要按钮</button>
+        </div>
+      </div>
+    </div>
+    <div class="color-row">
+      <div class="color-swatch" style="background:#faf8f6;border:1px solid #e8e2dd;"><span>#faf8f6</span></div>
+      <div class="color-swatch" style="background:#f0eae4;border:1px solid #e8e2dd;"><span>#f0eae4</span></div>
+      <div class="color-swatch" style="background:#ffffff;border:1px solid #e8e2dd;"><span>#ffffff</span></div>
+      <div class="color-swatch" style="background:#2d2826;"><span>#2d2826</span></div>
+      <div class="color-swatch" style="background:#5a5450;"><span>#5a5450</span></div>
+      <div class="color-swatch" style="background:#9a8d85;"><span>#9a8d85</span></div>
+      <div class="color-swatch" style="background:#c47a5e;"><span>#c47a5e 主色</span></div>
+      <div class="color-swatch" style="background:#d8a08e;"><span>#d8a08e 辅助</span></div>
+      <div class="color-swatch" style="background:#e8c4b8;"><span>#e8c4b8 浅色</span></div>
+      <div class="color-swatch" style="background:#a8624a;"><span>#a8624a 深色</span></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

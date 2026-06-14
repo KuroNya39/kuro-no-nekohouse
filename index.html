@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/jpeg" href="favicon.jpg">
 <meta name="description" content="黒の猫窝 - 个人同人小说收藏站，收录VOCALOID、偶像梦幻祭等优秀同人创作">
 <meta name="keywords" content="同人小说,VOCALOID,偶像梦幻祭,狮心,零凛,初音未来">
 <meta property="og:title" content="黒の猫窝 - 同人小说收藏站">
@@ -3070,11 +3071,11 @@ let siteConfig = safeJSONParse('siteConfig', JSON.parse(JSON.stringify(defaultSi
 function renderAboutPage() {
   const d = aboutData;
   const socialItems = [
-    { icon: '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>', name: 'QQ空间', url: d.links.qq },
-    { icon: '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 19.858 0 18.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906L17.813 4.653zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773H5.333zm4 4.427c.711 0 1.333.26 1.867.78.533.52.8 1.151.8 1.893 0 .742-.267 1.373-.8 1.894-.534.52-1.156.78-1.867.78s-1.333-.26-1.867-.78c-.533-.52-.8-1.152-.8-1.894 0-.742.267-1.373.8-1.893.534-.52 1.156-.78 1.867-.78zm5.334 0c.711 0 1.333.26 1.867.78.533.52.8 1.151.8 1.893 0 .742-.267 1.373-.8 1.894-.534.52-1.156.78-1.867.78s-1.333-.26-1.867-.78c-.533-.52-.8-1.152-.8-1.894 0-.742.267-1.373.8-1.893.534-.52 1.156-.78 1.867-.78z"/></svg>', name: '哔哩哔哩', url: d.links.bili },
-    { icon: '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M10.098 20.323c-3.977.391-7.414-1.056-7.72-3.254-.083-.592.114-1.229.538-1.836 1.907-2.764 6.277-4.29 11.543-4.29h.014c5.266 0 10.636 1.526 11.543 4.29.424.607.621 1.244.538 1.836-.306 2.198-3.743 3.645-7.72 3.254h-.236zm-1.878-5.42c-2.518 0-4.56 1.15-4.56 2.57 0 1.42 2.042 2.57 4.56 2.57s4.56-1.15 4.56-2.57c0-1.42-2.042-2.57-4.56-2.57zm5.66 0c-.39 0-.707.448-.707 1s.317 1 .707 1 .707-.448.707-1-.317-1-.707-1z"/></svg>', name: '微博', url: d.links.weibo },
-    { icon: '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.5 13.5c-.267.4-.933.533-1.333.267-2-.933-3.133-2.267-3.133-4 0-1.733 1.067-3.067 2.933-4 .533-.2 1.133.067 1.333.6.2.533-.067 1.133-.6 1.333-1.2.467-1.867 1.333-1.867 2.4 0 1.067.8 2 2.267 2.667.4.2.533.8.267 1.2-.133.267-.4.4-.667.4-.133 0-.2-.067-.267-.067zM12 7a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></svg>', name: '小红书', url: d.links.xiaohongshu },
-    { icon: '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>', name: 'X', url: d.links.x }
+    { icon: '<img src="https://qzone.qq.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'QQ空间', url: d.links.qq },
+    { icon: '<img src="https://www.bilibili.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '哔哩哔哩', url: d.links.bili },
+    { icon: '<img src="https://weibo.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '微博', url: d.links.weibo },
+    { icon: '<img src="https://www.xiaohongshu.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '小红书', url: d.links.xiaohongshu },
+    { icon: '<img src="https://x.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'X', url: d.links.x }
   ];
 
   function renderInterestRows(items) {
