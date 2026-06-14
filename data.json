@@ -1,6 +1,6 @@
 {
   "_version": 1,
-  "_updatedAt": "2026-06-14T18:32:30.171Z",
+  "_updatedAt": "2026-06-14T18:54:43.300Z",
   "categories": [
     {
       "id": "miku",
@@ -77,7 +77,7 @@
   ],
   "aboutData": {
     "circleName": "黒 / 黑喵子",
-    "bio": "@kuro_nekoko · 同人小说收藏",
+    "bio": "20↑ 社畜",
     "vocaloid": [
       {
         "label": "声库",
@@ -92,10 +92,7 @@
         "value": "ixima"
       }
     ],
-    "vocaloidTags": [
-      "vocaloid调声",
-      "bilibili：黑喵子_"
-    ],
+    "vocaloidTags": [],
     "ensemble": [
       {
         "label": "主推",
