@@ -393,7 +393,6 @@ body {
 
 /* Theme Toggle */
 .theme-toggle {
-  position: fixed; top: 16px; right: 16px; z-index: 1000;
   width: 40px; height: 40px;
   border: 1px solid var(--border-light);
   background: var(--bg-card); color: var(--text-secondary);
@@ -401,40 +400,45 @@ body {
   backdrop-filter: blur(10px);
   display: flex; align-items: center; justify-content: center;
   border-radius: 0px;
+  flex-shrink: 0;
 }
 .theme-toggle:hover { background: var(--accent-primary); color: white; border-color: var(--accent-primary); transform: scale(1.1); }
 
 /* Color Scheme Picker */
+.top-toolbar {
+  position: fixed; top: 16px; right: 16px; z-index: 1000;
+  display: flex; gap: 8px; align-items: center;
+}
 .color-scheme-picker {
-  position: fixed; top: 16px; right: 68px; z-index: 1000;
-  display: flex; gap: 6px; align-items: center;
-  padding: 5px 8px;
+  display: flex; gap: 2px; align-items: center;
+  padding: 4px 6px;
   background: var(--bg-card); border: 1px solid var(--border-light);
   backdrop-filter: blur(10px);
   transition: var(--transition);
   border-radius: 0px;
 }
 .scheme-btn {
-  display: flex; align-items: center; gap: 5px;
-  padding: 3px 8px;
+  display: flex; align-items: center; gap: 4px;
+  padding: 4px 8px 4px 6px;
   background: transparent; border: 1px solid transparent;
   cursor: pointer; transition: var(--transition);
-  font-family: var(--font-serif); font-size: 0.7rem;
+  font-family: var(--font-serif); font-size: 0.72rem;
   color: var(--text-muted);
   border-radius: 0px;
+  line-height: 1;
+  white-space: nowrap;
 }
-.scheme-btn:hover { color: var(--text-primary); border-color: var(--border-light); }
+.scheme-btn:hover { color: var(--text-primary); background: var(--accent-miku-glow); }
 .scheme-btn.active { color: var(--text-primary); border-color: var(--accent-primary); background: var(--accent-miku-glow); }
 .scheme-dot {
-  display: inline-block; width: 10px; height: 10px;
+  display: inline-block; width: 12px; height: 12px;
   border-radius: 50%; flex-shrink: 0;
-  border: 1px solid rgba(128,128,128,0.2);
+  border: 1.5px solid rgba(128,128,128,0.15);
 }
 .scheme-label { white-space: nowrap; }
 
 /* Admin Toggle */
 .admin-toggle {
-  position: fixed; top: 16px; right: 340px; z-index: 1000;
   width: 40px; height: 40px;
   border: 1px solid var(--border-light);
   background: var(--bg-card); color: var(--text-secondary);
@@ -442,6 +446,7 @@ body {
   backdrop-filter: blur(10px);
   display: flex; align-items: center; justify-content: center;
   border-radius: 0px;
+  flex-shrink: 0;
 }
 .admin-toggle:hover { background: var(--accent-primary); color: white; transform: scale(1.1); }
 .admin-toggle.active { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
@@ -1331,11 +1336,11 @@ body {
   .app-container { padding: 0 16px; }
   .site-title { font-size: 2rem; letter-spacing: 5px; }
   .theme-toggle, .admin-toggle { top: 10px; width: 36px; height: 36px; font-size: 0.8rem; }
-  .admin-toggle { right: 52px; }
-  .color-scheme-picker { top: 10px; right: 96px; padding: 4px 5px; gap: 4px; }
-  .scheme-btn { padding: 2px; }
+  .top-toolbar { top: 10px; right: 10px; gap: 4px; }
+  .color-scheme-picker { padding: 3px 4px; gap: 2px; }
+  .scheme-btn { padding: 2px 4px; }
   .scheme-label { display: none; }
-  .scheme-dot { width: 12px; height: 12px; }
+  .scheme-dot { width: 14px; height: 14px; }
   .admin-drawer { width: 100%; right: -100%; }
   .hero-section { flex-direction: column; text-align: center; padding: 28px 24px; gap: 20px; }
   .hero-avatar { width: 80px; height: 80px; font-size: 2rem; }
@@ -1409,14 +1414,16 @@ body {
   <span class="loading-star" style="top:80%;left:60%;animation-delay:1.5s;">&#10023;</span>
 </div>
 <div class="scroll-progress" id="scrollProgress"></div>
-<button class="theme-toggle" id="themeToggle" title="切换主题" aria-label="切换主题">☾</button>
-<div class="color-scheme-picker" id="colorSchemePicker">
-  <button class="scheme-btn active" data-scheme="miku" title="Miku 青" onclick="setColorScheme('miku')"><span class="scheme-dot" style="background:#39c5bb"></span><span class="scheme-label">Miku 青</span></button>
-  <button class="scheme-btn" data-scheme="rose" title="蔷薇粉" onclick="setColorScheme('rose')"><span class="scheme-dot" style="background:#F23172"></span><span class="scheme-label">蔷薇粉</span></button>
-  <button class="scheme-btn" data-scheme="coral" title="珊瑚橘" onclick="setColorScheme('coral')"><span class="scheme-dot" style="background:linear-gradient(135deg,#ED6D52 60%,#BADBF2 60%)"></span><span class="scheme-label">珊瑚橘</span></button>
-  <button class="scheme-btn" data-scheme="night" title="深夜蓝" onclick="setColorScheme('night')"><span class="scheme-dot" style="background:linear-gradient(135deg,#001E44 60%,#46266E 60%)"></span><span class="scheme-label">深夜蓝</span></button>
+<div class="top-toolbar">
+  <button class="admin-toggle" id="adminToggle" title="管理" aria-label="管理面板">⚙</button>
+  <div class="color-scheme-picker" id="colorSchemePicker">
+    <button class="scheme-btn active" data-scheme="miku" title="Miku 青" onclick="setColorScheme('miku')"><span class="scheme-dot" style="background:#39c5bb"></span><span class="scheme-label">Miku 青</span></button>
+    <button class="scheme-btn" data-scheme="rose" title="蔷薇粉" onclick="setColorScheme('rose')"><span class="scheme-dot" style="background:#F23172"></span><span class="scheme-label">蔷薇粉</span></button>
+    <button class="scheme-btn" data-scheme="coral" title="珊瑚橘" onclick="setColorScheme('coral')"><span class="scheme-dot" style="background:linear-gradient(135deg,#ED6D52 60%,#BADBF2 60%)"></span><span class="scheme-label">珊瑚橘</span></button>
+    <button class="scheme-btn" data-scheme="night" title="深夜蓝" onclick="setColorScheme('night')"><span class="scheme-dot" style="background:linear-gradient(135deg,#001E44 60%,#46266E 60%)"></span><span class="scheme-label">深夜蓝</span></button>
+  </div>
+  <button class="theme-toggle" id="themeToggle" title="切换主题" aria-label="切换主题">☾</button>
 </div>
-<button class="admin-toggle" id="adminToggle" title="管理" aria-label="管理面板">⚙</button>
 <button class="back-to-top" id="backToTop" title="返回顶部" aria-label="返回顶部">↑</button>
 <canvas id="bgCanvas"></canvas>
 
