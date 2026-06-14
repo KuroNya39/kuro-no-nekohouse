@@ -1,6 +1,6 @@
 {
   "_version": 2,
-  "_updatedAt": "2026-06-14T20:49:57.187Z",
+  "_updatedAt": "2026-06-14T20:53:35.115Z",
   "categories": [
     {
       "id": "miku",
@@ -121,14 +121,15 @@
         "value": "系列作补完中"
       }
     ],
-    "other": "电子琴 / MMD / 手帐 / 爵士乐 / 普罗米亚 / 创作BL / 樱新 / 梅露可物语 / 男子高校生 / はじめての / 玉桂狗 / 文具 / 少女歌剧",
+    "other": "电子琴 / MMD / 手帐 / 爵士乐 / 普罗米亚 / 创作BL / 快新 / 梅露可物语 / 男子高校生、はじめての / 玉桂狗 / 文具 / 少女歌剧",
     "links": {
-      "qq": "#",
-      "bili": "#",
-      "weibo": "#",
-      "xiaohongshu": "#",
-      "x": "#"
-    }
+      "qq": "https://user.qzone.qq.com/1395507041",
+      "bili": "https://space.bilibili.com/3318554",
+      "weibo": "https://weibo.com/u/5031602926",
+      "xiaohongshu": "https://xhslink.com/m/7bBjGbLWBGT",
+      "x": "https://x.com/KuroNya39"
+    },
+    "_lastSync": "2026-06-14T20:53:33.112Z"
   },
   "siteConfig": {
     "siteName": "黒の猫窝",
