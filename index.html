@@ -8,6 +8,9 @@
 <meta property="og:title" content="黒の猫窝 - 同人小说收藏站">
 <meta property="og:description" content="个人同人小说收藏站，收录VOCALOID、偶像梦幻祭等优秀同人创作">
 <meta property="og:type" content="website">
+<link rel="canonical" href="https://kuronya39.github.io/kuro-no-nekohouse/">
+<meta property="og:url" content="https://kuronya39.github.io/kuro-no-nekohouse/">
+<meta property="og:image" content="https://kuronya39.github.io/kuro-no-nekohouse/avatar.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="黒の猫窝 - 同人小说收藏站">
 <meta name="twitter:description" content="个人同人小说收藏站，收录VOCALOID、偶像梦幻祭等优秀同人创作">
@@ -100,6 +103,17 @@
   --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
   --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.2);
   --shadow-hover: 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="dark"] .hero-section,
+[data-theme="dark"] .category-card,
+[data-theme="dark"] .guestbook-intro,
+[data-theme="dark"] .about-header-card,
+[data-theme="dark"] .interest-card,
+[data-theme="dark"] .link-card,
+[data-theme="dark"] .guestbook-form,
+[data-theme="dark"] .recent-card {
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08) !important;
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1344,10 +1358,10 @@ body {
         <textarea id="adminContent" placeholder="在这里粘贴小说的完整正文内容..." oninput="updateWordCount()"></textarea>
         <div style="margin-top:8px;display:flex;gap:8px;align-items:center;">
           <label class="admin-btn small secondary" style="cursor:pointer;margin:0;">
-            上传文件
-            <input type="file" id="contentFileUpload" accept=".txt,.text,.md,.jpg,.jpeg,.png,.gif,.bmp,.webp" style="display:none" onchange="handleContentFileUpload(event)">
+            上传文本文件
+            <input type="file" id="contentFileUpload" accept=".txt,.text,.md" style="display:none" onchange="handleContentFileUpload(event)">
           </label>
-          <span style="font-size:0.7rem;color:var(--text-muted);">支持 txt/md 文本文件和 jpg/png 图片</span>
+          <span style="font-size:0.7rem;color:var(--text-muted);">支持 txt/md 文本文件</span>
         </div>
       </div>
       <button class="admin-btn" onclick="addNovel()">添加小说</button>
@@ -1465,6 +1479,10 @@ body {
     <div class="category-grid" id="categoryGrid"></div>
 
     <div class="section-title">最近更新</div>
+    <div id="continueReading" style="display:none;margin-bottom:30px;">
+      <div class="section-title" style="margin-bottom:16px;">继续阅读</div>
+      <div id="continueReadingList"></div>
+    </div>
     <div class="recent-grid" id="recentGrid"></div>
   </section>
 
@@ -1716,6 +1734,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderGuestbookIntro();
   renderStats();
   renderCategories();
+  renderContinueReading();
   renderRecentUpdates();
   renderTimeline();
   renderLinks();
@@ -1752,12 +1771,20 @@ function saveAllData() {
   safeJSONStringify('siteConfig', siteConfig);
   safeJSONStringify('timelineData', timelineData);
   safeJSONStringify('linksData', linksData);
-  syncToGitHub();
+  debouncedSyncToGitHub();
 }
 
 function saveData() { saveAllData(); }
 
 // ===== GITHUB DATA SYNC =====
+let githubSyncTimer = null;
+function debouncedSyncToGitHub() {
+  if (githubSyncTimer) clearTimeout(githubSyncTimer);
+  githubSyncTimer = setTimeout(() => {
+    syncToGitHub();
+  }, 2000);
+}
+
 const GITHUB_CONFIG = {
   owner: 'KuroNya39',
   repo: 'kuro-no-nekohouse',
@@ -1972,6 +1999,16 @@ function importData(event) {
 }
 
 // ===== THEME =====
+function syncGiscusTheme() {
+  try {
+    const giscusTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark_dimmed' : 'light';
+    const giscusIframe = document.querySelector('.giscus iframe');
+    if (giscusIframe) {
+      giscusIframe.contentWindow.postMessage({ giscus: { setConfig: { theme: giscusTheme } } }, 'https://giscus.app');
+    }
+  } catch(e) {}
+}
+
 function initTheme() {
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const savedTheme = localStorage.getItem('theme');
@@ -1990,6 +2027,7 @@ function initTheme() {
       localStorage.setItem('theme', 'dark');
       document.getElementById('themeToggle').textContent = '☀';
     }
+    syncGiscusTheme();
   });
 
   // Real-time system theme listener
@@ -2002,6 +2040,7 @@ function initTheme() {
         document.documentElement.removeAttribute('data-theme');
         document.getElementById('themeToggle').textContent = '☾';
       }
+      syncGiscusTheme();
     }
   });
 }
@@ -2009,6 +2048,7 @@ function initTheme() {
 // ===== CANVAS with spatial grid optimization =====
 function initCanvas() {
   const canvas = document.getElementById('bgCanvas');
+  if (!canvas || canvas.style.display === 'none') return;
   const ctx = canvas.getContext('2d');
   let particles = [], mouseX = 0, mouseY = 0;
   let animationId;
@@ -2359,9 +2399,7 @@ function handleContentFileUpload(event) {
   if (!file) return;
   const ext = file.name.split('.').pop().toLowerCase();
   const textarea = document.getElementById('adminContent');
-  
   if (['txt', 'text', 'md'].includes(ext)) {
-    // Text file: read content
     const reader = new FileReader();
     reader.onload = function(e) {
       textarea.value = e.target.result;
@@ -2369,18 +2407,8 @@ function handleContentFileUpload(event) {
       showToast('文件内容已导入');
     };
     reader.readAsText(file, 'UTF-8');
-  } else if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(ext)) {
-    // Image file: convert to base64 and embed as img tag
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const base64 = e.target.result;
-      textarea.value = '[IMG]' + base64 + '[/IMG]';
-      updateWordCount();
-      showToast('图片已导入（将以图片方式显示）');
-    };
-    reader.readAsDataURL(file);
   } else {
-    showToast('不支持的文件格式', 'error');
+    showToast('仅支持 txt/md 文本文件', 'error');
   }
   event.target.value = '';
 }
@@ -2522,6 +2550,55 @@ function renderCategories() {
     div.appendChild(img);
     div.appendChild(body);
     grid.appendChild(div);
+  });
+}
+
+// ===== CONTINUE READING =====
+function renderContinueReading() {
+  const container = document.getElementById('continueReading');
+  const list = document.getElementById('continueReadingList');
+  if (!container || !list) return;
+  
+  // Find novels with reading progress
+  const items = [];
+  Object.keys(readProgress).forEach(key => {
+    const progress = readProgress[key];
+    if (progress && progress > 0 && progress < 100) {
+      // Find the novel across all categories
+      for (const cat of categories) {
+        const novel = cat.novels.find(n => n.id === key);
+        if (novel) {
+          items.push({ novel, cat, progress: progress });
+          break;
+        }
+      }
+    }
+  });
+  
+  if (items.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+  
+  container.style.display = 'block';
+  list.innerHTML = '';
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'recent-card';
+    div.setAttribute('role', 'button');
+    div.setAttribute('tabindex', '0');
+    div.onclick = () => goToNovel(item.cat.id, item.novel.id);
+    div.onkeydown = (e) => { if (e.key === 'Enter') goToNovel(item.cat.id, item.novel.id); };
+    div.innerHTML = `
+      <div class="recent-info" style="flex:1;">
+        <h4>${escapeHTML(item.novel.title)}</h4>
+        <p>已读 ${Math.round(item.progress)}% · ${escapeHTML(item.cat.name)}</p>
+        <div style="margin-top:6px;height:4px;background:var(--border-light);border-radius:2px;overflow:hidden;">
+          <div style="height:100%;width:${item.progress}%;background:var(--accent-primary);border-radius:2px;transition:width 0.3s;"></div>
+        </div>
+      </div>
+    `;
+    list.appendChild(div);
   });
 }
 
@@ -2762,6 +2839,7 @@ function showNovel(index) {
   document.getElementById('readerCategory').textContent = currentCategory.name;
   document.getElementById('readerCategory').onclick = () => showCategory(currentCategory.id);
   document.getElementById('readerTitle').textContent = novel.title;
+  document.title = novel.title + ' - ' + siteConfig.siteName;
 
   // Calculate reading time
   const readTime = Math.max(1, Math.round(novel.wordCount / 300));
@@ -2862,6 +2940,14 @@ function setReaderStyle(style) {
 }
 
 // ===== READ PROGRESS - Fixed: using addEventListener instead of window.onscroll =====
+let readProgressTimer = null;
+function debouncedSaveReadProgress() {
+  if (readProgressTimer) clearTimeout(readProgressTimer);
+  readProgressTimer = setTimeout(() => {
+    safeJSONStringify('readProgress', readProgress);
+  }, 1000);
+}
+
 function updateReadProgress() {
   const novelId = currentCategory.novels[currentNovelIndex].id;
   const progress = readProgress[novelId] || 0;
@@ -2882,7 +2968,7 @@ function updateReadProgress() {
     document.getElementById('progressFill').style.width = newProgress + '%';
     document.getElementById('progressText').textContent = `阅读进度 ${newProgress}%`;
     readProgress[novelId] = newProgress;
-    safeJSONStringify('readProgress', readProgress);
+    debouncedSaveReadProgress();
   };
   window.addEventListener('scroll', updateReadProgress._handler);
 }
@@ -3074,6 +3160,12 @@ function startEditNovel(catId, novelId) {
   const el = document.getElementById('edit-' + novelId);
   el.innerHTML = `
     <div class="admin-edit-row"><label style="font-size:0.75rem;color:var(--text-muted);width:60px;">标题</label><input type="text" id="editTitle-${novelId}" value="${escapeHTML(novel.title)}"></div>
+    <div style="margin-top:8px;">
+      <label style="font-size:0.8rem;color:var(--text-muted);">分类</label>
+      <select id="editCategory-${novel.id}" style="width:100%;padding:6px 8px;border:1px solid var(--border-light);background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-serif);font-size:0.85rem;">
+        ${categories.map(c => `<option value="${c.id}" ${c.id === cat.id ? 'selected' : ''}>${escapeHTML(c.name)}</option>`).join('')}
+      </select>
+    </div>
     <div class="admin-edit-row"><label style="font-size:0.75rem;color:var(--text-muted);width:60px;">作者</label><input type="text" id="editAuthor-${novelId}" value="${escapeHTML(novel.author)}"></div>
     <div class="admin-edit-row"><label style="font-size:0.75rem;color:var(--text-muted);width:60px;">标签</label><input type="text" id="editTags-${novelId}" value="${escapeHTML(novel.tags.join(', '))}"></div>
     <div class="admin-edit-row"><label style="font-size:0.75rem;color:var(--text-muted);width:60px;align-self:flex-start;">内容</label><textarea id="editContent-${novelId}">${escapeHTML(novel.content)}</textarea></div>
@@ -3091,6 +3183,15 @@ function saveEditNovel(catId, novelId) {
   novel.author = document.getElementById('editAuthor-' + novelId).value.trim();
   novel.tags = document.getElementById('editTags-' + novelId).value.split(',').map(t => t.trim()).filter(t => t);
   novel.content = document.getElementById('editContent-' + novelId).value.trim();
+  // Handle category change
+  const newCatId = document.getElementById('editCategory-' + novelId).value;
+  if (newCatId !== catId) {
+    const newCat = categories.find(c => c.id === newCatId);
+    if (newCat) {
+      cat.novels = cat.novels.filter(n => n.id !== novelId);
+      newCat.novels.push(novel);
+    }
+  }
   saveData();
   renderAdminEditNovelList();
   renderStats();
