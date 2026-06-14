@@ -174,44 +174,48 @@
 
 /* ===== COLOR SCHEME: Coral Sky ===== */
 [data-color-scheme="coral"] {
+  --bg-primary: #faf6f2;
+  --bg-secondary: #f2ece6;
   --accent-primary: #ED6D52;
   --accent-primary-light: #f29078;
   --accent-pink: #f29078;
   --accent-rose: #f8b8a8;
-  --accent-miku: #ED6D52;
-  --accent-miku-light: #f29078;
-  --accent-miku-glow: rgba(237, 109, 82, 0.15);
-  --accent-gothic: #a87868;
-  --accent-gothic-light: #c89888;
+  --accent-miku: #BADBF2;
+  --accent-miku-light: #d0e8f8;
+  --accent-miku-glow: rgba(186, 219, 242, 0.2);
+  --accent-gothic: #8a9ab8;
+  --accent-gothic-light: #a8b8d0;
   --accent-blood: #b08070;
-  --accent-miku-alt: #BADBF2;
-  --accent-miku-alt-light: #d0e8f8;
-  --border-light: rgba(237, 109, 82, 0.2);
+  --accent-miku-alt: #ED6D52;
+  --accent-miku-alt-light: #f29078;
+  --border-light: rgba(186, 219, 242, 0.3);
   --border-hover: rgba(237, 109, 82, 0.4);
 }
 [data-color-scheme="coral"][data-theme="dark"] {
+  --bg-primary: #1a1614;
+  --bg-secondary: #242018;
   --accent-primary: #f08068;
   --accent-primary-light: #f4a090;
   --accent-pink: #f4a090;
   --accent-rose: #f8c8b8;
-  --accent-miku: #f08068;
-  --accent-miku-light: #f4a090;
-  --accent-miku-glow: rgba(240, 128, 104, 0.12);
-  --accent-gothic: #c09080;
-  --accent-gothic-light: #d8b0a0;
+  --accent-miku: #c8e0f4;
+  --accent-miku-light: #dceaf8;
+  --accent-miku-glow: rgba(200, 224, 244, 0.12);
+  --accent-gothic: #a0b0c8;
+  --accent-gothic-light: #b8c8e0;
   --accent-blood: #d89888;
-  --accent-miku-alt: #c8e0f4;
-  --accent-miku-alt-light: #dceaf8;
-  --border-light: rgba(240, 128, 104, 0.2);
-  --border-hover: rgba(240, 128, 104, 0.4);
+  --accent-miku-alt: #f08068;
+  --accent-miku-alt-light: #f4a090;
+  --border-light: rgba(200, 224, 244, 0.15);
+  --border-hover: rgba(240, 128, 104, 0.35);
 }
 
 /* ===== COLOR SCHEME: Deep Night ===== */
 [data-color-scheme="night"] {
-  --bg-primary: #eef0f6;
-  --bg-secondary: #e0e4ee;
-  --bg-card: #ffffff;
-  --bg-card-hover: #ffffff;
+  --bg-primary: #e8ecf4;
+  --bg-secondary: #dce0ec;
+  --bg-card: #f0f2fa;
+  --bg-card-hover: #f0f2fa;
   --text-primary: #0a1028;
   --text-secondary: #1e2a4a;
   --text-muted: #5a6080;
@@ -225,7 +229,9 @@
   --accent-gothic: #46266E;
   --accent-gothic-light: #5e3888;
   --accent-blood: #7a4060;
-  --border-light: rgba(0, 30, 68, 0.15);
+  --accent-miku-alt: #46266E;
+  --accent-miku-alt-light: #5e3888;
+  --border-light: rgba(0, 30, 68, 0.18);
   --border-hover: rgba(70, 38, 110, 0.35);
   --shadow-soft: 0 4px 20px rgba(0, 30, 68, 0.08);
   --shadow-card: 0 2px 8px rgba(0, 30, 68, 0.06);
@@ -249,6 +255,8 @@
   --accent-gothic: #7a4ea8;
   --accent-gothic-light: #9a70c0;
   --accent-blood: #a86888;
+  --accent-miku-alt: #6a3e96;
+  --accent-miku-alt-light: #8a5eb8;
   --border-light: rgba(0, 30, 68, 0.3);
   --border-hover: rgba(106, 62, 150, 0.45);
   --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.5);
@@ -268,6 +276,12 @@
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* Custom Cursor */
+html { cursor: url('cursors/Arrow.ani') 6 0, auto; }
+a, button, [onclick], select, input[type="submit"], .nav-btn, .scheme-btn, .category-card, .novel-card, .link-card, .interest-card, .back-to-top, .theme-toggle, .admin-toggle { cursor: url('cursors/リンクの選択.ani') 6 0, pointer; }
+input[type="text"], input[type="password"], input[type="url"], textarea, [contenteditable="true"] { cursor: url('cursors/IBeam.ani') 6 0, text; }
+.loading-screen { cursor: url('cursors/待ち状態.ani') 6 0, wait; }
 html { scroll-behavior: smooth; }
 body {
   font-family: var(--font-serif);
@@ -390,9 +404,37 @@ body {
 }
 .theme-toggle:hover { background: var(--accent-primary); color: white; border-color: var(--accent-primary); transform: scale(1.1); }
 
+/* Color Scheme Picker */
+.color-scheme-picker {
+  position: fixed; top: 16px; right: 68px; z-index: 1000;
+  display: flex; gap: 6px; align-items: center;
+  padding: 5px 8px;
+  background: var(--bg-card); border: 1px solid var(--border-light);
+  backdrop-filter: blur(10px);
+  transition: var(--transition);
+  border-radius: 0px;
+}
+.scheme-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 3px 8px;
+  background: transparent; border: 1px solid transparent;
+  cursor: pointer; transition: var(--transition);
+  font-family: var(--font-serif); font-size: 0.7rem;
+  color: var(--text-muted);
+  border-radius: 0px;
+}
+.scheme-btn:hover { color: var(--text-primary); border-color: var(--border-light); }
+.scheme-btn.active { color: var(--text-primary); border-color: var(--accent-primary); background: var(--accent-miku-glow); }
+.scheme-dot {
+  display: inline-block; width: 10px; height: 10px;
+  border-radius: 50%; flex-shrink: 0;
+  border: 1px solid rgba(128,128,128,0.2);
+}
+.scheme-label { white-space: nowrap; }
+
 /* Admin Toggle */
 .admin-toggle {
-  position: fixed; top: 16px; right: 64px; z-index: 1000;
+  position: fixed; top: 16px; right: 340px; z-index: 1000;
   width: 40px; height: 40px;
   border: 1px solid var(--border-light);
   background: var(--bg-card); color: var(--text-secondary);
@@ -1290,6 +1332,10 @@ body {
   .site-title { font-size: 2rem; letter-spacing: 5px; }
   .theme-toggle, .admin-toggle { top: 10px; width: 36px; height: 36px; font-size: 0.8rem; }
   .admin-toggle { right: 52px; }
+  .color-scheme-picker { top: 10px; right: 96px; padding: 4px 5px; gap: 4px; }
+  .scheme-btn { padding: 2px; }
+  .scheme-label { display: none; }
+  .scheme-dot { width: 12px; height: 12px; }
   .admin-drawer { width: 100%; right: -100%; }
   .hero-section { flex-direction: column; text-align: center; padding: 28px 24px; gap: 20px; }
   .hero-avatar { width: 80px; height: 80px; font-size: 2rem; }
@@ -1364,12 +1410,12 @@ body {
 </div>
 <div class="scroll-progress" id="scrollProgress"></div>
 <button class="theme-toggle" id="themeToggle" title="切换主题" aria-label="切换主题">☾</button>
-<select id="colorSchemeSelect" style="padding:4px 8px;font-size:0.75rem;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);cursor:pointer;border-radius:0px;" onchange="setColorScheme(this.value)">
-  <option value="miku">Miku 青</option>
-  <option value="rose">蔷薇粉</option>
-  <option value="coral">珊瑚橘</option>
-  <option value="night">深夜蓝</option>
-</select>
+<div class="color-scheme-picker" id="colorSchemePicker">
+  <button class="scheme-btn active" data-scheme="miku" title="Miku 青" onclick="setColorScheme('miku')"><span class="scheme-dot" style="background:#39c5bb"></span><span class="scheme-label">Miku 青</span></button>
+  <button class="scheme-btn" data-scheme="rose" title="蔷薇粉" onclick="setColorScheme('rose')"><span class="scheme-dot" style="background:#F23172"></span><span class="scheme-label">蔷薇粉</span></button>
+  <button class="scheme-btn" data-scheme="coral" title="珊瑚橘" onclick="setColorScheme('coral')"><span class="scheme-dot" style="background:linear-gradient(135deg,#ED6D52 60%,#BADBF2 60%)"></span><span class="scheme-label">珊瑚橘</span></button>
+  <button class="scheme-btn" data-scheme="night" title="深夜蓝" onclick="setColorScheme('night')"><span class="scheme-dot" style="background:linear-gradient(135deg,#001E44 60%,#46266E 60%)"></span><span class="scheme-label">深夜蓝</span></button>
+</div>
 <button class="admin-toggle" id="adminToggle" title="管理" aria-label="管理面板">⚙</button>
 <button class="back-to-top" id="backToTop" title="返回顶部" aria-label="返回顶部">↑</button>
 <canvas id="bgCanvas"></canvas>
@@ -2226,6 +2272,10 @@ function initTheme() {
 function setColorScheme(scheme) {
   document.documentElement.setAttribute('data-color-scheme', scheme);
   localStorage.setItem('colorScheme', scheme);
+  // Update active button
+  document.querySelectorAll('.scheme-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.scheme === scheme);
+  });
   // Update background pattern color
   updateBackgroundPattern();
   // Sync Giscus theme
@@ -2236,8 +2286,9 @@ function initColorScheme() {
   const saved = localStorage.getItem('colorScheme');
   const scheme = saved || 'miku';
   document.documentElement.setAttribute('data-color-scheme', scheme);
-  const sel = document.getElementById('colorSchemeSelect');
-  if (sel) sel.value = scheme;
+  document.querySelectorAll('.scheme-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.scheme === scheme);
+  });
 }
 
 function updateBackgroundPattern() {
