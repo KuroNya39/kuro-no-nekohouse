@@ -1311,7 +1311,7 @@ body {
         </div>
         <div class="admin-about-section">
           <label>封面图片文件名 <span style="color:var(--text-muted);font-size:0.7rem;">如 miku.jpg</span></label>
-          <input type="text" id="newCatImage" placeholder="miku.jpg">
+          <input type="text" id="newCatImage" placeholder="图片文件名(如miku.jpg)或图片URL">
         </div>
         <button class="admin-btn" onclick="addCategory()">添加分类</button>
       </div>
@@ -1342,6 +1342,13 @@ body {
       <div class="admin-form-row">
         <label>小说正文 <span style="color:var(--accent-rose);font-size:0.7rem;">*必填 — 直接粘贴全文内容</span></label>
         <textarea id="adminContent" placeholder="在这里粘贴小说的完整正文内容..." oninput="updateWordCount()"></textarea>
+        <div style="margin-top:8px;display:flex;gap:8px;align-items:center;">
+          <label class="admin-btn small secondary" style="cursor:pointer;margin:0;">
+            上传文件
+            <input type="file" id="contentFileUpload" accept=".txt,.text,.md,.jpg,.jpeg,.png,.gif,.bmp,.webp" style="display:none" onchange="handleContentFileUpload(event)">
+          </label>
+          <span style="font-size:0.7rem;color:var(--text-muted);">支持 txt/md 文本文件和 jpg/png 图片</span>
+        </div>
       </div>
       <button class="admin-btn" onclick="addNovel()">添加小说</button>
       <button class="admin-btn secondary" onclick="clearAdminForm()">清空</button>
@@ -1364,21 +1371,21 @@ body {
       </div>
       <div class="admin-section-group">
         <div class="admin-section-title">VOCALOID</div>
-        <div class="admin-about-section"><label>声库</label><input type="text" id="aboutVocaloid1"></div>
-        <div class="admin-about-section"><label>P主</label><input type="text" id="aboutVocaloid2"></div>
-        <div class="admin-about-section"><label>画师</label><input type="text" id="aboutVocaloid3"></div>
+        <div class="admin-about-section"><label>标签1</label><input type="text" id="aboutVocaloidLabel1" placeholder="声库"><input type="text" id="aboutVocaloid1" placeholder="内容"></div>
+        <div class="admin-about-section"><label>标签2</label><input type="text" id="aboutVocaloidLabel2" placeholder="P主"><input type="text" id="aboutVocaloid2" placeholder="内容"></div>
+        <div class="admin-about-section"><label>标签3</label><input type="text" id="aboutVocaloidLabel3" placeholder="画师"><input type="text" id="aboutVocaloid3" placeholder="内容"></div>
       </div>
       <div class="admin-section-group">
         <div class="admin-section-title">偶像梦幻祭</div>
-        <div class="admin-about-section"><label>主推</label><input type="text" id="aboutEnsemble1"></div>
-        <div class="admin-about-section"><label>好感</label><input type="text" id="aboutEnsemble2"></div>
-        <div class="admin-about-section"><label>CP</label><input type="text" id="aboutEnsemble3"></div>
-        <div class="admin-about-section"><label>其他</label><input type="text" id="aboutEnsemble4"></div>
+        <div class="admin-about-section"><label>标签1</label><input type="text" id="aboutEnsembleLabel1" placeholder="主推"><input type="text" id="aboutEnsemble1" placeholder="内容"></div>
+        <div class="admin-about-section"><label>标签2</label><input type="text" id="aboutEnsembleLabel2" placeholder="好感"><input type="text" id="aboutEnsemble2" placeholder="内容"></div>
+        <div class="admin-about-section"><label>标签3</label><input type="text" id="aboutEnsembleLabel3" placeholder="CP"><input type="text" id="aboutEnsemble3" placeholder="内容"></div>
+        <div class="admin-about-section"><label>标签4</label><input type="text" id="aboutEnsembleLabel4" placeholder="其他"><input type="text" id="aboutEnsemble4" placeholder="内容"></div>
       </div>
       <div class="admin-section-group">
         <div class="admin-section-title">NITRO+CHiRAL</div>
-        <div class="admin-about-section"><label>主推</label><input type="text" id="aboutNitro1"></div>
-        <div class="admin-about-section"><label>进度</label><input type="text" id="aboutNitro2"></div>
+        <div class="admin-about-section"><label>标签1</label><input type="text" id="aboutNitroLabel1" placeholder="主推"><input type="text" id="aboutNitro1" placeholder="内容"></div>
+        <div class="admin-about-section"><label>标签2</label><input type="text" id="aboutNitroLabel2" placeholder="进度"><input type="text" id="aboutNitro2" placeholder="内容"></div>
       </div>
       <div class="admin-about-section"><label>其他兴趣</label><input type="text" id="aboutOther"></div>
       <div class="admin-section-group">
@@ -2347,6 +2354,37 @@ function updateWordCount() {
   document.getElementById('wordCountHint').textContent = '已自动计算：' + count + ' 字';
 }
 
+function handleContentFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const ext = file.name.split('.').pop().toLowerCase();
+  const textarea = document.getElementById('adminContent');
+  
+  if (['txt', 'text', 'md'].includes(ext)) {
+    // Text file: read content
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      textarea.value = e.target.result;
+      updateWordCount();
+      showToast('文件内容已导入');
+    };
+    reader.readAsText(file, 'UTF-8');
+  } else if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(ext)) {
+    // Image file: convert to base64 and embed as img tag
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const base64 = e.target.result;
+      textarea.value = '[IMG]' + base64 + '[/IMG]';
+      updateWordCount();
+      showToast('图片已导入（将以图片方式显示）');
+    };
+    reader.readAsDataURL(file);
+  } else {
+    showToast('不支持的文件格式', 'error');
+  }
+  event.target.value = '';
+}
+
 function addNovel() {
   const title = document.getElementById('adminTitle').value.trim();
   const author = document.getElementById('adminAuthor').value.trim();
@@ -3066,24 +3104,31 @@ function saveEditNovel(catId, novelId) {
 function loadAboutForm() {
   document.getElementById('aboutCircleName').value = aboutData.circleName;
   document.getElementById('aboutBio').value = aboutData.bio;
-  const v1 = aboutData.vocaloid.find(v => v.label === '声库');
-  const v2 = aboutData.vocaloid.find(v => v.label === 'P主');
-  const v3 = aboutData.vocaloid.find(v => v.label === '画师');
-  document.getElementById('aboutVocaloid1').value = v1 ? v1.value : '';
-  document.getElementById('aboutVocaloid2').value = v2 ? v2.value : '';
-  document.getElementById('aboutVocaloid3').value = v3 ? v3.value : '';
-  const e1 = aboutData.ensemble.find(v => v.label === '主推');
-  const e2 = aboutData.ensemble.find(v => v.label === '好感');
-  const e3 = aboutData.ensemble.find(v => v.label === 'CP');
-  const e4 = aboutData.ensemble.find(v => v.label === '其他');
-  document.getElementById('aboutEnsemble1').value = e1 ? e1.value : '';
-  document.getElementById('aboutEnsemble2').value = e2 ? e2.value : '';
-  document.getElementById('aboutEnsemble3').value = e3 ? e3.value : '';
-  document.getElementById('aboutEnsemble4').value = e4 ? e4.value : '';
-  const n1 = aboutData.nitro.find(v => v.label === '主推');
-  const n2 = aboutData.nitro.find(v => v.label === '进度');
-  document.getElementById('aboutNitro1').value = n1 ? n1.value : '';
-  document.getElementById('aboutNitro2').value = n2 ? n2.value : '';
+  // Load labels
+  if (aboutData.vocaloid) {
+    aboutData.vocaloid.forEach((v, i) => {
+      const labelEl = document.getElementById('aboutVocaloidLabel' + (i+1));
+      if (labelEl) labelEl.value = v.label || '';
+      const valEl = document.getElementById('aboutVocaloid' + (i+1));
+      if (valEl) valEl.value = v.value || '';
+    });
+  }
+  if (aboutData.ensemble) {
+    aboutData.ensemble.forEach((v, i) => {
+      const labelEl = document.getElementById('aboutEnsembleLabel' + (i+1));
+      if (labelEl) labelEl.value = v.label || '';
+      const valEl = document.getElementById('aboutEnsemble' + (i+1));
+      if (valEl) valEl.value = v.value || '';
+    });
+  }
+  if (aboutData.nitro) {
+    aboutData.nitro.forEach((v, i) => {
+      const labelEl = document.getElementById('aboutNitroLabel' + (i+1));
+      if (labelEl) labelEl.value = v.label || '';
+      const valEl = document.getElementById('aboutNitro' + (i+1));
+      if (valEl) valEl.value = v.value || '';
+    });
+  }
   document.getElementById('aboutOther').value = aboutData.other;
   document.getElementById('aboutLinkQQ').value = aboutData.links.qq;
   document.getElementById('aboutLinkBili').value = aboutData.links.bili;
@@ -3096,20 +3141,20 @@ function saveAboutData() {
   aboutData.circleName = document.getElementById('aboutCircleName').value.trim() || defaultAboutData.circleName;
   aboutData.bio = document.getElementById('aboutBio').value.trim() || defaultAboutData.bio;
   aboutData.vocaloid = [
-    { label: '声库', value: document.getElementById('aboutVocaloid1').value.trim() || '' },
-    { label: 'P主', value: document.getElementById('aboutVocaloid2').value.trim() || '' },
-    { label: '画师', value: document.getElementById('aboutVocaloid3').value.trim() || '' }
+    { label: document.getElementById('aboutVocaloidLabel1').value.trim() || '声库', value: document.getElementById('aboutVocaloid1').value.trim() || '' },
+    { label: document.getElementById('aboutVocaloidLabel2').value.trim() || 'P主', value: document.getElementById('aboutVocaloid2').value.trim() || '' },
+    { label: document.getElementById('aboutVocaloidLabel3').value.trim() || '画师', value: document.getElementById('aboutVocaloid3').value.trim() || '' }
   ].filter(v => v.value);
   aboutData.vocaloidTags = [];
   aboutData.ensemble = [
-    { label: '主推', value: document.getElementById('aboutEnsemble1').value.trim() || '' },
-    { label: '好感', value: document.getElementById('aboutEnsemble2').value.trim() || '' },
-    { label: 'CP', value: document.getElementById('aboutEnsemble3').value.trim() || '' },
-    { label: '其他', value: document.getElementById('aboutEnsemble4').value.trim() || '' }
+    { label: document.getElementById('aboutEnsembleLabel1').value.trim() || '主推', value: document.getElementById('aboutEnsemble1').value.trim() || '' },
+    { label: document.getElementById('aboutEnsembleLabel2').value.trim() || '好感', value: document.getElementById('aboutEnsemble2').value.trim() || '' },
+    { label: document.getElementById('aboutEnsembleLabel3').value.trim() || 'CP', value: document.getElementById('aboutEnsemble3').value.trim() || '' },
+    { label: document.getElementById('aboutEnsembleLabel4').value.trim() || '其他', value: document.getElementById('aboutEnsemble4').value.trim() || '' }
   ].filter(v => v.value);
   aboutData.nitro = [
-    { label: '主推', value: document.getElementById('aboutNitro1').value.trim() || '' },
-    { label: '进度', value: document.getElementById('aboutNitro2').value.trim() || '' }
+    { label: document.getElementById('aboutNitroLabel1').value.trim() || '主推', value: document.getElementById('aboutNitro1').value.trim() || '' },
+    { label: document.getElementById('aboutNitroLabel2').value.trim() || '进度', value: document.getElementById('aboutNitro2').value.trim() || '' }
   ].filter(v => v.value);
   aboutData.other = document.getElementById('aboutOther').value.trim();
   aboutData.links = {
