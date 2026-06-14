@@ -1835,12 +1835,31 @@ function buildSiteData() {
 
 function loadSiteData(data) {
   if (!data || !data.categories) return false;
+  
+  // Always use remote categories (they are the source of truth for novel data)
   categories = data.categories;
-  if (data.aboutData) { aboutData = data.aboutData; safeJSONStringify('aboutData', aboutData); }
-  if (data.siteConfig) { siteConfig = data.siteConfig; safeJSONStringify('siteConfig', siteConfig); }
+  safeJSONStringify('categories', categories);
+  
+  // For other data, only update if remote version is newer
+  const localSiteConfig = safeJSONParse('siteConfig', null);
+  if (data.siteConfig) {
+    if (!localSiteConfig || (data._updatedAt && (!siteConfig._lastSync || data._updatedAt > siteConfig._lastSync))) {
+      siteConfig = data.siteConfig;
+      safeJSONStringify('siteConfig', siteConfig);
+    }
+  }
+  
+  const localAboutData = safeJSONParse('aboutData', null);
+  if (data.aboutData) {
+    if (!localAboutData || (data._updatedAt && (!aboutData._lastSync || data._updatedAt > aboutData._lastSync))) {
+      aboutData = data.aboutData;
+      safeJSONStringify('aboutData', aboutData);
+    }
+  }
+  
   if (data.timelineData) { timelineData = data.timelineData; safeJSONStringify('timelineData', timelineData); }
   if (data.linksData) { linksData = data.linksData; safeJSONStringify('linksData', linksData); }
-  safeJSONStringify('categories', categories);
+  
   return true;
 }
 
@@ -2655,48 +2674,43 @@ const PAGE_TITLES = {
   about: '关于 - 黒の猫窝'
 };
 
-function showPage(name) {
-  // Push current page to history stack (except for reader/category which are sub-pages)
-  const currentPage = document.querySelector('.page.active');
-  if (currentPage && currentPage.id !== 'page-' + name) {
-    navHistory.push(currentPage.id.replace('page-', ''));
-    // Keep history stack manageable
-    if (navHistory.length > 20) navHistory.shift();
-  }
-
+function showPage(name, pushState) {
+  if (pushState === undefined) pushState = true;
+  
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
+  const targetPage = document.getElementById('page-' + name);
+  if (targetPage) targetPage.classList.add('active');
   document.getElementById('searchResults').classList.remove('active');
   document.getElementById('searchInput').value = '';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
   // Update page title
-  document.title = PAGE_TITLES[name] || '黒の猫窝';
+  document.title = PAGE_TITLES[name] || (siteConfig.siteName || '黒の猫窝');
 
-  // Focus management for accessibility
-  const pageSection = document.getElementById('page-' + name);
-  if (pageSection) {
-    pageSection.setAttribute('tabindex', '-1');
-    pageSection.focus({ preventScroll: true });
+  // Focus management
+  if (targetPage) {
+    targetPage.setAttribute('tabindex', '-1');
+    targetPage.focus({ preventScroll: true });
   }
 
   // Update URL hash
-  if (name !== 'home') {
-    window.history.pushState({ page: name }, '', '#/' + name);
-  } else {
-    window.history.pushState({ page: name }, '', '/');
+  if (pushState) {
+    if (name !== 'home') {
+      window.history.pushState({ page: name }, '', '#/' + name);
+    } else {
+      window.history.pushState({ page: 'home' }, '', window.location.pathname);
+    }
   }
 }
 
 // ===== HASH ROUTER =====
 function initHashRouter() {
   window.addEventListener('popstate', (e) => {
-    if (e.state && e.state.page) {
-      showPage(e.state.page);
-      document.querySelectorAll('.nav-btn').forEach(b => {
-        b.classList.toggle('active', b.dataset.page === e.state.page);
-      });
-    }
+    const page = (e.state && e.state.page) ? e.state.page : 'home';
+    showPage(page, false);
+    document.querySelectorAll('.nav-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.page === page);
+    });
   });
 
   // Handle initial hash
@@ -2704,7 +2718,7 @@ function initHashRouter() {
   if (hash && hash.startsWith('#/')) {
     const page = hash.slice(2);
     if (PAGE_TITLES[page]) {
-      showPage(page);
+      showPage(page, false);
       document.querySelectorAll('.nav-btn').forEach(b => {
         b.classList.toggle('active', b.dataset.page === page);
       });
@@ -3056,11 +3070,11 @@ let siteConfig = safeJSONParse('siteConfig', JSON.parse(JSON.stringify(defaultSi
 function renderAboutPage() {
   const d = aboutData;
   const socialItems = [
-    { icon: '&#10022;', name: 'QQ空间', url: d.links.qq },
-    { icon: '&#10022;', name: '哔哩哔哩', url: d.links.bili },
-    { icon: '&#10022;', name: '微博', url: d.links.weibo },
-    { icon: '&#10022;', name: '小红书', url: d.links.xiaohongshu },
-    { icon: '&#10022;', name: 'X（Twitter）', url: d.links.x }
+    { icon: '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>', name: 'QQ空间', url: d.links.qq },
+    { icon: '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 19.858 0 18.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906L17.813 4.653zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773H5.333zm4 4.427c.711 0 1.333.26 1.867.78.533.52.8 1.151.8 1.893 0 .742-.267 1.373-.8 1.894-.534.52-1.156.78-1.867.78s-1.333-.26-1.867-.78c-.533-.52-.8-1.152-.8-1.894 0-.742.267-1.373.8-1.893.534-.52 1.156-.78 1.867-.78zm5.334 0c.711 0 1.333.26 1.867.78.533.52.8 1.151.8 1.893 0 .742-.267 1.373-.8 1.894-.534.52-1.156.78-1.867.78s-1.333-.26-1.867-.78c-.533-.52-.8-1.152-.8-1.894 0-.742.267-1.373.8-1.893.534-.52 1.156-.78 1.867-.78z"/></svg>', name: '哔哩哔哩', url: d.links.bili },
+    { icon: '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M10.098 20.323c-3.977.391-7.414-1.056-7.72-3.254-.083-.592.114-1.229.538-1.836 1.907-2.764 6.277-4.29 11.543-4.29h.014c5.266 0 10.636 1.526 11.543 4.29.424.607.621 1.244.538 1.836-.306 2.198-3.743 3.645-7.72 3.254h-.236zm-1.878-5.42c-2.518 0-4.56 1.15-4.56 2.57 0 1.42 2.042 2.57 4.56 2.57s4.56-1.15 4.56-2.57c0-1.42-2.042-2.57-4.56-2.57zm5.66 0c-.39 0-.707.448-.707 1s.317 1 .707 1 .707-.448.707-1-.317-1-.707-1z"/></svg>', name: '微博', url: d.links.weibo },
+    { icon: '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.5 13.5c-.267.4-.933.533-1.333.267-2-.933-3.133-2.267-3.133-4 0-1.733 1.067-3.067 2.933-4 .533-.2 1.133.067 1.333.6.2.533-.067 1.133-.6 1.333-1.2.467-1.867 1.333-1.867 2.4 0 1.067.8 2 2.267 2.667.4.2.533.8.267 1.2-.133.267-.4.4-.667.4-.133 0-.2-.067-.267-.067zM12 7a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></svg>', name: '小红书', url: d.links.xiaohongshu },
+    { icon: '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>', name: 'X', url: d.links.x }
   ];
 
   function renderInterestRows(items) {
@@ -3267,8 +3281,9 @@ function saveAboutData() {
     xiaohongshu: document.getElementById('aboutLinkXiaohongshu').value.trim() || '#',
     x: document.getElementById('aboutLinkX').value.trim() || '#'
   };
+  aboutData._lastSync = new Date().toISOString();
   safeJSONStringify('aboutData', aboutData);
-  syncToGitHub();
+  saveData();
   renderAboutPage();
   announceToScreenReader('关于页已保存');
   showToast('关于页已保存');
@@ -3295,6 +3310,7 @@ function saveSiteConfig() {
   siteConfig.footerText = document.getElementById('cfgFooterText').value.trim() || defaultSiteConfig.footerText;
   siteConfig.guestbookIntro = document.getElementById('cfgGbIntro').value.trim() || defaultSiteConfig.guestbookIntro;
   siteConfig.guestbookHint = document.getElementById('cfgGbHint').value.trim() || defaultSiteConfig.guestbookHint;
+  siteConfig._lastSync = new Date().toISOString();
   safeJSONStringify('siteConfig', siteConfig);
   saveData();
   renderHomePage();
@@ -3515,9 +3531,7 @@ function initSwipeNavigation() {
     if (Math.abs(horizontalDistance) > minSwipeDistance) {
       if (pageId === 'page-category' || pageId === 'page-reader') {
         e.preventDefault();
-        showPage('home');
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.querySelector('.nav-btn[data-page="home"]').classList.add('active');
+        history.back();
       }
     }
   }, { passive: false });
