@@ -1,6 +1,6 @@
 {
   "_version": 2,
-  "_updatedAt": "2026-06-14T19:20:54.173Z",
+  "_updatedAt": "2026-06-14T19:49:36.184Z",
   "categories": [
     {
       "id": "miku",
@@ -132,15 +132,11 @@
   },
   "siteConfig": {
     "siteName": "黒の猫窝",
-    "siteSubtitle": "同人小说收藏站",
+    "siteSubtitle": "黑喵子你能不能别看男同了",
     "heroTitle": "欢迎来到黒の猫窝",
-    "heroDesc": "目前主要用于保存同人文。",
-    "heroTags": [
-      "初音未来",
-      "狮心",
-      "零凛"
-    ],
-    "footerText": "黒の猫窝 · 避难所",
+    "heroDesc": "这里是我收藏的同人小说集，主要收录 VOCALOID、偶像梦幻祭等作品的优秀创作。每一篇都是精心挑选，希望能给你带来美好的阅读体验。",
+    "heroTags": [],
+    "footerText": "黒の猫窝 · 收藏每一个故事",
     "guestbookIntro": "欢迎留下你的想法和建议！评论通过 GitHub Discussions 存储，所有人都能看到。",
     "guestbookHint": "首次留言需要登录 GitHub 账号授权。"
   },
