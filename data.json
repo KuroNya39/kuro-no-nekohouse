@@ -1,6 +1,6 @@
 {
-  "_version": 1,
-  "_updatedAt": "2026-06-14T18:54:43.300Z",
+  "_version": 2,
+  "_updatedAt": "2026-06-14T19:20:54.173Z",
   "categories": [
     {
       "id": "miku",
@@ -129,5 +129,67 @@
       "xiaohongshu": "#",
       "x": "#"
     }
-  }
+  },
+  "siteConfig": {
+    "siteName": "黒の猫窝",
+    "siteSubtitle": "同人小说收藏站",
+    "heroTitle": "欢迎来到黒の猫窝",
+    "heroDesc": "目前主要用于保存同人文。",
+    "heroTags": [
+      "初音未来",
+      "狮心",
+      "零凛"
+    ],
+    "footerText": "黒の猫窝 · 避难所",
+    "guestbookIntro": "欢迎留下你的想法和建议！评论通过 GitHub Discussions 存储，所有人都能看到。",
+    "guestbookHint": "首次留言需要登录 GitHub 账号授权。"
+  },
+  "timelineData": [
+    {
+      "date": "2026-06-10",
+      "title": "网站上线",
+      "desc": "黒の猫窝正式对外开放，收录第一批小说。"
+    },
+    {
+      "date": "2026-06-08",
+      "title": "新增初音未来分类",
+      "desc": "收录了两篇 VOCALOID 相关创作。"
+    },
+    {
+      "date": "2026-06-05",
+      "title": "新增狮心分类",
+      "desc": "开始收录濑名泉×月永雷欧相关作品。"
+    },
+    {
+      "date": "2026-06-01",
+      "title": "建站构想",
+      "desc": "决定建立一个个人同人小说收藏站。"
+    }
+  ],
+  "linksData": [
+    {
+      "icon": "<span aria-hidden=\"true\">LOF</span>",
+      "title": "LOFTER",
+      "desc": "我的 LOFTER 主页",
+      "url": "#"
+    },
+    {
+      "icon": "<span aria-hidden=\"true\">AO3</span>",
+      "title": "AO3",
+      "desc": "Archive of Our Own",
+      "url": "https://archiveofourown.org/"
+    },
+    {
+      "icon": "<span aria-hidden=\"true\">晋</span>",
+      "title": "晋江",
+      "desc": "晋江文学城",
+      "url": "https://www.jjwxc.net/"
+    },
+    {
+      "icon": "<span aria-hidden=\"true\">Wiki</span>",
+      "title": "Vocaloid Wiki",
+      "desc": "Vocaloid 中文维基",
+      "url": "https://w.atwiki.jp/vocaloid/"
+    }
+  ]
 }
