@@ -858,7 +858,7 @@ body {
 .novel-item:hover .novel-title { color: var(--accent-primary); }
 .novel-number { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: var(--accent-primary); border: 1px solid var(--border-light); flex-shrink: 0; transition: var(--transition); border-radius: 0px; }
 .novel-info { flex: 1; }
-.novel-title { font-size: 1.05rem; color: var(--text-primary); margin-bottom: 4px; font-weight: 500; transition: color 0.3s; }
+.novel-title { font-size: 1.05rem; color: var(--text-primary); margin-bottom: 4px; font-weight: 500; transition: color 0.3s; line-height: 1.5; word-break: break-all; }
 .novel-author { font-size: 0.8rem; color: var(--accent-pink); margin-bottom: 4px; }
 .novel-meta { font-size: 0.75rem; color: var(--text-muted); display: flex; gap: 14px; flex-wrap: wrap; }
 .novel-tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
@@ -891,7 +891,7 @@ body {
 }
 .reader-category-tag { display: inline-block; padding: 4px 14px; border: 1px solid var(--border-light); font-size: 0.75rem; color: var(--accent-primary); margin-bottom: 12px; letter-spacing: 1px; transition: var(--transition); cursor: pointer; border-radius: 0px; }
 .reader-category-tag:hover { background: var(--accent-primary); color: white; }
-.reader-title { font-family: var(--font-display); font-size: 1.5rem; color: var(--text-primary); margin-bottom: 8px; }
+.reader-title { font-family: var(--font-display); font-size: 1.5rem; color: var(--text-primary); margin-bottom: 8px; line-height: 1.6; word-break: break-all; }
 .reader-meta { font-size: 0.8rem; color: var(--text-muted); }
 .reader-author { font-size: 0.85rem; color: var(--accent-pink); margin-top: 6px; }
 
@@ -3205,6 +3205,7 @@ function showCategory(catId) {
 
   renderNovelList();
   showPage('category');
+  document.title = currentCategory.name + ' - ' + siteConfig.siteName;
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
 }
 
@@ -3281,7 +3282,6 @@ function showNovel(index, chapterIdx) {
   document.getElementById('readerCategory').textContent = currentCategory.name;
   document.getElementById('readerCategory').onclick = () => showCategory(currentCategory.id);
   document.getElementById('readerTitle').textContent = novel.title;
-  document.title = novel.title + ' - ' + siteConfig.siteName;
 
   // Calculate reading time
   const readTime = Math.max(1, Math.round(novel.wordCount / 300));
@@ -3343,7 +3343,9 @@ function showNovel(index, chapterIdx) {
   document.getElementById('nextNovel').onclick = () => { if (index < currentCategory.novels.length - 1) showNovel(index + 1); };
 
   updateReadProgress();
-  showPage('reader');
+  showPage('reader', true);
+  // Set title AFTER showPage to avoid being overwritten
+  document.title = novel.title + ' - ' + siteConfig.siteName;
 }
 
 function backToCategory() {
