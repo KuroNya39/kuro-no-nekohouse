@@ -1,6 +1,6 @@
 {
   "_version": 2,
-  "_updatedAt": "2026-06-14T20:49:37.957Z",
+  "_updatedAt": "2026-06-14T20:49:57.187Z",
   "categories": [
     {
       "id": "miku",
@@ -141,9 +141,9 @@
       "零凛"
     ],
     "footerText": "黒の猫窝 · 避难所",
-    "guestbookIntro": "欢迎留下你的想法和建议！评论通过 GitHub Discussions 存储，所有人都能看到。",
+    "guestbookIntro": "欢迎留下你的想法和建议！评论通过 GitHub Discussions 存储。",
     "guestbookHint": "首次留言需要登录 GitHub 账号授权。",
-    "_lastSync": "2026-06-14T20:49:35.949Z"
+    "_lastSync": "2026-06-14T20:49:55.185Z"
   },
   "timelineData": [
     {
