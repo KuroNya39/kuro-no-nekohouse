@@ -1,0 +1,136 @@
+{
+  "_version": 1,
+  "_updatedAt": "2026-06-14T18:31:54.487Z",
+  "categories": [
+    {
+      "id": "miku",
+      "name": "初音未来",
+      "desc": "VOCALOID 相关创作",
+      "image": "miku.jpg",
+      "novels": [
+        {
+          "id": "miku-1",
+          "title": "星之声",
+          "author": "星夜",
+          "date": "2026-06-10",
+          "wordCount": 2800,
+          "tags": [
+            "甜文",
+            "短篇"
+          ],
+          "content": "这是初音未来分类下的示例小说内容。\n\n在这个示例中，你可以看到小说的排版效果。正文使用首字下沉的设计，段落之间有舒适的间距。\n\n当你提供真实的小说内容后，只需替换这里的文本即可。每一段会自动首行缩进，营造传统书籍的阅读体验。"
+        },
+        {
+          "id": "miku-2",
+          "title": "虚拟歌姬的梦境",
+          "author": "月见",
+          "date": "2026-06-08",
+          "wordCount": 1500,
+          "tags": [
+            "幻想",
+            "中篇"
+          ],
+          "content": "这是另一篇示例小说。\n\n你可以为每个分类添加任意数量的小说。每篇小说都有独立的阅读页面，支持上一篇/下一篇导航。"
+        }
+      ]
+    },
+    {
+      "id": "leoizumi",
+      "name": "狮心",
+      "desc": "濑名泉 × 月永雷欧",
+      "image": "izumileo.jpg",
+      "novels": [
+        {
+          "id": "leo-1",
+          "title": "骑士与王子",
+          "author": "蔷薇",
+          "date": "2026-06-05",
+          "wordCount": 3200,
+          "tags": [
+            "甜文",
+            "长篇"
+          ],
+          "content": "这是狮心分类下的示例小说。\n\n濑名泉与月永雷欧的故事将在这里展开。你可以将真实的小说内容替换这段占位文本。"
+        }
+      ]
+    },
+    {
+      "id": "reiritsu",
+      "name": "零凛",
+      "desc": "朔间零 × 朔间凛月",
+      "image": "reiritsu.jpg",
+      "novels": [
+        {
+          "id": "rei-1",
+          "title": "月夜下的兄弟",
+          "author": "黑羽",
+          "date": "2026-06-01",
+          "wordCount": 4100,
+          "tags": [
+            "虐文",
+            "中篇"
+          ],
+          "content": "这是零凛分类下的示例小说。\n\n朔间兄弟的故事在这里等待被阅读。提供你的小说文本后，这里将展示真实的内容。"
+        }
+      ]
+    }
+  ],
+  "aboutData": {
+    "circleName": "黒 / 黑喵子",
+    "bio": "@kuro_nekoko · 同人小说收藏",
+    "vocaloid": [
+      {
+        "label": "声库",
+        "value": "miku > > > 音街ウナ > Rana"
+      },
+      {
+        "label": "P主",
+        "value": "Mitchie M / Giga"
+      },
+      {
+        "label": "画师",
+        "value": "ixima"
+      }
+    ],
+    "vocaloidTags": [
+      "vocaloid调声",
+      "bilibili：黑喵子_"
+    ],
+    "ensemble": [
+      {
+        "label": "主推",
+        "value": "leo > > > 凛月 > 零=泉"
+      },
+      {
+        "label": "好感",
+        "value": "mika/夏目/晃牙/彩/宙"
+      },
+      {
+        "label": "CP",
+        "value": "狮心/零凛"
+      },
+      {
+        "label": "其他",
+        "value": "雷leo司/泉真 · 其他杂食"
+      }
+    ],
+    "nitro": [
+      {
+        "label": "主推",
+        "value": "Slow Damage · towa单推"
+      },
+      {
+        "label": "进度",
+        "value": "系列作补完中"
+      }
+    ],
+    "other": "电子琴 / MMD / 手帐 / 爵士乐 / 普罗米亚 / 创作BL / 樱新 / 梅露可物语 / 男子高校生 / はじめての / 玉桂狗 / 文具 / 少女歌剧",
+    "links": {
+      "qq": "#",
+      "bili": "#",
+      "weibo": "#",
+      "xiaohongshu": "#",
+      "x": "#"
+    }
+  }
+}
