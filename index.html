@@ -2043,25 +2043,19 @@ function buildSiteData() {
 function loadSiteData(data) {
   if (!data || !data.categories) return false;
   
-  // Always use remote categories (they are the source of truth for novel data)
+  // GitHub is the single source of truth - always use remote data
+  // (every save uploads the complete dataset, so remote is always the latest full snapshot)
   categories = data.categories;
   safeJSONStringify('categories', categories);
   
-  // For other data, only update if remote version is newer
-  const localSiteConfig = safeJSONParse('siteConfig', null);
   if (data.siteConfig) {
-    if (!localSiteConfig || (data._updatedAt && (!siteConfig._lastSync || data._updatedAt > siteConfig._lastSync))) {
-      siteConfig = data.siteConfig;
-      safeJSONStringify('siteConfig', siteConfig);
-    }
+    siteConfig = data.siteConfig;
+    safeJSONStringify('siteConfig', siteConfig);
   }
   
-  const localAboutData = safeJSONParse('aboutData', null);
   if (data.aboutData) {
-    if (!localAboutData || (data._updatedAt && (!aboutData._lastSync || data._updatedAt > aboutData._lastSync))) {
-      aboutData = data.aboutData;
-      safeJSONStringify('aboutData', aboutData);
-    }
+    aboutData = data.aboutData;
+    safeJSONStringify('aboutData', aboutData);
   }
   
   if (data.timelineData) { timelineData = data.timelineData; safeJSONStringify('timelineData', timelineData); }
