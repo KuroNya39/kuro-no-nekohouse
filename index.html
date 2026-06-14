@@ -1228,10 +1228,14 @@ body {
     <button class="admin-drawer-close" onclick="closeAdmin()" aria-label="关闭管理面板"><span class="close-x" aria-hidden="true"></span></button>
   </div>
   <div class="admin-drawer-body">
-    <div class="admin-tabs">
-      <button class="admin-tab active" onclick="switchAdminTab(this, 'add')">添加小说</button>
+    <div class="admin-tabs" style="flex-wrap:wrap;">
+      <button class="admin-tab active" onclick="switchAdminTab(this, 'site')">站点设置</button>
+      <button class="admin-tab" onclick="switchAdminTab(this, 'categories')">分类管理</button>
+      <button class="admin-tab" onclick="switchAdminTab(this, 'add')">添加小说</button>
       <button class="admin-tab" onclick="switchAdminTab(this, 'edit')">编辑小说</button>
-      <button class="admin-tab" onclick="switchAdminTab(this, 'about')">编辑关于页</button>
+      <button class="admin-tab" onclick="switchAdminTab(this, 'about')">关于页</button>
+      <button class="admin-tab" onclick="switchAdminTab(this, 'timeline')">时间轴</button>
+      <button class="admin-tab" onclick="switchAdminTab(this, 'links')">友链</button>
     </div>
     <div class="admin-io-bar">
       <span id="githubSyncStatus" style="font-size:0.75rem;color:var(--text-muted);">○ 未同步</span>
@@ -1245,8 +1249,76 @@ body {
       <button class="admin-btn small" onclick="saveGitHubToken()">保存令牌</button>
     </div>
 
+    <!-- Tab: 站点设置 -->
+    <div class="admin-tab-content active" id="adminTabSite">
+      <div class="admin-section-group">
+        <div class="admin-section-title">基本信息</div>
+        <div class="admin-about-section">
+          <label>站点名称</label>
+          <input type="text" id="cfgSiteName" placeholder="站点名称">
+        </div>
+        <div class="admin-about-section">
+          <label>站点副标题</label>
+          <input type="text" id="cfgSiteSubtitle" placeholder="站点副标题">
+        </div>
+        <div class="admin-about-section">
+          <label>首页标题</label>
+          <input type="text" id="cfgHeroTitle" placeholder="欢迎来到...">
+        </div>
+        <div class="admin-about-section">
+          <label>首页介绍</label>
+          <textarea id="cfgHeroDesc" placeholder="首页介绍文字" style="min-height:60px;resize:vertical;"></textarea>
+        </div>
+        <div class="admin-about-section">
+          <label>首页标签 <span style="color:var(--text-muted);font-size:0.7rem;">用逗号分隔</span></label>
+          <input type="text" id="cfgHeroTags" placeholder="VOCALOID,偶像梦幻祭,ES">
+        </div>
+        <div class="admin-about-section">
+          <label>页脚文字</label>
+          <input type="text" id="cfgFooterText" placeholder="页脚文字">
+        </div>
+      </div>
+      <div class="admin-section-group">
+        <div class="admin-section-title">留言板</div>
+        <div class="admin-about-section">
+          <label>留言板介绍</label>
+          <textarea id="cfgGbIntro" placeholder="留言板介绍文字" style="min-height:40px;resize:vertical;"></textarea>
+        </div>
+        <div class="admin-about-section">
+          <label>留言板提示</label>
+          <input type="text" id="cfgGbHint" placeholder="提示文字">
+        </div>
+      </div>
+      <button class="admin-btn" onclick="saveSiteConfig()">保存站点设置</button>
+    </div>
+
+    <!-- Tab: 分类管理 -->
+    <div class="admin-tab-content" id="adminTabCategories">
+      <div id="adminCategoryList"></div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-light);">
+        <div class="admin-section-title" style="margin-bottom:12px;">添加新分类</div>
+        <div class="admin-about-section">
+          <label>分类 ID <span style="color:var(--text-muted);font-size:0.7rem;">英文，如 miku</span></label>
+          <input type="text" id="newCatId" placeholder="miku">
+        </div>
+        <div class="admin-about-section">
+          <label>分类名称</label>
+          <input type="text" id="newCatName" placeholder="初音未来">
+        </div>
+        <div class="admin-about-section">
+          <label>分类描述</label>
+          <input type="text" id="newCatDesc" placeholder="VOCALOID 相关创作">
+        </div>
+        <div class="admin-about-section">
+          <label>封面图片文件名 <span style="color:var(--text-muted);font-size:0.7rem;">如 miku.jpg</span></label>
+          <input type="text" id="newCatImage" placeholder="miku.jpg">
+        </div>
+        <button class="admin-btn" onclick="addCategory()">添加分类</button>
+      </div>
+    </div>
+
     <!-- Tab: 添加小说 -->
-    <div class="admin-tab-content active" id="adminTabAdd">
+    <div class="admin-tab-content" id="adminTabAdd">
       <div class="admin-form-row">
         <label>小说标题 <span style="color:var(--accent-rose);font-size:0.7rem;">*必填</span></label>
         <input type="text" id="adminTitle" placeholder="输入小说的标题">
@@ -1257,11 +1329,7 @@ body {
       </div>
       <div class="admin-form-row">
         <label>所属分类 <span style="color:var(--text-muted);font-size:0.7rem;">选择小说属于哪个圈子</span></label>
-        <select id="adminCategory">
-          <option value="miku">初音未来</option>
-          <option value="leoizumi">狮心（濑名泉×月永雷欧）</option>
-          <option value="reiritsu">零凛（朔间零×朔间凛月）</option>
-        </select>
+        <select id="adminCategory"></select>
       </div>
       <div class="admin-form-row">
         <label>标签 <span style="color:var(--text-muted);font-size:0.7rem;">用逗号分隔多个标签，如：甜文,短篇,HE</span></label>
@@ -1284,104 +1352,77 @@ body {
       <div id="adminEditNovelList"></div>
     </div>
 
-
-
-    <!-- Tab: 编辑关于页 -->
+    <!-- Tab: 关于页 -->
     <div class="admin-tab-content" id="adminTabAbout">
       <div class="admin-about-section">
-        <label>😺 圈名 <span style="color:var(--text-muted);font-size:0.7rem;">显示在关于页顶部</span></label>
+        <label>圈名</label>
         <input type="text" id="aboutCircleName" placeholder="例如：黒 / 黑喵子">
       </div>
       <div class="admin-about-section">
-        <label>个人简介 <span style="color:var(--text-muted);font-size:0.7rem;">显示在圈名下方</span></label>
+        <label>个人简介</label>
         <input type="text" id="aboutBio" placeholder="例如：@kuro_nekoko · 同人小说收藏">
       </div>
-
       <div class="admin-section-group">
-        <div class="admin-section-title">VOCALOID 区块</div>
-        <div class="admin-about-section">
-          <label>声库偏好 <span style="color:var(--text-muted);font-size:0.7rem;">直接输入文字</span></label>
-          <input type="text" id="aboutVocaloid1" placeholder="例如：miku > > > 音街ウナ > Rana">
-        </div>
-        <div class="admin-about-section">
-          <label>P主偏好 <span style="color:var(--text-muted);font-size:0.7rem;">直接输入文字</span></label>
-          <input type="text" id="aboutVocaloid2" placeholder="例如：Mitchie M / Giga">
-        </div>
-        <div class="admin-about-section">
-          <label>画师偏好 <span style="color:var(--text-muted);font-size:0.7rem;">直接输入文字</span></label>
-          <input type="text" id="aboutVocaloid3" placeholder="例如：ixima">
-        </div>
+        <div class="admin-section-title">VOCALOID</div>
+        <div class="admin-about-section"><label>声库</label><input type="text" id="aboutVocaloid1"></div>
+        <div class="admin-about-section"><label>P主</label><input type="text" id="aboutVocaloid2"></div>
+        <div class="admin-about-section"><label>画师</label><input type="text" id="aboutVocaloid3"></div>
       </div>
-
       <div class="admin-section-group">
-        <div class="admin-section-title">偶像梦幻祭 区块</div>
-        <div class="admin-about-section">
-          <label>主推角色 <span style="color:var(--text-muted);font-size:0.7rem;">直接输入文字</span></label>
-          <input type="text" id="aboutEnsemble1" placeholder="例如：leo > > > 凛月 > 零=泉">
-        </div>
-        <div class="admin-about-section">
-          <label>好感角色 <span style="color:var(--text-muted);font-size:0.7rem;">直接输入文字</span></label>
-          <input type="text" id="aboutEnsemble2" placeholder="例如：mika/夏目/晃牙/彩/宙">
-        </div>
-        <div class="admin-about-section">
-          <label>主推CP <span style="color:var(--text-muted);font-size:0.7rem;">直接输入文字</span></label>
-          <input type="text" id="aboutEnsemble3" placeholder="例如：狮心/零凛">
-        </div>
-        <div class="admin-about-section">
-          <label>其他 <span style="color:var(--text-muted);font-size:0.7rem;">直接输入文字</span></label>
-          <input type="text" id="aboutEnsemble4" placeholder="例如：雷leo司/泉真 · 其他杂食">
-        </div>
+        <div class="admin-section-title">偶像梦幻祭</div>
+        <div class="admin-about-section"><label>主推</label><input type="text" id="aboutEnsemble1"></div>
+        <div class="admin-about-section"><label>好感</label><input type="text" id="aboutEnsemble2"></div>
+        <div class="admin-about-section"><label>CP</label><input type="text" id="aboutEnsemble3"></div>
+        <div class="admin-about-section"><label>其他</label><input type="text" id="aboutEnsemble4"></div>
       </div>
-
       <div class="admin-section-group">
-        <div class="admin-section-title">NITRO+CHiRAL 区块</div>
-        <div class="admin-about-section">
-          <label>主推内容 <span style="color:var(--text-muted);font-size:0.7rem;">直接输入文字</span></label>
-          <input type="text" id="aboutNitro1" placeholder="例如：Slow Damage · towa单推">
-        </div>
-        <div class="admin-about-section">
-          <label>进度/备注 <span style="color:var(--text-muted);font-size:0.7rem;">直接输入文字</span></label>
-          <input type="text" id="aboutNitro2" placeholder="例如：系列作补完中">
-        </div>
+        <div class="admin-section-title">NITRO+CHiRAL</div>
+        <div class="admin-about-section"><label>主推</label><input type="text" id="aboutNitro1"></div>
+        <div class="admin-about-section"><label>进度</label><input type="text" id="aboutNitro2"></div>
       </div>
-
-      <div class="admin-about-section">
-        <label>其他兴趣 <span style="color:var(--text-muted);font-size:0.7rem;">直接输入文字</span></label>
-        <input type="text" id="aboutOther" placeholder="例如：电子琴 / MMD / 手帐 / ...">
-      </div>
-
+      <div class="admin-about-section"><label>其他兴趣</label><input type="text" id="aboutOther"></div>
       <div class="admin-section-group">
         <div class="admin-section-title">社交链接</div>
-        <div class="admin-about-section">
-          <label>QQ空间链接</label>
-          <input type="text" id="aboutLinkQQ" placeholder="粘贴QQ空间主页链接">
-        </div>
-        <div class="admin-about-section">
-          <label>📺 哔哩哔哩链接</label>
-          <input type="text" id="aboutLinkBili" placeholder="粘贴B站个人空间链接">
-        </div>
-        <div class="admin-about-section">
-          <label>🐦 微博链接</label>
-          <input type="text" id="aboutLinkWeibo" placeholder="粘贴微博主页链接">
-        </div>
-        <div class="admin-about-section">
-          <label>📕 小红书链接</label>
-          <input type="text" id="aboutLinkXiaohongshu" placeholder="粘贴小红书主页链接">
-        </div>
-        <div class="admin-about-section">
-          <label>🐦 X（Twitter）链接</label>
-          <input type="text" id="aboutLinkX" placeholder="粘贴X主页链接">
-        </div>
+        <div class="admin-about-section"><label>QQ</label><input type="text" id="aboutLinkQQ"></div>
+        <div class="admin-about-section"><label>哔哩哔哩</label><input type="text" id="aboutLinkBili"></div>
+        <div class="admin-about-section"><label>微博</label><input type="text" id="aboutLinkWeibo"></div>
+        <div class="admin-about-section"><label>小红书</label><input type="text" id="aboutLinkXiaohongshu"></div>
+        <div class="admin-about-section"><label>X</label><input type="text" id="aboutLinkX"></div>
       </div>
       <button class="admin-btn" onclick="saveAboutData()">保存关于页</button>
+    </div>
+
+    <!-- Tab: 时间轴 -->
+    <div class="admin-tab-content" id="adminTabTimeline">
+      <div id="adminTimelineList"></div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-light);">
+        <div class="admin-section-title" style="margin-bottom:12px;">添加新事件</div>
+        <div class="admin-about-section"><label>日期</label><input type="date" id="newTlDate"></div>
+        <div class="admin-about-section"><label>标题</label><input type="text" id="newTlTitle" placeholder="事件标题"></div>
+        <div class="admin-about-section"><label>描述</label><input type="text" id="newTlDesc" placeholder="事件描述"></div>
+        <button class="admin-btn" onclick="addTimelineEvent()">添加事件</button>
+      </div>
+    </div>
+
+    <!-- Tab: 友链 -->
+    <div class="admin-tab-content" id="adminTabLinks">
+      <div id="adminLinksList"></div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-light);">
+        <div class="admin-section-title" style="margin-bottom:12px;">添加新友链</div>
+        <div class="admin-about-section"><label>名称</label><input type="text" id="newLinkTitle" placeholder="站点名称"></div>
+        <div class="admin-about-section"><label>图标文字 <span style="color:var(--text-muted);font-size:0.7rem;">2-3个字</span></label><input type="text" id="newLinkIcon" placeholder="LOF"></div>
+        <div class="admin-about-section"><label>描述</label><input type="text" id="newLinkDesc" placeholder="站点描述"></div>
+        <div class="admin-about-section"><label>链接</label><input type="text" id="newLinkUrl" placeholder="https://..."></div>
+        <button class="admin-btn" onclick="addLink()">添加友链</button>
+      </div>
     </div>
   </div>
 </div>
 
 <div class="app-container">
   <header class="site-header">
-    <h1 class="site-title" id="siteTitle"><span class="star-left" aria-hidden="true">&#10022;</span>黒の猫窝<span class="star-right" aria-hidden="true">&#10022;</span></h1>
-    <p class="site-subtitle">同人小说收藏站</p>
+    <h1 class="site-title" id="siteTitleEl">✦黒の猫窝✦</h1>
+    <p class="site-subtitle" id="siteSubtitleEl">同人小说收藏站</p>
     <div class="site-divider"></div>
   </header>
 
@@ -1402,19 +1443,12 @@ body {
     </div>
     <div class="search-results" id="searchResults"></div>
 
-    <div class="hero-section">
+    <div class="hero-section" id="heroSection">
       <img class="hero-avatar" src="avatar.png" alt="头像">
       <div class="hero-content">
-        <h2>欢迎来到黒の猫窝</h2>
-        <p>这里是我收藏的同人小说集，主要收录 VOCALOID、偶像梦幻祭等作品的优秀创作。每一篇都是精心挑选，希望能给你带来美好的阅读体验。</p>
-        <div class="hero-tags">
-          <span class="hero-tag">VOCALOID</span>
-          <span class="hero-tag">偶像梦幻祭</span>
-          <span class="hero-tag">ES</span>
-          <span class="hero-tag">同人小说</span>
-          <span class="hero-tag">狮心</span>
-          <span class="hero-tag">零凛</span>
-        </div>
+        <h2 id="heroTitle"></h2>
+        <p id="heroDesc"></p>
+        <div class="hero-tags" id="heroTags"></div>
       </div>
     </div>
 
@@ -1509,9 +1543,9 @@ body {
   <!-- ===== GUESTBOOK PAGE ===== -->
   <section class="page" id="page-guestbook" aria-label="留言板">
     <div class="section-title">留言板</div>
-    <div class="guestbook-intro">
-      <p>欢迎留下你的想法和建议！评论通过 GitHub Discussions 存储，所有人都能看到。</p>
-      <p style="font-size:0.8rem;color:var(--text-muted);margin-top:8px;">首次留言需要登录 GitHub 账号授权。</p>
+    <div class="guestbook-intro" id="guestbookIntroArea">
+      <p id="gbIntroText"></p>
+      <p id="gbHintText" style="font-size:0.8rem;color:var(--text-muted);margin-top:8px;"></p>
     </div>
     <div class="giscus-wrapper">
       <script src="https://giscus.app/client.js"
@@ -1547,7 +1581,7 @@ body {
   </main>
 
   <footer class="site-footer">
-    <p>黒の猫窝 · 收藏每一个故事</p>
+    <p id="footerText">黒の猫窝 · 收藏每一个故事</p>
     <p class="footer-stars" aria-hidden="true">&#10022; &#10022; &#10022;</p>
   </footer>
 </div>
@@ -1603,19 +1637,19 @@ let categories = safeJSONParse('categories', [
   }
 ]);
 
-const timelineData = [
+let timelineData = safeJSONParse('timelineData', [
   { date: '2026-06-10', title: '网站上线', desc: '黒の猫窝正式对外开放，收录第一批小说。' },
   { date: '2026-06-08', title: '新增初音未来分类', desc: '收录了两篇 VOCALOID 相关创作。' },
   { date: '2026-06-05', title: '新增狮心分类', desc: '开始收录濑名泉×月永雷欧相关作品。' },
   { date: '2026-06-01', title: '建站构想', desc: '决定建立一个个人同人小说收藏站。' }
-];
+]);
 
-const linksData = [
+let linksData = safeJSONParse('linksData', [
   { icon: '<span aria-hidden="true">LOF</span>', title: 'LOFTER', desc: '我的 LOFTER 主页', url: '#' },
   { icon: '<span aria-hidden="true">AO3</span>', title: 'AO3', desc: 'Archive of Our Own', url: 'https://archiveofourown.org/' },
   { icon: '<span aria-hidden="true">晋</span>', title: '晋江', desc: '晋江文学城', url: 'https://www.jjwxc.net/' },
   { icon: '<span aria-hidden="true">Wiki</span>', title: 'Vocaloid Wiki', desc: 'Vocaloid 中文维基', url: 'https://w.atwiki.jp/vocaloid/' }
-];
+]);
 
 // ===== STATE =====
 let currentCategory = null;
@@ -1635,6 +1669,25 @@ function announceToScreenReader(message) {
   }
 }
 
+function showToast(message, type) {
+  type = type || 'success';
+  const existing = document.querySelector('.toast-notification');
+  if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.className = 'toast-notification toast-' + type;
+  toast.textContent = message;
+  toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:12px 24px;z-index:99999;font-size:0.85rem;font-family:var(--font-serif);border-radius:0px;animation:staggerFadeIn 0.3s ease both;pointer-events:none;';
+  if (type === 'success') {
+    toast.style.cssText += 'background:var(--accent-primary);color:white;border:1px solid var(--accent-primary);';
+  } else if (type === 'error') {
+    toast.style.cssText += 'background:var(--accent-rose);color:white;border:1px solid var(--accent-rose);';
+  } else {
+    toast.style.cssText += 'background:var(--bg-card);color:var(--text-primary);border:1px solid var(--border-light);';
+  }
+  document.body.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 2500);
+}
+
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
   initLoadingText();
@@ -1652,6 +1705,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     githubSyncStatus = 'synced';
   }
 
+  renderHomePage();
+  renderGuestbookIntro();
   renderStats();
   renderCategories();
   renderRecentUpdates();
@@ -1684,7 +1739,16 @@ function initLoadingText() {
     container.appendChild(span);
   });
 }
-function saveData() { safeJSONStringify('categories', categories); syncToGitHub(); }
+function saveAllData() {
+  safeJSONStringify('categories', categories);
+  safeJSONStringify('aboutData', aboutData);
+  safeJSONStringify('siteConfig', siteConfig);
+  safeJSONStringify('timelineData', timelineData);
+  safeJSONStringify('linksData', linksData);
+  syncToGitHub();
+}
+
+function saveData() { saveAllData(); }
 
 // ===== GITHUB DATA SYNC =====
 const GITHUB_CONFIG = {
@@ -1723,20 +1787,23 @@ let githubSha = null; // SHA of the current data.json on GitHub (for updates)
 
 function buildSiteData() {
   return {
-    _version: 1,
+    _version: 2,
     _updatedAt: new Date().toISOString(),
     categories: categories,
-    aboutData: aboutData
+    aboutData: aboutData,
+    siteConfig: siteConfig,
+    timelineData: timelineData,
+    linksData: linksData
   };
 }
 
 function loadSiteData(data) {
   if (!data || !data.categories) return false;
   categories = data.categories;
-  if (data.aboutData) {
-    aboutData = data.aboutData;
-    safeJSONStringify('aboutData', aboutData);
-  }
+  if (data.aboutData) { aboutData = data.aboutData; safeJSONStringify('aboutData', aboutData); }
+  if (data.siteConfig) { siteConfig = data.siteConfig; safeJSONStringify('siteConfig', siteConfig); }
+  if (data.timelineData) { timelineData = data.timelineData; safeJSONStringify('timelineData', timelineData); }
+  if (data.linksData) { linksData = data.linksData; safeJSONStringify('linksData', linksData); }
   safeJSONStringify('categories', categories);
   return true;
 }
@@ -1833,10 +1900,13 @@ function updateSyncUI() {
 // ===== DATA IMPORT / EXPORT =====
 function exportData() {
   const data = {
-    _version: 1,
+    _version: 2,
     _exportedAt: new Date().toISOString(),
     categories: categories,
     aboutData: aboutData,
+    siteConfig: siteConfig,
+    timelineData: timelineData,
+    linksData: linksData,
     readProgress: readProgress,
     theme: localStorage.getItem('theme') || ''
   };
@@ -1864,6 +1934,9 @@ function importData(event) {
       if (!confirm('导入将覆盖当前所有数据（小说、关于页等），确定继续吗？')) return;
       categories = data.categories;
       if (data.aboutData) { aboutData = data.aboutData; safeJSONStringify('aboutData', aboutData); }
+      if (data.siteConfig) { siteConfig = data.siteConfig; safeJSONStringify('siteConfig', siteConfig); }
+      if (data.timelineData) { timelineData = data.timelineData; safeJSONStringify('timelineData', timelineData); }
+      if (data.linksData) { linksData = data.linksData; safeJSONStringify('linksData', linksData); }
       if (data.readProgress) { readProgress = data.readProgress; safeJSONStringify('readProgress', readProgress); }
       if (data.theme) { localStorage.setItem('theme', data.theme); }
       saveData();
@@ -2298,6 +2371,7 @@ function addNovel() {
   renderCategories();
   renderRecentUpdates();
   announceToScreenReader('小说添加成功');
+  showToast('小说添加成功');
 }
 
 function deleteNovel(catId, novelId) {
@@ -2310,6 +2384,7 @@ function deleteNovel(catId, novelId) {
   renderCategories();
   renderRecentUpdates();
   announceToScreenReader('小说已删除');
+  showToast('小说已删除');
 }
 
 function clearAdminForm() {
@@ -2318,6 +2393,35 @@ function clearAdminForm() {
   document.getElementById('adminTags').value = '';
   document.getElementById('adminWords').value = '';
   document.getElementById('adminContent').value = '';
+}
+
+function renderHomePage() {
+  // Site title
+  const titleEl = document.getElementById('siteTitleEl');
+  if (titleEl) titleEl.innerHTML = '✦' + escapeHTML(siteConfig.siteName) + '✦';
+  const subtitleEl = document.getElementById('siteSubtitleEl');
+  if (subtitleEl) subtitleEl.textContent = siteConfig.siteSubtitle;
+  // Hero
+  const heroTitle = document.getElementById('heroTitle');
+  if (heroTitle) heroTitle.textContent = siteConfig.heroTitle;
+  const heroDesc = document.getElementById('heroDesc');
+  if (heroDesc) heroDesc.textContent = siteConfig.heroDesc;
+  const heroTags = document.getElementById('heroTags');
+  if (heroTags) {
+    heroTags.innerHTML = (siteConfig.heroTags || []).map(t => '<span class="hero-tag">' + escapeHTML(t) + '</span>').join('');
+  }
+  // Footer
+  const footerEl = document.getElementById('footerText');
+  if (footerEl) footerEl.textContent = siteConfig.footerText;
+  // Page title
+  document.title = siteConfig.siteName + ' - ' + siteConfig.siteSubtitle;
+}
+
+function renderGuestbookIntro() {
+  const introEl = document.getElementById('gbIntroText');
+  if (introEl) introEl.textContent = siteConfig.guestbookIntro || '';
+  const hintEl = document.getElementById('gbHintText');
+  if (hintEl) hintEl.textContent = siteConfig.guestbookHint || '';
 }
 
 // ===== STATS =====
@@ -2810,6 +2914,19 @@ const defaultAboutData = {
 
 let aboutData = safeJSONParse('aboutData', JSON.parse(JSON.stringify(defaultAboutData)));
 
+const defaultSiteConfig = {
+  siteName: '黒の猫窝',
+  siteSubtitle: '同人小说收藏站',
+  heroTitle: '欢迎来到黒の猫窝',
+  heroDesc: '这里是我收藏的同人小说集，主要收录 VOCALOID、偶像梦幻祭等作品的优秀创作。每一篇都是精心挑选，希望能给你带来美好的阅读体验。',
+  heroTags: ['VOCALOID', '偶像梦幻祭', 'ES', '同人小说', '狮心', '零凛'],
+  footerText: '黒の猫窝 · 收藏每一个故事',
+  guestbookIntro: '欢迎留下你的想法和建议！评论通过 GitHub Discussions 存储，所有人都能看到。',
+  guestbookHint: '首次留言需要登录 GitHub 账号授权。'
+};
+
+let siteConfig = safeJSONParse('siteConfig', JSON.parse(JSON.stringify(defaultSiteConfig)));
+
 function renderAboutPage() {
   const d = aboutData;
   const socialItems = [
@@ -2871,9 +2988,19 @@ function switchAdminTab(btn, tabName) {
   document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.admin-tab-content').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
-  if (tabName === 'add') document.getElementById('adminTabAdd').classList.add('active');
-  else if (tabName === 'edit') { document.getElementById('adminTabEdit').classList.add('active'); renderAdminEditNovelList(); }
-  else if (tabName === 'about') { document.getElementById('adminTabAbout').classList.add('active'); loadAboutForm(); }
+  const tabMap = {
+    'site': ['adminTabSite', () => loadSiteConfigForm()],
+    'categories': ['adminTabCategories', () => renderAdminCategoryList()],
+    'add': ['adminTabAdd', () => updateCategorySelect()],
+    'edit': ['adminTabEdit', () => renderAdminEditNovelList()],
+    'about': ['adminTabAbout', () => loadAboutForm()],
+    'timeline': ['adminTabTimeline', () => renderAdminTimelineList()],
+    'links': ['adminTabLinks', () => renderAdminLinksList()]
+  };
+  if (tabMap[tabName]) {
+    document.getElementById(tabMap[tabName][0]).classList.add('active');
+    tabMap[tabName][1]();
+  }
 }
 
 // ===== ADMIN EDIT NOVEL =====
@@ -2932,6 +3059,7 @@ function saveEditNovel(catId, novelId) {
   renderCategories();
   renderRecentUpdates();
   announceToScreenReader('小说保存成功');
+  showToast('小说保存成功');
 }
 
 // ===== ADMIN EDIT ABOUT =====
@@ -2995,6 +3123,191 @@ function saveAboutData() {
   syncToGitHub();
   renderAboutPage();
   announceToScreenReader('关于页已保存');
+  showToast('关于页已保存');
+}
+
+// ===== ADMIN: Site Config =====
+function loadSiteConfigForm() {
+  document.getElementById('cfgSiteName').value = siteConfig.siteName || '';
+  document.getElementById('cfgSiteSubtitle').value = siteConfig.siteSubtitle || '';
+  document.getElementById('cfgHeroTitle').value = siteConfig.heroTitle || '';
+  document.getElementById('cfgHeroDesc').value = siteConfig.heroDesc || '';
+  document.getElementById('cfgHeroTags').value = (siteConfig.heroTags || []).join(',');
+  document.getElementById('cfgFooterText').value = siteConfig.footerText || '';
+  document.getElementById('cfgGbIntro').value = siteConfig.guestbookIntro || '';
+  document.getElementById('cfgGbHint').value = siteConfig.guestbookHint || '';
+}
+
+function saveSiteConfig() {
+  siteConfig.siteName = document.getElementById('cfgSiteName').value.trim() || defaultSiteConfig.siteName;
+  siteConfig.siteSubtitle = document.getElementById('cfgSiteSubtitle').value.trim() || defaultSiteConfig.siteSubtitle;
+  siteConfig.heroTitle = document.getElementById('cfgHeroTitle').value.trim() || defaultSiteConfig.heroTitle;
+  siteConfig.heroDesc = document.getElementById('cfgHeroDesc').value.trim() || defaultSiteConfig.heroDesc;
+  siteConfig.heroTags = document.getElementById('cfgHeroTags').value.split(',').map(t => t.trim()).filter(t => t);
+  siteConfig.footerText = document.getElementById('cfgFooterText').value.trim() || defaultSiteConfig.footerText;
+  siteConfig.guestbookIntro = document.getElementById('cfgGbIntro').value.trim() || defaultSiteConfig.guestbookIntro;
+  siteConfig.guestbookHint = document.getElementById('cfgGbHint').value.trim() || defaultSiteConfig.guestbookHint;
+  safeJSONStringify('siteConfig', siteConfig);
+  saveData();
+  renderHomePage();
+  renderGuestbookIntro();
+  showToast('站点设置已保存');
+}
+
+// ===== ADMIN: Category Management =====
+function renderAdminCategoryList() {
+  const list = document.getElementById('adminCategoryList');
+  list.innerHTML = '';
+  categories.forEach((cat, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'padding:10px 0;border-bottom:1px solid var(--border-light);';
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <strong>${escapeHTML(cat.name)}</strong>
+          <span style="color:var(--text-muted);font-size:0.8rem;"> (${cat.id}) · ${escapeHTML(cat.desc)} · ${cat.novels.length}篇</span>
+        </div>
+        <button class="admin-small-btn cancel" onclick="deleteCategory('${cat.id}')">删除</button>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+  if (!categories.length) list.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">暂无分类</p>';
+}
+
+function addCategory() {
+  const id = document.getElementById('newCatId').value.trim().replace(/\s+/g, '-').toLowerCase();
+  const name = document.getElementById('newCatName').value.trim();
+  const desc = document.getElementById('newCatDesc').value.trim();
+  const image = document.getElementById('newCatImage').value.trim();
+  if (!id || !name) { showToast('请填写分类 ID 和名称', 'error'); return; }
+  if (categories.find(c => c.id === id)) { showToast('分类 ID 已存在', 'error'); return; }
+  categories.push({ id, name, desc, image: image || id + '.jpg', novels: [] });
+  saveData();
+  renderAdminCategoryList();
+  renderStats();
+  renderCategories();
+  updateCategorySelect();
+  showToast('分类已添加');
+  document.getElementById('newCatId').value = '';
+  document.getElementById('newCatName').value = '';
+  document.getElementById('newCatDesc').value = '';
+  document.getElementById('newCatImage').value = '';
+}
+
+function deleteCategory(catId) {
+  const cat = categories.find(c => c.id === catId);
+  if (!cat) return;
+  if (cat.novels.length > 0 && !confirm(`分类"${cat.name}"下有 ${cat.novels.length} 篇小说，删除后小说也会丢失，确定吗？`)) return;
+  categories = categories.filter(c => c.id !== catId);
+  saveData();
+  renderAdminCategoryList();
+  renderStats();
+  renderCategories();
+  renderRecentUpdates();
+  updateCategorySelect();
+  showToast('分类已删除');
+}
+
+function updateCategorySelect() {
+  const sel = document.getElementById('adminCategory');
+  sel.innerHTML = '';
+  categories.forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat.id;
+    opt.textContent = cat.name;
+    sel.appendChild(opt);
+  });
+}
+
+// ===== ADMIN: Timeline =====
+function renderAdminTimelineList() {
+  const list = document.getElementById('adminTimelineList');
+  list.innerHTML = '';
+  timelineData.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'padding:10px 0;border-bottom:1px solid var(--border-light);';
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <strong>${escapeHTML(item.title)}</strong>
+          <span style="color:var(--text-muted);font-size:0.8rem;"> ${item.date} - ${escapeHTML(item.desc)}</span>
+        </div>
+        <button class="admin-small-btn cancel" onclick="deleteTimelineEvent(${i})">删除</button>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+  if (!timelineData.length) list.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">暂无事件</p>';
+}
+
+function addTimelineEvent() {
+  const date = document.getElementById('newTlDate').value;
+  const title = document.getElementById('newTlTitle').value.trim();
+  const desc = document.getElementById('newTlDesc').value.trim();
+  if (!date || !title) { showToast('请填写日期和标题', 'error'); return; }
+  timelineData.unshift({ date, title, desc });
+  saveData();
+  renderAdminTimelineList();
+  renderTimeline();
+  showToast('事件已添加');
+  document.getElementById('newTlDate').value = '';
+  document.getElementById('newTlTitle').value = '';
+  document.getElementById('newTlDesc').value = '';
+}
+
+function deleteTimelineEvent(index) {
+  timelineData.splice(index, 1);
+  saveData();
+  renderAdminTimelineList();
+  renderTimeline();
+  showToast('事件已删除');
+}
+
+// ===== ADMIN: Links =====
+function renderAdminLinksList() {
+  const list = document.getElementById('adminLinksList');
+  list.innerHTML = '';
+  linksData.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'padding:10px 0;border-bottom:1px solid var(--border-light);';
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <strong>${escapeHTML(item.title)}</strong>
+          <span style="color:var(--text-muted);font-size:0.8rem;"> ${escapeHTML(item.desc)}</span>
+        </div>
+        <button class="admin-small-btn cancel" onclick="deleteLink(${i})">删除</button>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+  if (!linksData.length) list.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">暂无友链</p>';
+}
+
+function addLink() {
+  const title = document.getElementById('newLinkTitle').value.trim();
+  const icon = document.getElementById('newLinkIcon').value.trim();
+  const desc = document.getElementById('newLinkDesc').value.trim();
+  const url = document.getElementById('newLinkUrl').value.trim();
+  if (!title || !url) { showToast('请填写名称和链接', 'error'); return; }
+  linksData.push({ icon: '<span aria-hidden="true">' + escapeHTML(icon) + '</span>', title, desc, url });
+  saveData();
+  renderAdminLinksList();
+  renderLinks();
+  showToast('友链已添加');
+  document.getElementById('newLinkTitle').value = '';
+  document.getElementById('newLinkIcon').value = '';
+  document.getElementById('newLinkDesc').value = '';
+  document.getElementById('newLinkUrl').value = '';
+}
+
+function deleteLink(index) {
+  linksData.splice(index, 1);
+  saveData();
+  renderAdminLinksList();
+  renderLinks();
+  showToast('友链已删除');
 }
 
 // ===== ERROR BOUNDARY =====
