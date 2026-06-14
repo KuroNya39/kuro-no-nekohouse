@@ -1018,6 +1018,130 @@ body {
   border-left: 3px solid var(--accent-primary);
   padding-left: 12px;
 }
+
+/* 章节导航栏 */
+.chapter-nav {
+  margin-bottom: 20px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+.chapter-nav-btn {
+  padding: 6px 16px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-family: var(--font-serif);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: var(--transition);
+  border-radius: 0px;
+}
+.chapter-nav-btn:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+.chapter-nav-btn.active {
+  background: var(--accent-primary);
+  color: white;
+  border-color: var(--accent-primary);
+}
+
+/* 章节管理区域（后台） */
+.chapter-manager {
+  margin-bottom: 16px;
+  padding: 12px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-secondary);
+}
+.chapter-manager-title {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.chapter-item {
+  margin-bottom: 12px;
+  padding: 10px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-card);
+  position: relative;
+}
+.chapter-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.chapter-item-header span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.chapter-item input[type="text"] {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-serif);
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  border-radius: 0px;
+}
+.chapter-item textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-serif);
+  font-size: 0.85rem;
+  resize: vertical;
+  border-radius: 0px;
+}
+.chapter-item input:focus, .chapter-item textarea:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+.chapter-add-btn {
+  padding: 6px 14px;
+  border: 1px dashed var(--border-hover);
+  background: transparent;
+  color: var(--accent-primary);
+  font-family: var(--font-serif);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: var(--transition);
+  border-radius: 0px;
+  width: 100%;
+  text-align: center;
+}
+.chapter-add-btn:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-card);
+}
+.chapter-del-btn {
+  padding: 2px 8px;
+  border: 1px solid var(--text-muted);
+  background: none;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  cursor: pointer;
+  font-family: var(--font-serif);
+  transition: var(--transition);
+  border-radius: 0px;
+}
+.chapter-del-btn:hover {
+  border-color: var(--accent-blood);
+  color: var(--accent-blood);
+}
+
 .reader-progress { margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-light); }
 .progress-bar { height: 3px; background: var(--border-light); position: relative; }
 .progress-fill { height: 100%; background: var(--accent-primary); transition: width 0.3s; }
@@ -1231,65 +1355,77 @@ body {
 }
 
 /* Loading */
-.loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.6s ease, visibility 0.6s ease; }
+.loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-primary); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.8s ease, visibility 0.8s ease; }
 .loading-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-.loading-text { font-family: var(--font-display); font-size: 2.2rem; color: var(--text-primary); letter-spacing: 12px; position: relative; }
 
-/* Loading animation with multiple effects */
+/* Loading cat paw animation */
+.loading-paw-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 30px;
+}
+.loading-paw {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2.4rem;
+  color: var(--accent-primary);
+  animation: pawPulse 1.6s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px var(--accent-miku-glow));
+}
+.loading-paw-ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px; height: 60px;
+  border: 1.5px solid var(--accent-primary);
+  border-radius: 50%;
+  opacity: 0;
+  animation: pawRingExpand 1.6s ease-out infinite;
+}
+.loading-paw-ring:nth-child(2) { animation-delay: 0.5s; }
+.loading-paw-ring:nth-child(3) { animation-delay: 1.0s; }
+
+@keyframes pawPulse {
+  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(0.95); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+}
+@keyframes pawRingExpand {
+  0% { width: 30px; height: 30px; opacity: 0.6; border-width: 2px; }
+  100% { width: 80px; height: 80px; opacity: 0; border-width: 0.5px; }
+}
+
+/* Loading text */
+.loading-text { font-family: var(--font-display); font-size: 1.6rem; color: var(--text-primary); letter-spacing: 8px; position: relative; }
 .loading-text .loading-char {
   display: inline-block;
-  animation: loadingBounce 1.4s ease-in-out infinite;
   opacity: 0;
-  transform: translateY(20px);
+  animation: charFadeIn 0.6s ease forwards;
+}
+@keyframes charFadeIn {
+  0% { opacity: 0; transform: translateY(8px); filter: blur(4px); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
 
-@keyframes loadingBounce {
-  0%, 100% { opacity: 0.2; transform: translateY(20px) scale(0.8); }
-  50% { opacity: 1; transform: translateY(0) scale(1); }
+/* Loading progress bar */
+.loading-bar {
+  width: 120px; height: 2px;
+  background: var(--border-light);
+  border-radius: 1px;
+  margin-top: 24px;
+  overflow: hidden;
 }
-
-/* Loading decorative elements */
-.loading-overlay::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 200px;
-  height: 200px;
-  margin: -100px 0 0 -100px;
-  border: 1px solid var(--border-light);
-  animation: loadingRotate 8s linear infinite;
+.loading-bar-inner {
+  width: 0%; height: 100%;
+  background: var(--accent-primary);
+  border-radius: 1px;
+  animation: loadingBarFill 1.8s ease-in-out infinite;
 }
-
-.loading-overlay::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 160px;
-  height: 160px;
-  margin: -80px 0 0 -80px;
-  border: 1px solid var(--accent-primary);
-  opacity: 0.3;
-  animation: loadingRotate 6s linear infinite reverse;
-}
-
-@keyframes loadingRotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-/* Loading stars */
-.loading-star {
-  position: absolute;
-  color: var(--accent-primary);
-  font-size: 0.8rem;
-  animation: loadingStarFloat 2s ease-in-out infinite;
-}
-
-@keyframes loadingStarFloat {
-  0%, 100% { opacity: 0.2; transform: translateY(0) rotate(0deg); }
-  50% { opacity: 0.8; transform: translateY(-10px) rotate(180deg); }
+@keyframes loadingBarFill {
+  0% { width: 0%; margin-left: 0; }
+  50% { width: 60%; margin-left: 20%; }
+  100% { width: 0%; margin-left: 100%; }
 }
 
 /* Card hover glow - enhanced */
@@ -1405,13 +1541,14 @@ body {
 <body>
 <a href="#main-content" class="skip-link">跳转到主内容</a>
 <div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-paw-container">
+    <span class="loading-paw">🐾</span>
+    <span class="loading-paw-ring"></span>
+    <span class="loading-paw-ring"></span>
+    <span class="loading-paw-ring"></span>
+  </div>
   <div class="loading-text" id="loadingText"></div>
-  <span class="loading-star" style="top:30%;left:20%;animation-delay:0s;">&#10022;</span>
-  <span class="loading-star" style="top:60%;left:75%;animation-delay:0.3s;">&#10022;</span>
-  <span class="loading-star" style="top:25%;left:70%;animation-delay:0.6s;">&#10023;</span>
-  <span class="loading-star" style="top:70%;left:25%;animation-delay:0.9s;">&#10023;</span>
-  <span class="loading-star" style="top:40%;left:85%;animation-delay:1.2s;">&#10022;</span>
-  <span class="loading-star" style="top:80%;left:60%;animation-delay:1.5s;">&#10023;</span>
+  <div class="loading-bar"><div class="loading-bar-inner"></div></div>
 </div>
 <div class="scroll-progress" id="scrollProgress"></div>
 <div class="top-toolbar">
@@ -1442,9 +1579,9 @@ body {
 
 <!-- Admin Drawer -->
 <div class="admin-drawer-overlay" id="adminOverlay" onclick="closeAdmin()"></div>
-<div class="admin-drawer" id="adminDrawer" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
+<div class="admin-drawer" id="adminDrawer" role="dialog" aria-modal="true" aria-labelledby="adminDrawerTitle">
   <div class="admin-drawer-header">
-    <h3 id="adminTitle"><span class="admin-star" aria-hidden="true"></span> 管理面板</h3>
+    <h3 id="adminDrawerTitle"><span class="admin-star" aria-hidden="true"></span> 管理面板</h3>
     <button class="admin-drawer-close" onclick="closeAdmin()" aria-label="关闭管理面板"><span class="close-x" aria-hidden="true"></span></button>
   </div>
   <div class="admin-drawer-body">
@@ -1559,15 +1696,15 @@ body {
         <label>字数 <span id="wordCountHint" style="color:var(--accent-primary);font-size:0.7rem;">已自动计算：0 字</span></label>
         <input type="number" id="adminWords" placeholder="留空则自动计算" readonly style="background:var(--bg-secondary);color:var(--text-muted);">
       </div>
+      <!-- 章节管理区域 -->
       <div class="admin-form-row">
-        <label>小说正文 <span style="color:var(--accent-rose);font-size:0.7rem;">*必填 — 直接粘贴全文内容</span></label>
-        <textarea id="adminContent" placeholder="在这里粘贴小说的完整正文内容..." oninput="updateWordCount()"></textarea>
-        <div style="margin-top:8px;display:flex;gap:8px;align-items:center;">
-          <label class="admin-btn small secondary" style="cursor:pointer;margin:0;">
-            上传文本文件
-            <input type="file" id="contentFileUpload" accept=".txt,.text,.md" style="display:none" onchange="handleContentFileUpload(event)">
-          </label>
-          <span style="font-size:0.7rem;color:var(--text-muted);">支持 txt/md 文本文件</span>
+        <label>章节管理 <span style="color:var(--text-muted);font-size:0.7rem;">管理小说的章节内容</span></label>
+        <div class="chapter-manager" id="addChapterManager">
+          <div class="chapter-manager-title">
+            <span>章节列表</span>
+            <button class="chapter-add-btn" style="width:auto;" onclick="addChapterField('add')">+ 添加章节</button>
+          </div>
+          <div id="addChapterList"></div>
         </div>
       </div>
       <button class="admin-btn" onclick="addNovel()">添加小说</button>
@@ -2647,29 +2784,86 @@ function closeAdmin() {
 }
 
 function updateWordCount() {
-  const content = document.getElementById('adminContent').value;
-  const count = content.replace(/\s/g, '').length;
+  // 从所有章节文本框中收集内容并计算总字数
+  const container = document.getElementById('addChapterList');
+  if (!container) return;
+  const textareas = container.querySelectorAll('.chapter-item textarea');
+  let totalContent = '';
+  textareas.forEach(ta => { totalContent += ta.value; });
+  const count = totalContent.replace(/\s/g, '').length;
   document.getElementById('adminWords').value = count;
   document.getElementById('wordCountHint').textContent = '已自动计算：' + count + ' 字';
 }
 
-function handleContentFileUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const ext = file.name.split('.').pop().toLowerCase();
-  const textarea = document.getElementById('adminContent');
-  if (['txt', 'text', 'md'].includes(ext)) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      textarea.value = e.target.result;
-      updateWordCount();
-      showToast('文件内容已导入');
-    };
-    reader.readAsText(file, 'UTF-8');
-  } else {
-    showToast('仅支持 txt/md 文本文件', 'error');
+// ===== 章节管理辅助函数 =====
+
+// 添加小说表单中添加章节字段
+function addChapterField(mode) {
+  const listId = mode === 'add' ? 'addChapterList' : null;
+  const container = document.getElementById(listId);
+  if (!container) return;
+  const count = container.querySelectorAll('.chapter-item').length;
+  const div = document.createElement('div');
+  div.className = 'chapter-item';
+  div.innerHTML = `
+    <div class="chapter-item-header">
+      <span>章节 ${count + 1}</span>
+      <button class="chapter-del-btn" onclick="removeChapterField(this, '${mode}')" ${count < 1 ? 'disabled style="opacity:0.3;cursor:not-allowed;"' : ''}>删除</button>
+    </div>
+    <input type="text" placeholder="章节标题，如：第一章 开端" oninput="updateWordCount()">
+    <textarea placeholder="在这里粘贴章节正文内容..." oninput="updateWordCount()"></textarea>
+  `;
+  container.appendChild(div);
+  updateWordCount();
+}
+
+// 添加小说表单中删除章节字段
+function removeChapterField(btn, mode) {
+  const container = btn.closest('#addChapterList') || btn.closest('.chapter-manager').querySelector('.chapter-item')?.parentElement;
+  const manager = btn.closest('.chapter-manager');
+  const items = manager.querySelectorAll('.chapter-item');
+  if (items.length <= 1) return; // 至少保留一个章节
+  btn.closest('.chapter-item').remove();
+  // 重新编号
+  manager.querySelectorAll('.chapter-item').forEach((item, i) => {
+    item.querySelector('.chapter-item-header span').textContent = '章节 ' + (i + 1);
+  });
+  updateWordCount();
+}
+
+// 编辑小说表单中添加章节
+function addEditChapter(novelId) {
+  const container = document.getElementById('editChapterList-' + novelId);
+  if (!container) return;
+  const count = container.querySelectorAll('.chapter-item').length;
+  const div = document.createElement('div');
+  div.className = 'chapter-item';
+  div.innerHTML = `
+    <div class="chapter-item-header">
+      <span>章节 ${count + 1}</span>
+      <button class="chapter-del-btn" onclick="removeEditChapter(this, '${novelId}')">删除</button>
+    </div>
+    <input type="text" class="edit-chapter-title" value="" placeholder="章节标题">
+    <textarea class="edit-chapter-content" placeholder="章节内容..."></textarea>
+  `;
+  container.appendChild(div);
+}
+
+// 编辑小说表单中删除章节
+function removeEditChapter(btn, novelId) {
+  const container = document.getElementById('editChapterList-' + novelId);
+  const items = container.querySelectorAll('.chapter-item');
+  if (items.length <= 1) return; // 至少保留一个章节
+  btn.closest('.chapter-item').remove();
+  // 重新编号
+  container.querySelectorAll('.chapter-item').forEach((item, i) => {
+    item.querySelector('.chapter-item-header span').textContent = '章节 ' + (i + 1);
+  });
+  // 如果只剩一个，禁用删除按钮
+  if (container.querySelectorAll('.chapter-item').length <= 1) {
+    const delBtn = container.querySelector('.chapter-del-btn');
+    if (delBtn) { delBtn.disabled = true; delBtn.style.opacity = '0.3'; delBtn.style.cursor = 'not-allowed'; }
   }
-  event.target.value = '';
 }
 
 function addNovel() {
@@ -2677,16 +2871,28 @@ function addNovel() {
   const author = document.getElementById('adminAuthor').value.trim();
   const catId = document.getElementById('adminCategory').value;
   const tags = document.getElementById('adminTags').value.split(',').map(t => t.trim()).filter(t => t);
-  const content = document.getElementById('adminContent').value.trim();
-  const words = content.replace(/\s/g, '').length;
 
-  if (!title || !author || !content) { alert('请填写完整信息'); return; }
+  // 从章节表单收集数据
+  const chapterItems = document.querySelectorAll('#addChapterList .chapter-item');
+  const chapters = [];
+  let allContent = '';
+  chapterItems.forEach(item => {
+    const chTitle = item.querySelector('input[type="text"]').value.trim() || '未命名章节';
+    const chContent = item.querySelector('textarea').value.trim();
+    chapters.push({ title: chTitle, content: chContent });
+    allContent += chContent;
+  });
+
+  if (!title || !author || chapters.length === 0 || !chapters.some(c => c.content)) { alert('请填写完整信息，至少一个章节需要有内容'); return; }
+
+  const words = allContent.replace(/\s/g, '').length;
 
   const cat = categories.find(c => c.id === catId);
   const newNovel = {
     id: catId + '-' + Date.now(),
     title, author, date: new Date().toISOString().slice(0, 10),
-    wordCount: words, tags, content
+    wordCount: words, tags, chapters,
+    content: allContent // 向后兼容：保留 content 字段
   };
   cat.novels.push(newNovel);
   saveData();
@@ -2717,7 +2923,11 @@ function clearAdminForm() {
   document.getElementById('adminAuthor').value = '';
   document.getElementById('adminTags').value = '';
   document.getElementById('adminWords').value = '';
-  document.getElementById('adminContent').value = '';
+  document.getElementById('wordCountHint').textContent = '已自动计算：0 字';
+  // 重置章节列表为单个空章节
+  const chapterList = document.getElementById('addChapterList');
+  chapterList.innerHTML = '';
+  addChapterField('add');
 }
 
 function renderHomePage() {
@@ -3086,7 +3296,9 @@ function renderNovelList() {
 }
 
 // ===== READER =====
-function showNovel(index) {
+let currentChapterIndex = 0; // 当前章节索引
+
+function showNovel(index, chapterIdx) {
   currentNovelIndex = index;
   const novel = currentCategory.novels[index];
 
@@ -3100,9 +3312,49 @@ function showNovel(index) {
   document.getElementById('readerMeta').textContent = `${novel.date} · ${novel.wordCount} 字 · 约 ${readTime} 分钟 · ${novel.tags.join(' / ')}`;
   document.getElementById('readerAuthor').textContent = `作者：${novel.author}`;
 
-  const paragraphs = novel.content.split('\n\n').filter(p => p.trim());
+  // 处理章节：向后兼容没有 chapters 字段的旧数据
+  let chapters = [];
+  if (novel.chapters && novel.chapters.length > 0) {
+    chapters = novel.chapters;
+  } else {
+    chapters = [{ title: '全文', content: novel.content || '' }];
+  }
+
+  // 确定当前章节索引
+  if (typeof chapterIdx === 'number' && chapterIdx >= 0 && chapterIdx < chapters.length) {
+    currentChapterIndex = chapterIdx;
+  } else {
+    currentChapterIndex = 0;
+  }
+
+  const currentChapter = chapters[currentChapterIndex];
+
+  // 渲染章节导航（仅多章节时显示）
+  const settingsPanel = document.querySelector('.reader-settings');
   const contentDiv = document.getElementById('readerContent');
+
+  // 移除旧的章节导航
+  const oldNav = document.getElementById('chapterNav');
+  if (oldNav) oldNav.remove();
+
+  if (chapters.length > 1) {
+    const navDiv = document.createElement('div');
+    navDiv.className = 'chapter-nav';
+    navDiv.id = 'chapterNav';
+    chapters.forEach((ch, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'chapter-nav-btn' + (i === currentChapterIndex ? ' active' : '');
+      btn.textContent = ch.title;
+      btn.onclick = () => showNovel(index, i);
+      navDiv.appendChild(btn);
+    });
+    // 插入到 settings 面板和 content 之间
+    settingsPanel.parentNode.insertBefore(navDiv, contentDiv);
+  }
+
+  // 渲染当前章节内容
   contentDiv.innerHTML = '';
+  const paragraphs = currentChapter.content.split('\n\n').filter(p => p.trim());
   paragraphs.forEach(p => {
     const para = document.createElement('p');
     para.textContent = p.trim();
@@ -3370,7 +3622,7 @@ function switchAdminTab(btn, tabName) {
   const tabMap = {
     'site': ['adminTabSite', () => loadSiteConfigForm()],
     'categories': ['adminTabCategories', () => renderAdminCategoryList()],
-    'add': ['adminTabAdd', () => updateCategorySelect()],
+    'add': ['adminTabAdd', () => { updateCategorySelect(); if (!document.getElementById('addChapterList').children.length) addChapterField('add'); }],
     'edit': ['adminTabEdit', () => renderAdminEditNovelList()],
     'about': ['adminTabAbout', () => loadAboutForm()],
     'timeline': ['adminTabTimeline', () => renderAdminTimelineList()],
@@ -3388,13 +3640,16 @@ function renderAdminEditNovelList() {
   list.innerHTML = '';
   categories.forEach(cat => {
     cat.novels.forEach(novel => {
+      // 计算章节数量（向后兼容）
+      const chapterCount = novel.chapters ? novel.chapters.length : 1;
+      const chapterText = chapterCount > 1 ? chapterCount + ' 章' : '全文';
       const div = document.createElement('div');
       div.className = 'admin-edit-item';
       div.id = 'edit-' + novel.id;
       div.style.cssText = 'padding:10px 0;border-bottom:1px solid var(--border-light);';
       div.innerHTML = `
         <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div><strong>${escapeHTML(novel.title)}</strong> <span style="color:var(--text-muted);font-size:0.8rem;">${escapeHTML(novel.author)} · ${escapeHTML(cat.name)}</span></div>
+          <div><strong>${escapeHTML(novel.title)}</strong> <span style="color:var(--text-muted);font-size:0.8rem;">${escapeHTML(novel.author)} · ${escapeHTML(cat.name)} · ${chapterText}</span></div>
           <div style="display:flex;gap:6px;">
             <button class="admin-small-btn" onclick="startEditNovel('${cat.id}','${novel.id}')">编辑</button>
             <button class="admin-small-btn cancel" onclick="deleteNovel('${cat.id}','${novel.id}')">删除</button>
@@ -3413,6 +3668,30 @@ function startEditNovel(catId, novelId) {
   const cat = categories.find(c => c.id === catId);
   const novel = cat.novels.find(n => n.id === novelId);
   const el = document.getElementById('edit-' + novelId);
+
+  // 处理章节：向后兼容
+  let chapters = [];
+  if (novel.chapters && novel.chapters.length > 0) {
+    chapters = novel.chapters;
+  } else {
+    chapters = [{ title: '全文', content: novel.content || '' }];
+  }
+
+  // 构建章节编辑区域 HTML
+  let chaptersHTML = '';
+  chapters.forEach((ch, i) => {
+    chaptersHTML += `
+      <div class="chapter-item" data-chapter-idx="${i}">
+        <div class="chapter-item-header">
+          <span>章节 ${i + 1}</span>
+          <button class="chapter-del-btn" onclick="removeEditChapter(this, '${novelId}')" ${chapters.length <= 1 ? 'disabled style="opacity:0.3;cursor:not-allowed;"' : ''}>删除</button>
+        </div>
+        <input type="text" class="edit-chapter-title" value="${escapeHTML(ch.title)}" placeholder="章节标题">
+        <textarea class="edit-chapter-content" placeholder="章节内容...">${escapeHTML(ch.content)}</textarea>
+      </div>
+    `;
+  });
+
   el.innerHTML = `
     <div class="admin-edit-row"><label style="font-size:0.75rem;color:var(--text-muted);width:60px;">标题</label><input type="text" id="editTitle-${novelId}" value="${escapeHTML(novel.title)}"></div>
     <div style="margin-top:8px;">
@@ -3423,7 +3702,15 @@ function startEditNovel(catId, novelId) {
     </div>
     <div class="admin-edit-row"><label style="font-size:0.75rem;color:var(--text-muted);width:60px;">作者</label><input type="text" id="editAuthor-${novelId}" value="${escapeHTML(novel.author)}"></div>
     <div class="admin-edit-row"><label style="font-size:0.75rem;color:var(--text-muted);width:60px;">标签</label><input type="text" id="editTags-${novelId}" value="${escapeHTML(novel.tags.join(', '))}"></div>
-    <div class="admin-edit-row"><label style="font-size:0.75rem;color:var(--text-muted);width:60px;align-self:flex-start;">内容</label><textarea id="editContent-${novelId}">${escapeHTML(novel.content)}</textarea></div>
+    <div style="margin-top:8px;">
+      <div class="chapter-manager-title">
+        <span style="font-size:0.8rem;color:var(--text-muted);">章节管理</span>
+        <button class="chapter-add-btn" style="width:auto;" onclick="addEditChapter('${novelId}')">+ 添加章节</button>
+      </div>
+      <div id="editChapterList-${novelId}">
+        ${chaptersHTML}
+      </div>
+    </div>
     <div style="display:flex;gap:8px;margin-top:8px;">
       <button class="admin-small-btn" onclick="saveEditNovel('${catId}','${novelId}')">保存</button>
       <button class="admin-small-btn cancel" onclick="renderAdminEditNovelList()">取消</button>
@@ -3437,7 +3724,23 @@ function saveEditNovel(catId, novelId) {
   novel.title = document.getElementById('editTitle-' + novelId).value.trim();
   novel.author = document.getElementById('editAuthor-' + novelId).value.trim();
   novel.tags = document.getElementById('editTags-' + novelId).value.split(',').map(t => t.trim()).filter(t => t);
-  novel.content = document.getElementById('editContent-' + novelId).value.trim();
+
+  // 从章节编辑表单收集数据
+  const chapterContainer = document.getElementById('editChapterList-' + novelId);
+  const chapterItems = chapterContainer.querySelectorAll('.chapter-item');
+  const chapters = [];
+  let allContent = '';
+  chapterItems.forEach(item => {
+    const chTitle = item.querySelector('.edit-chapter-title').value.trim() || '未命名章节';
+    const chContent = item.querySelector('.edit-chapter-content').value.trim();
+    chapters.push({ title: chTitle, content: chContent });
+    allContent += chContent;
+  });
+  novel.chapters = chapters;
+  novel.wordCount = allContent.replace(/\s/g, '').length;
+  // 向后兼容：同时保留 content 字段（合并所有章节内容）
+  novel.content = allContent;
+
   // Handle category change
   const newCatId = document.getElementById('editCategory-' + novelId).value;
   if (newCatId !== catId) {
