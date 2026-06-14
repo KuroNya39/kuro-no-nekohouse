@@ -1355,77 +1355,68 @@ body {
 }
 
 /* Loading */
-.loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-primary); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.8s ease, visibility 0.8s ease; }
+.loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-primary); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), visibility 1s cubic-bezier(0.4, 0, 0.2, 1); }
 .loading-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
-/* Loading cat paw animation */
-.loading-paw-container {
-  position: relative;
-  width: 80px;
-  height: 80px;
-  margin-bottom: 30px;
+/* Minimalist loading animation */
+.loading-brand {
+  margin-bottom: 40px;
+  text-align: center;
 }
-.loading-paw {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 2.4rem;
-  color: var(--accent-primary);
-  animation: pawPulse 1.6s ease-in-out infinite;
-  filter: drop-shadow(0 0 8px var(--accent-miku-glow));
-}
-.loading-paw-ring {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 60px; height: 60px;
+.loading-brand-symbol {
+  display: block;
+  width: 32px; height: 32px;
+  margin: 0 auto 20px;
   border: 1.5px solid var(--accent-primary);
-  border-radius: 50%;
-  opacity: 0;
-  animation: pawRingExpand 1.6s ease-out infinite;
+  transform: rotate(45deg);
+  animation: loadingSymbolSpin 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  position: relative;
 }
-.loading-paw-ring:nth-child(2) { animation-delay: 0.5s; }
-.loading-paw-ring:nth-child(3) { animation-delay: 1.0s; }
-
-@keyframes pawPulse {
-  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(0.95); }
-  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+.loading-brand-symbol::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 8px; height: 8px;
+  background: var(--accent-primary);
+  transform: translate(-50%, -50%);
 }
-@keyframes pawRingExpand {
-  0% { width: 30px; height: 30px; opacity: 0.6; border-width: 2px; }
-  100% { width: 80px; height: 80px; opacity: 0; border-width: 0.5px; }
-}
-
-/* Loading text */
-.loading-text { font-family: var(--font-display); font-size: 1.6rem; color: var(--text-primary); letter-spacing: 8px; position: relative; }
-.loading-text .loading-char {
-  display: inline-block;
-  opacity: 0;
-  animation: charFadeIn 0.6s ease forwards;
-}
-@keyframes charFadeIn {
-  0% { opacity: 0; transform: translateY(8px); filter: blur(4px); }
-  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+@keyframes loadingSymbolSpin {
+  0% { transform: rotate(45deg) scale(1); opacity: 0.4; }
+  50% { transform: rotate(225deg) scale(1.1); opacity: 1; }
+  100% { transform: rotate(405deg) scale(1); opacity: 0.4; }
 }
 
-/* Loading progress bar */
-.loading-bar {
-  width: 120px; height: 2px;
+.loading-brand-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  animation: loadingNamePulse 2s ease-in-out infinite;
+}
+@keyframes loadingNamePulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+/* Thin progress line */
+.loading-line {
+  width: 1px; height: 48px;
   background: var(--border-light);
-  border-radius: 1px;
-  margin-top: 24px;
+  position: relative;
   overflow: hidden;
 }
-.loading-bar-inner {
-  width: 0%; height: 100%;
+.loading-line::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: var(--accent-primary);
-  border-radius: 1px;
-  animation: loadingBarFill 1.8s ease-in-out infinite;
+  animation: loadingLineMove 1.5s ease-in-out infinite;
 }
-@keyframes loadingBarFill {
-  0% { width: 0%; margin-left: 0; }
-  50% { width: 60%; margin-left: 20%; }
-  100% { width: 0%; margin-left: 100%; }
+@keyframes loadingLineMove {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
 }
 
 /* Card hover glow - enhanced */
@@ -1541,14 +1532,11 @@ body {
 <body>
 <a href="#main-content" class="skip-link">跳转到主内容</a>
 <div class="loading-overlay" id="loadingOverlay">
-  <div class="loading-paw-container">
-    <span class="loading-paw">🐾</span>
-    <span class="loading-paw-ring"></span>
-    <span class="loading-paw-ring"></span>
-    <span class="loading-paw-ring"></span>
+  <div class="loading-brand">
+    <span class="loading-brand-symbol"></span>
+    <span class="loading-brand-name">Loading</span>
   </div>
-  <div class="loading-text" id="loadingText"></div>
-  <div class="loading-bar"><div class="loading-bar-inner"></div></div>
+  <div class="loading-line"></div>
 </div>
 <div class="scroll-progress" id="scrollProgress"></div>
 <div class="top-toolbar">
@@ -1749,6 +1737,7 @@ body {
         <div class="admin-section-title">社交链接</div>
         <div class="admin-about-section"><label>QQ</label><input type="text" id="aboutLinkQQ"></div>
         <div class="admin-about-section"><label>哔哩哔哩</label><input type="text" id="aboutLinkBili"></div>
+        <div class="admin-about-section"><label>GitHub</label><input type="text" id="aboutLinkGithub"></div>
         <div class="admin-about-section"><label>微博</label><input type="text" id="aboutLinkWeibo"></div>
         <div class="admin-about-section"><label>小红书</label><input type="text" id="aboutLinkXiaohongshu"></div>
         <div class="admin-about-section"><label>X</label><input type="text" id="aboutLinkX"></div>
@@ -2058,7 +2047,6 @@ function showToast(message, type) {
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
-  initLoadingText();
   initTheme();
   initColorScheme();
   initCanvas();
@@ -2097,18 +2085,6 @@ function hideLoading() {
   }, 1800);
 }
 
-// Initialize loading text animation
-function initLoadingText() {
-  const text = '黒の猫窝';
-  const container = document.getElementById('loadingText');
-  text.split('').forEach((char, i) => {
-    const span = document.createElement('span');
-    span.className = 'loading-char';
-    span.textContent = char;
-    span.style.animationDelay = (i * 0.15) + 's';
-    container.appendChild(span);
-  });
-}
 function saveAllData() {
   safeJSONStringify('categories', categories);
   safeJSONStringify('aboutData', aboutData);
@@ -3538,7 +3514,7 @@ const defaultAboutData = {
   ],
   other: '电子琴 / MMD / 手帐 / 爵士乐 / 普罗米亚 / 创作BL / 樱新 / 梅露可物语 / 男子高校生 / はじめての / 玉桂狗 / 文具 / 少女歌剧',
   links: {
-    qq: '#', bili: '#', weibo: '#', xiaohongshu: '#', x: '#'
+    qq: '#', bili: '#', github: '#', weibo: '#', xiaohongshu: '#', x: '#'
   }
 };
 
@@ -3561,8 +3537,9 @@ let siteConfig = safeJSONParse('siteConfig', JSON.parse(JSON.stringify(defaultSi
 function renderAboutPage() {
   const d = aboutData;
   const socialItems = [
-    { icon: '<img src="https://qzone.qq.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'QQ空间', url: d.links.qq },
     { icon: '<img src="https://www.bilibili.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '哔哩哔哩', url: d.links.bili },
+    { icon: '<img src="github.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'GitHub', url: d.links.github },
+    { icon: '<img src="https://qzone.qq.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'QQ空间', url: d.links.qq },
     { icon: '<img src="https://weibo.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '微博', url: d.links.weibo },
     { icon: '<img src="https://www.xiaohongshu.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '小红书', url: d.links.xiaohongshu },
     { icon: '<img src="https://abs.twimg.com/favicons/twitter.3.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'X', url: d.links.x }
@@ -3791,6 +3768,7 @@ function loadAboutForm() {
   document.getElementById('aboutOther').value = aboutData.other;
   document.getElementById('aboutLinkQQ').value = aboutData.links.qq;
   document.getElementById('aboutLinkBili').value = aboutData.links.bili;
+  document.getElementById('aboutLinkGithub').value = aboutData.links.github;
   document.getElementById('aboutLinkWeibo').value = aboutData.links.weibo;
   document.getElementById('aboutLinkXiaohongshu').value = aboutData.links.xiaohongshu;
   document.getElementById('aboutLinkX').value = aboutData.links.x;
@@ -3819,6 +3797,7 @@ function saveAboutData() {
   aboutData.links = {
     qq: document.getElementById('aboutLinkQQ').value.trim() || '#',
     bili: document.getElementById('aboutLinkBili').value.trim() || '#',
+    github: document.getElementById('aboutLinkGithub').value.trim() || '#',
     weibo: document.getElementById('aboutLinkWeibo').value.trim() || '#',
     xiaohongshu: document.getElementById('aboutLinkXiaohongshu').value.trim() || '#',
     x: document.getElementById('aboutLinkX').value.trim() || '#'
