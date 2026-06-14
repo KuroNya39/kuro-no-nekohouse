@@ -1,6 +1,6 @@
 {
   "_version": 2,
-  "_updatedAt": "2026-06-14T21:08:52.342Z",
+  "_updatedAt": "2026-06-14T21:27:16.262Z",
   "categories": [
     {
       "id": "miku",
@@ -125,11 +125,12 @@
     "links": {
       "qq": "https://user.qzone.qq.com/1395507041",
       "bili": "https://space.bilibili.com/3318554",
+      "github": "https://github.com/KuroNya39",
       "weibo": "https://weibo.com/u/5031602926",
       "xiaohongshu": "https://xhslink.com/m/7bBjGbLWBGT",
       "x": "https://x.com/KuroNya39"
     },
-    "_lastSync": "2026-06-14T21:08:50.341Z"
+    "_lastSync": "2026-06-14T21:27:14.261Z"
   },
   "siteConfig": {
     "siteName": "黒の猫窝",
