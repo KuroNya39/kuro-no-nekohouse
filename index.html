@@ -2181,30 +2181,24 @@ async function syncToGitHub() {
 }
 
 async function loadFromGitHub() {
-  const token = getGitHubToken();
-  const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.dataFile}?t=${Date.now()}`;
+  // Use raw.githubusercontent.com for reading — no API rate limit, no token needed
+  const rawUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/${GITHUB_CONFIG.branch}/${GITHUB_CONFIG.dataFile}?t=${Date.now()}`;
   try {
-    console.log('[Sync] Fetching latest data from GitHub...');
-    const headers = { 'Accept': 'application/vnd.github.v3+json' };
-    if (token) headers['Authorization'] = `token ${token}`;
-    const res = await fetch(url, { headers, cache: 'no-cache' });
+    console.log('[Sync] Fetching latest data from GitHub (raw)...');
+    const res = await fetch(rawUrl, { cache: 'no-cache' });
     if (!res.ok) {
-      if (res.status === 401) {
-        console.error('[Sync] GitHub token is invalid or expired.');
-      } else if (res.status === 404) {
+      if (res.status === 404) {
         console.log('[Sync] No remote data file found, using local data.');
-      } else if (res.status === 403) {
-        console.warn('[Sync] GitHub API rate limit reached. Data may be outdated. Try again later or set a token in admin panel.');
       } else {
-        console.error('[Sync] GitHub API returned status', res.status);
+        console.error('[Sync] Fetch failed with status', res.status);
       }
       return false;
     }
-    const file = await res.json();
-    githubSha = file.sha;
-    const content = decodeURIComponent(escape(atob(file.content)));
-    const data = JSON.parse(content);
+    const text = await res.text();
+    const data = JSON.parse(text);
     console.log('[Sync] Successfully loaded data from GitHub, updated at:', data._updatedAt);
+    // Also fetch SHA via API (with token if available) for later writes
+    fetchGitHubSha();
     return loadSiteData(data);
   } catch (e) {
     console.error('[Sync] Failed to load from GitHub:', e);
@@ -2226,6 +2220,20 @@ async function loadFromGitHub() {
     }
     return false;
   }
+}
+
+// Fetch file SHA for write operations (only needed when saving)
+async function fetchGitHubSha() {
+  const token = getGitHubToken();
+  if (!token) return;
+  try {
+    const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.dataFile}`;
+    const res = await fetch(url, { headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' } });
+    if (res.ok) {
+      const file = await res.json();
+      githubSha = file.sha;
+    }
+  } catch (e) { /* silent */ }
 }
 
 function updateSyncUI() {
