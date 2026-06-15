@@ -518,18 +518,19 @@ body {
 .app-container { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
 
 /* Header - Gothic Cathedral Style */
-.site-header { text-align: center; padding: 60px 0 30px; position: relative; }
+.site-header { text-align: center; padding: 60px 0 30px; position: relative; display: flex; flex-direction: column; align-items: center; }
 
-.site-title { font-family: var(--font-display); font-size: 2.8rem; color: var(--text-primary); letter-spacing: 10px; margin-bottom: 6px; position: relative; display: block; text-align: center; }
+.site-title { font-family: var(--font-display); font-size: 2.8rem; color: var(--text-primary); letter-spacing: 10px; position: relative; display: flex; align-items: center; justify-content: center; }
 .site-title .star-left, .site-title .star-right { position: absolute; top: 50%; transform: translateY(-50%); font-size: 0.6rem; color: var(--accent-primary); opacity: 0.5; animation: twinkle 2s ease-in-out infinite; }
 .site-title .star-left { left: -24px; animation-delay: 0s; }
 .site-title .star-right { right: -24px; animation-delay: 1s; }
-.site-subtitle { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 6px; text-transform: uppercase; display: block; text-align: center; }
+.site-subtitle { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 6px; text-transform: uppercase; display: block; text-align: center; margin-bottom: 0; }
 .site-divider {
   width: 60px; height: 1px;
   background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
-  margin: 15px auto 0;
+  margin: 16px auto 0;
   opacity: 0.5;
+  flex-shrink: 0;
 }
 
 /* Navigation with star-moon divider */
@@ -1354,11 +1355,10 @@ body {
 }
 
 /* Loading */
-.loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.6s ease, visibility 0.6s ease; }
+.loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.8s ease, visibility 0.8s ease; }
 .loading-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-.loading-line { width: 1px; height: 40px; background: var(--border-light); position: relative; overflow: hidden; }
-.loading-line::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--accent-primary); animation: loadingLineMove 1.2s ease-in-out infinite; }
-@keyframes loadingLineMove { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
+.loading-dot { width: 4px; height: 4px; background: var(--accent-primary); border-radius: 50%; animation: dotPulse 1.5s ease-in-out infinite; }
+@keyframes dotPulse { 0%, 100% { opacity: 0.2; transform: scale(1); } 50% { opacity: 1; transform: scale(1.5); } }
 
 /* Card hover glow - enhanced */
 .category-card:hover, .recent-card:hover, .link-card:hover, .guestbook-item:hover, .interest-card:hover {
@@ -1403,7 +1403,7 @@ body {
 @media (max-width: 768px) {
   .app-container { padding: 0 16px; }
   .site-title { font-size: 2rem; letter-spacing: 5px; }
-  .theme-toggle, .admin-toggle { top: 10px; width: 36px; height: 36px; font-size: 0.8rem; }
+  .theme-toggle, .admin-toggle, .color-scheme-toggle { top: 10px; width: 36px; height: 36px; font-size: 0.8rem; }
   .top-toolbar { top: 10px; right: 10px; gap: 4px; }
   .color-scheme-dropdown { flex-shrink: 0; }
   .admin-drawer { width: 100%; right: -100%; }
@@ -1473,7 +1473,7 @@ body {
 <body>
 <a href="#main-content" class="skip-link">跳转到主内容</a>
 <div class="loading-overlay" id="loadingOverlay">
-  <div class="loading-line"></div>
+  <div class="loading-dot"></div>
 </div>
 <div class="scroll-progress" id="scrollProgress"></div>
 <div class="top-toolbar">
@@ -2190,11 +2190,13 @@ async function loadFromGitHub() {
     const res = await fetch(url, { headers, cache: 'no-cache' });
     if (!res.ok) {
       if (res.status === 401) {
-        console.error('[Sync] GitHub token is invalid or expired. Please update the token in admin panel.');
+        console.error('[Sync] GitHub token is invalid or expired.');
       } else if (res.status === 404) {
         console.log('[Sync] No remote data file found, using local data.');
+      } else if (res.status === 403) {
+        console.warn('[Sync] GitHub API rate limit reached. Data may be outdated. Try again later or set a token in admin panel.');
       } else {
-        console.error('[Sync] GitHub API returned status', res.status, await res.text());
+        console.error('[Sync] GitHub API returned status', res.status);
       }
       return false;
     }
