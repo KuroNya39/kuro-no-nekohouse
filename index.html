@@ -2241,16 +2241,12 @@ async function syncToGitHub() {
 
 async function loadFromGitHub() {
   const token = getGitHubToken();
-  if (!token) {
-    console.log('[Sync] No GitHub token found, using local data. Set a token in admin panel to enable cross-device sync.');
-    return false;
-  }
   const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.dataFile}?t=${Date.now()}`;
   try {
     console.log('[Sync] Fetching latest data from GitHub...');
-    const res = await fetch(url, {
-      headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
-    });
+    const headers = { 'Accept': 'application/vnd.github.v3+json' };
+    if (token) headers['Authorization'] = `token ${token}`;
+    const res = await fetch(url, { headers });
     if (!res.ok) {
       if (res.status === 401) {
         console.error('[Sync] GitHub token is invalid or expired. Please update the token in admin panel.');
