@@ -51,13 +51,13 @@
 
 /* ===== LIGHT MODE - Soft Gothic Lolita ===== */
 :root {
-  --bg-primary: #faf9f7;
-  --bg-secondary: #f0eeea;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f6f8fa;
   --bg-card: #ffffff;
   --bg-card-hover: #ffffff;
-  --text-primary: #2d2a26;
-  --text-secondary: #5a5650;
-  --text-muted: #9a958d;
+  --text-primary: #1f2328;
+  --text-secondary: #656d76;
+  --text-muted: #8b949e;
   --accent-primary: #7a9e8a;
   --accent-primary-light: #a0c4b0;
   --accent-pink: #a0c4b0;
@@ -69,11 +69,11 @@
   --accent-miku: #5bbfb8;
   --accent-miku-light: #8dd8d2;
   --accent-miku-glow: rgba(91, 191, 184, 0.15);
-  --border-light: rgba(122, 158, 138, 0.2);
-  --border-hover: rgba(122, 158, 138, 0.4);
-  --shadow-soft: 0 4px 20px rgba(45, 42, 38, 0.06);
-  --shadow-card: 0 2px 8px rgba(45, 42, 38, 0.04);
-  --shadow-hover: 0 8px 28px rgba(45, 42, 38, 0.1);
+  --border-light: #d0d7de;
+  --border-hover: #afb8c1;
+  --shadow-soft: 0 4px 20px rgba(31, 35, 40, 0.06);
+  --shadow-card: 0 2px 8px rgba(31, 35, 40, 0.04);
+  --shadow-hover: 0 8px 28px rgba(31, 35, 40, 0.1);
   --font-serif: 'Noto Serif SC', 'Georgia', serif;
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
   --font-display: 'Noto Serif SC', 'Georgia', serif;
@@ -87,13 +87,13 @@
 
 /* ===== DARK MODE - Dark Gothic Lolita ===== */
 [data-theme="dark"] {
-  --bg-primary: #1a1816;
-  --bg-secondary: #242220;
-  --bg-card: rgba(36, 34, 32, 0.95);
-  --bg-card-hover: rgba(42, 40, 38, 0.98);
-  --text-primary: #e8e4de;
-  --text-secondary: #b8b0a8;
-  --text-muted: #7a746c;
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-card: #0d1117;
+  --bg-card-hover: #161b22;
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #8b949e;
   --accent-primary: #8ab8a0;
   --accent-primary-light: #a8d4b8;
   --accent-pink: #a8d4b8;
@@ -105,8 +105,8 @@
   --accent-miku: #6dcfc8;
   --accent-miku-light: #8dd8d2;
   --accent-miku-glow: rgba(109, 207, 200, 0.12);
-  --border-light: rgba(138, 184, 160, 0.2);
-  --border-hover: rgba(138, 184, 160, 0.4);
+  --border-light: #30363d;
+  --border-hover: #484f58;
   --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
   --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.2);
   --shadow-hover: 0 8px 28px rgba(0, 0, 0, 0.35);
@@ -270,8 +270,7 @@
 [data-theme="dark"] .about-header-card,
 [data-theme="dark"] .interest-card,
 [data-theme="dark"] .link-card,
-[data-theme="dark"] .guestbook-form,
-[data-theme="dark"] .recent-card {
+[data-theme="dark"] .guestbook-form {
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08) !important;
 }
 
@@ -279,7 +278,6 @@
 [data-theme="dark"] .reader-chapter-title { color: var(--text-primary); border-bottom-color: var(--border-light); }
 [data-theme="dark"] .reader-preface-block { color: var(--text-muted); border-bottom-color: var(--border-light); }
 [data-theme="dark"] .novel-item { background: var(--bg-card); border-color: var(--border-light); }
-[data-theme="dark"] .recent-card { background: var(--bg-card); border-color: var(--border-light); }
 [data-theme="dark"] .hero-section { background: var(--bg-card); border-color: var(--border-light); }
 [data-theme="dark"] .social-link { color: var(--text-secondary); border-color: var(--border-light); }
 [data-theme="dark"] .social-link:hover { color: var(--accent-primary); border-color: var(--accent-primary); }
@@ -765,46 +763,6 @@ body {
 .category-count { font-size: 0.75rem; color: var(--text-muted); }
 .category-arrow { color: var(--text-muted); transition: var(--transition); opacity: 0.4; }
 .category-card:hover .category-arrow { opacity: 1; color: var(--accent-primary); transform: translateX(4px); }
-
-/* Recent Updates */
-.recent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 50px; align-items: stretch; }
-.recent-card {
-  background: var(--bg-card); border: 1px solid var(--border-light);
-  padding: 18px 20px; cursor: pointer; transition: var(--transition); backdrop-filter: blur(10px);
-  display: flex; gap: 14px; align-items: flex-start;
-  border-radius: 0px;
-  position: relative;
-  overflow: hidden;
-}
-.recent-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(91, 191, 184, 0.06), transparent);
-  transition: left 0.6s ease;
-  pointer-events: none;
-}
-.recent-card:hover::before {
-  left: 100%;
-}
-.recent-card:hover {
-  border-color: var(--border-hover);
-  box-shadow: 0 0 15px rgba(122, 158, 138, 0.2), 0 0 30px rgba(122, 158, 138, 0.1);
-  transform: translateY(-4px);
-}
-.recent-card:hover .recent-num {
-  background: var(--accent-primary);
-  color: white;
-  border-color: var(--accent-primary);
-  transform: scale(1.1);
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.recent-num { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--accent-primary); border: 1px solid var(--border-light); flex-shrink: 0; border-radius: 0px; }
-.recent-info h4 { font-size: 0.9rem; color: var(--text-primary); margin-bottom: 2px; font-weight: 500; line-height: 1.5; word-break: break-all; }
-.recent-info p { font-size: 0.75rem; color: var(--text-muted); }
-.recent-author { font-size: 0.7rem; color: var(--accent-pink); margin-top: 2px; }
-.recent-cat { font-size: 0.7rem; color: var(--accent-primary); margin-top: 4px; }
 
 /* Category Page with Header Image */
 .category-hero { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; margin-bottom: 25px; border: 1px solid var(--border-light); border-radius: 0px; }
@@ -1316,7 +1274,20 @@ body {
   padding: 16px 20px; transition: var(--transition);
   backdrop-filter: blur(10px); border-radius: 0px;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5);
+  position: relative;
 }
+.guestbook-delete-btn {
+  position: absolute;
+  top: 8px; right: 8px;
+  background: none; border: none;
+  color: var(--text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s, color 0.2s;
+}
+.guestbook-item:hover .guestbook-delete-btn { opacity: 1; }
+.guestbook-delete-btn:hover { color: #e74c3c; }
 .guestbook-item-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 .guestbook-item-name { font-family: var(--font-display); font-size: 0.9rem; color: var(--accent-primary); }
 .guestbook-item-date { font-size: 0.75rem; color: var(--text-muted); }
@@ -1364,7 +1335,7 @@ body {
 .about-header-card .about-handle { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; }
 
 /* Social Links */
-.social-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; }
+.social-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 10px; }
 .social-link {
   display: flex; align-items: center; gap: 6px;
   padding: 8px 16px; border: 1px solid var(--border-light);
@@ -1454,7 +1425,7 @@ body {
 }
 
 /* Card hover glow - enhanced */
-.category-card:hover, .recent-card:hover, .link-card:hover, .guestbook-item:hover, .interest-card:hover {
+.category-card:hover, .link-card:hover, .guestbook-item:hover, .interest-card:hover {
   box-shadow: 0 0 20px rgba(122, 158, 138, 0.2), 0 0 40px rgba(91, 191, 184, 0.08);
 }
 
@@ -1505,7 +1476,6 @@ body {
   .hero-tags { justify-content: center; }
   .stats-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .category-grid { grid-template-columns: 1fr; gap: 18px; }
-  .recent-grid { grid-template-columns: 1fr; }
   .content-with-sidebar { flex-direction: column; }
   .sidebar { width: 100%; }
   .sort-bar { flex-direction: column; align-items: flex-start; }
@@ -1515,7 +1485,6 @@ body {
   .reader-nav-btn { width: 100%; text-align: center; }
   .nav-btn { padding: 6px 14px; font-size: 0.85rem; }
   .about-header-card { padding: 28px 20px; }
-  .social-links { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .social-link { padding: 6px 12px; font-size: 0.75rem; }
   .links-grid { grid-template-columns: 1fr; }
 
@@ -1616,6 +1585,7 @@ body {
       <button class="admin-tab" onclick="switchAdminTab(this, 'about')">关于页</button>
       <button class="admin-tab" onclick="switchAdminTab(this, 'timeline')">时间轴</button>
       <button class="admin-tab" onclick="switchAdminTab(this, 'links')">友链</button>
+      <button class="admin-tab" onclick="switchAdminTab(this, 'guestbook')">留言管理</button>
     </div>
     <div class="admin-io-bar">
       <span id="githubSyncStatus" style="font-size:0.75rem;color:var(--text-muted);">○ 未同步</span>
@@ -1716,6 +1686,10 @@ body {
         <input type="text" id="adminTags" placeholder="甜文,短篇">
       </div>
       <div class="admin-form-row">
+        <label>前言/备注 <span style="color:var(--text-muted);font-size:0.7rem;">可选，会在正文前显示</span></label>
+        <textarea id="adminPreface" class="admin-textarea" placeholder="输入前言或备注（可选）" rows="3"></textarea>
+      </div>
+      <div class="admin-form-row">
         <label>字数 <span id="wordCountHint" style="color:var(--accent-primary);font-size:0.7rem;">已自动计算：0 字</span></label>
         <input type="number" id="adminWords" placeholder="留空则自动计算" readonly style="background:var(--bg-secondary);color:var(--text-muted);">
       </div>
@@ -1804,6 +1778,12 @@ body {
         <button class="admin-btn" onclick="addLink()">添加友链</button>
       </div>
     </div>
+
+    <!-- Tab: 留言管理 -->
+    <div class="admin-tab-content" id="adminTabGuestbook">
+      <h4>留言管理</h4>
+      <div id="adminGuestbookList"></div>
+    </div>
   </div>
 </div>
 
@@ -1844,13 +1824,6 @@ body {
 
     <div class="section-title">分类</div>
     <div class="category-grid" id="categoryGrid"></div>
-
-    <div class="section-title">最近更新</div>
-    <div id="continueReading" style="display:none;margin-bottom:30px;">
-      <div class="section-title" style="margin-bottom:16px;">继续阅读</div>
-      <div id="continueReadingList"></div>
-    </div>
-    <div class="recent-grid" id="recentGrid"></div>
   </section>
 
   <!-- ===== CATEGORY PAGE ===== -->
@@ -2098,7 +2071,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderStats();
   renderCategories();
   renderContinueReading();
-  renderRecentUpdates();
   renderTimeline();
   renderLinks();
   renderAboutPage();
@@ -2388,7 +2360,6 @@ function importData(event) {
       // Re-render everything
       renderStats();
       renderCategories();
-      renderRecentUpdates();
       renderAboutPage();
       renderAdminEditNovelList();
       // Re-apply theme
@@ -2943,6 +2914,7 @@ function addNovel() {
   const author = document.getElementById('adminAuthor').value.trim();
   const catId = document.getElementById('adminCategory').value;
   const tags = document.getElementById('adminTags').value.split(',').map(t => t.trim()).filter(t => t);
+  const preface = document.getElementById('adminPreface').value.trim();
 
   // 从章节表单收集数据
   const chapterItems = document.querySelectorAll('#addChapterList .chapter-item');
@@ -2963,7 +2935,7 @@ function addNovel() {
   const newNovel = {
     id: catId + '-' + Date.now(),
     title, author, date: new Date().toISOString().slice(0, 10),
-    wordCount: words, tags, chapters,
+    wordCount: words, tags, chapters, preface,
     content: allContent // 向后兼容：保留 content 字段
   };
   cat.novels.push(newNovel);
@@ -2972,7 +2944,6 @@ function addNovel() {
   renderAdminEditNovelList();
   renderStats();
   renderCategories();
-  renderRecentUpdates();
   announceToScreenReader('小说添加成功');
   showToast('小说添加成功');
 }
@@ -2985,7 +2956,6 @@ function deleteNovel(catId, novelId) {
   renderAdminEditNovelList();
   renderStats();
   renderCategories();
-  renderRecentUpdates();
   announceToScreenReader('小说已删除');
   showToast('小说已删除');
 }
@@ -2994,6 +2964,7 @@ function clearAdminForm() {
   document.getElementById('adminTitle').value = '';
   document.getElementById('adminAuthor').value = '';
   document.getElementById('adminTags').value = '';
+  document.getElementById('adminPreface').value = '';
   document.getElementById('adminWords').value = '';
   document.getElementById('wordCountHint').textContent = '已自动计算：0 字';
   // 重置章节列表为单个空章节
@@ -3058,6 +3029,7 @@ async function loadGuestbook() {
 function renderGuestbook() {
   const list = document.getElementById('guestbookList');
   if (!list) return;
+  const myDeviceId = localStorage.getItem('guestbookDeviceId') || (localStorage.setItem('guestbookDeviceId', crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substr(2)), localStorage.getItem('guestbookDeviceId'));
   if (guestbookMessages.length === 0) {
     list.innerHTML = '<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;padding:20px 0;">暂无留言，来留下第一条吧</p>';
     return;
@@ -3070,7 +3042,11 @@ function renderGuestbook() {
     div.className = 'guestbook-item';
     const name = escapeHTML(msg.name || '访客');
     const date = msg.date ? new Date(msg.date).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '';
+    const isOwn = msg.deviceId === myDeviceId;
+    // Find original index in guestbookMessages
+    const originalIndex = guestbookMessages.indexOf(msg);
     div.innerHTML = `
+      ${isOwn ? `<button class="guestbook-delete-btn" onclick="deleteGuestbookMessage(${originalIndex})" title="删除">×</button>` : ''}
       <div class="guestbook-item-header">
         <span class="guestbook-item-name">${name}</span>
         <span class="guestbook-item-date">${date}</span>
@@ -3087,12 +3063,14 @@ async function submitGuestbookMessage() {
   const name = nameInput.value.trim() || '访客';
   const content = contentInput.value.trim();
   if (!content) { alert('请输入留言内容'); return; }
+  const myDeviceId = localStorage.getItem('guestbookDeviceId') || (localStorage.setItem('guestbookDeviceId', crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substr(2)), localStorage.getItem('guestbookDeviceId'));
   const msg = {
     id: guestbookMessages.length > 0 ? Math.max(...guestbookMessages.map(m => m.id)) + 1 : 1,
     name: name,
     content: content,
     date: new Date().toISOString(),
-    avatar: ''
+    avatar: '',
+    deviceId: myDeviceId
   };
   guestbookMessages.push(msg);
   localStorage.setItem('guestbook', JSON.stringify(guestbookMessages));
@@ -3124,6 +3102,41 @@ async function syncGuestbookToGitHub() {
       body: JSON.stringify(putBody)
     });
   } catch (e) { console.error('[Guestbook] Sync failed:', e); }
+}
+
+function deleteGuestbookMessage(index) {
+  if (!confirm('确定删除这条留言吗？')) return;
+  guestbookMessages.splice(index, 1);
+  localStorage.setItem('guestbook', JSON.stringify(guestbookMessages));
+  renderGuestbook();
+  syncGuestbookToGitHub();
+}
+
+function renderAdminGuestbookList() {
+  const container = document.getElementById('adminGuestbookList');
+  if (!guestbookMessages.length) {
+    container.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">暂无留言</p>';
+    return;
+  }
+  container.innerHTML = guestbookMessages.map((msg, i) => `
+    <div class="admin-guestbook-item" style="padding:10px;border:1px solid var(--border-light);margin-bottom:8px;font-size:0.85rem;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <strong>${escapeHTML(msg.name)}</strong>
+        <span style="color:var(--text-muted);font-size:0.75rem;">${msg.date}</span>
+      </div>
+      <p style="margin:6px 0;color:var(--text-secondary);">${escapeHTML(msg.content)}</p>
+      <button onclick="adminDeleteGuestbook(${i})" style="background:none;border:1px solid var(--border-light);color:var(--text-muted);padding:2px 8px;font-size:0.75rem;cursor:pointer;">删除</button>
+    </div>
+  `).join('');
+}
+
+function adminDeleteGuestbook(index) {
+  if (!confirm('确定删除这条留言吗？')) return;
+  guestbookMessages.splice(index, 1);
+  localStorage.setItem('guestbook', JSON.stringify(guestbookMessages));
+  renderAdminGuestbookList();
+  renderGuestbook();
+  syncGuestbookToGitHub();
 }
 
 // ===== STATS =====
@@ -3235,36 +3248,6 @@ function renderContinueReading() {
       </div>
     `;
     list.appendChild(div);
-  });
-}
-
-// ===== RECENT UPDATES =====
-function renderRecentUpdates() {
-  let allNovels = [];
-  categories.forEach(cat => {
-    cat.novels.forEach(n => allNovels.push({ ...n, catName: cat.name, catId: cat.id }));
-  });
-  allNovels.sort((a, b) => new Date(b.date) - new Date(a.date));
-  const grid = document.getElementById('recentGrid');
-  grid.innerHTML = '';
-  allNovels.slice(0, 4).forEach((n, i) => {
-    const div = document.createElement('div');
-    div.className = 'recent-card';
-    div.style.animation = `staggerFadeIn 0.5s ease ${i * 0.1}s both`;
-    div.setAttribute('role', 'button');
-    div.setAttribute('tabindex', '0');
-    div.onclick = () => goToNovel(n.catId, n.id);
-    div.onkeydown = (e) => { if (e.key === 'Enter') goToNovel(n.catId, n.id); };
-    div.innerHTML = `
-      <div class="recent-num">${String(i + 1).padStart(2, '0')}</div>
-      <div class="recent-info">
-        <h4>${escapeHTML(n.title)}</h4>
-        <p>${n.date} · ${n.wordCount}字</p>
-        <div class="recent-author">作者：${escapeHTML(n.author)}</div>
-        <div class="recent-cat">${escapeHTML(n.catName)}</div>
-      </div>
-    `;
-    grid.appendChild(div);
   });
 }
 
@@ -3723,7 +3706,7 @@ function renderAboutPage() {
   const socialItems = [
     { icon: '<img src="https://www.bilibili.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '哔哩哔哩', url: d.links.bili },
     { icon: '<img src="https://github.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'GitHub', url: d.links.github },
-    { icon: '<img src="https://qzone.qq.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'QQ空间', url: d.links.qq },
+    { icon: '<img src="https://qq.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'QQ空间', url: d.links.qq },
     { icon: '<img src="https://weibo.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '微博', url: d.links.weibo },
     { icon: '<img src="https://www.xiaohongshu.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '小红书', url: d.links.xiaohongshu },
     { icon: '<img src="https://abs.twimg.com/favicons/twitter.3.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'X', url: d.links.x }
@@ -3787,7 +3770,8 @@ function switchAdminTab(btn, tabName) {
     'edit': ['adminTabEdit', () => renderAdminEditNovelList()],
     'about': ['adminTabAbout', () => loadAboutForm()],
     'timeline': ['adminTabTimeline', () => renderAdminTimelineList()],
-    'links': ['adminTabLinks', () => renderAdminLinksList()]
+    'links': ['adminTabLinks', () => renderAdminLinksList()],
+    'guestbook': ['adminTabGuestbook', () => renderAdminGuestbookList()]
   };
   if (tabMap[tabName]) {
     document.getElementById(tabMap[tabName][0]).classList.add('active');
@@ -3855,7 +3839,7 @@ function startEditNovel(catId, novelId) {
 
   el.innerHTML = `
     <div class="admin-edit-row"><label style="font-size:0.75rem;color:var(--text-muted);width:60px;">标题</label><input type="text" id="editTitle-${novelId}" value="${escapeHTML(novel.title)}"></div>
-    <div style="margin-top:8px;">
+    <div style="margin-top:8px;margin-bottom:12px;">
       <label style="font-size:0.8rem;color:var(--text-muted);">分类</label>
       <select id="editCategory-${novel.id}" style="width:100%;padding:6px 8px;border:1px solid var(--border-light);background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-serif);font-size:0.85rem;">
         ${categories.map(c => `<option value="${c.id}" ${c.id === cat.id ? 'selected' : ''}>${escapeHTML(c.name)}</option>`).join('')}
@@ -3863,6 +3847,10 @@ function startEditNovel(catId, novelId) {
     </div>
     <div class="admin-edit-row"><label style="font-size:0.75rem;color:var(--text-muted);width:60px;">作者</label><input type="text" id="editAuthor-${novelId}" value="${escapeHTML(novel.author)}"></div>
     <div class="admin-edit-row"><label style="font-size:0.75rem;color:var(--text-muted);width:60px;">标签</label><input type="text" id="editTags-${novelId}" value="${escapeHTML(novel.tags.join(', '))}"></div>
+    <div style="margin-bottom:16px;">
+      <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:4px;">前言/备注</label>
+      <textarea id="editNovelPreface" class="admin-textarea" placeholder="输入前言或备注（可选，会在正文前显示）" rows="3">${escapeHTML(novel.preface || '')}</textarea>
+    </div>
     <div style="margin-top:8px;">
       <div class="chapter-manager-title">
         <span style="font-size:0.8rem;color:var(--text-muted);">章节管理</span>
@@ -3885,6 +3873,7 @@ function saveEditNovel(catId, novelId) {
   novel.title = document.getElementById('editTitle-' + novelId).value.trim();
   novel.author = document.getElementById('editAuthor-' + novelId).value.trim();
   novel.tags = document.getElementById('editTags-' + novelId).value.split(',').map(t => t.trim()).filter(t => t);
+  novel.preface = document.getElementById('editNovelPreface').value.trim();
 
   // 从章节编辑表单收集数据
   const chapterContainer = document.getElementById('editChapterList-' + novelId);
@@ -3915,7 +3904,6 @@ function saveEditNovel(catId, novelId) {
   renderAdminEditNovelList();
   renderStats();
   renderCategories();
-  renderRecentUpdates();
   announceToScreenReader('小说保存成功');
   showToast('小说保存成功');
 }
@@ -4073,7 +4061,6 @@ function deleteCategory(catId) {
   renderAdminCategoryList();
   renderStats();
   renderCategories();
-  renderRecentUpdates();
   updateCategorySelect();
   showToast('分类已删除');
 }
