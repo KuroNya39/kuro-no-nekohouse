@@ -279,7 +279,7 @@
 
 /* Custom Cursor */
 html { cursor: url('cursors/Arrow.ani') 6 0, auto; }
-a, button, [onclick], select, input[type="submit"], .nav-btn, .scheme-btn, .category-card, .novel-card, .link-card, .interest-card, .back-to-top, .theme-toggle, .admin-toggle { cursor: url('cursors/リンクの選択.ani') 6 0, pointer; }
+a, button, [onclick], select, input[type="submit"], .nav-btn, .scheme-option, .category-card, .novel-card, .link-card, .interest-card, .back-to-top, .theme-toggle, .admin-toggle, .color-scheme-toggle { cursor: url('cursors/リンクの選択.ani') 6 0, pointer; }
 input[type="text"], input[type="password"], input[type="url"], textarea, [contenteditable="true"] { cursor: url('cursors/IBeam.ani') 6 0, text; }
 .loading-screen { cursor: url('cursors/待ち状態.ani') 6 0, wait; }
 html { scroll-behavior: smooth; }
@@ -404,38 +404,61 @@ body {
 }
 .theme-toggle:hover { background: var(--accent-primary); color: white; border-color: var(--accent-primary); transform: scale(1.1); }
 
-/* Color Scheme Picker */
+/* Top Toolbar */
 .top-toolbar {
   position: fixed; top: 16px; right: 16px; z-index: 1000;
   display: flex; gap: 8px; align-items: center;
 }
-.color-scheme-picker {
-  display: flex; gap: 2px; align-items: center;
-  padding: 4px 6px;
-  background: var(--bg-card); border: 1px solid var(--border-light);
+
+/* Color Scheme Dropdown */
+.color-scheme-dropdown { position: relative; flex-shrink: 0; }
+.color-scheme-toggle {
+  width: 40px; height: 40px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-card); color: var(--text-secondary);
+  font-size: 1rem; cursor: pointer; transition: var(--transition);
   backdrop-filter: blur(10px);
-  transition: var(--transition);
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 0px;
+  flex-shrink: 0;
+}
+.color-scheme-toggle:hover { background: var(--accent-primary); color: white; border-color: var(--accent-primary); transform: scale(1.1); }
+.scheme-current-dot {
+  display: block; width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(128,128,128,0.15);
+}
+.color-scheme-menu {
+  display: none;
+  position: absolute;
+  top: 44px;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  backdrop-filter: blur(10px);
+  z-index: 1001;
+  min-width: 140px;
+  box-shadow: var(--shadow-hover);
   border-radius: 0px;
 }
-.scheme-btn {
-  display: flex; align-items: center; gap: 4px;
-  padding: 4px 8px 4px 6px;
-  background: transparent; border: 1px solid transparent;
+.color-scheme-menu.active { display: block; }
+.scheme-option {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 8px 12px;
+  background: transparent; border: none;
   cursor: pointer; transition: var(--transition);
-  font-family: var(--font-serif); font-size: 0.72rem;
-  color: var(--text-muted);
+  font-family: var(--font-serif); font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: left;
   border-radius: 0px;
-  line-height: 1;
-  white-space: nowrap;
 }
-.scheme-btn:hover { color: var(--text-primary); background: var(--accent-miku-glow); }
-.scheme-btn.active { color: var(--text-primary); border-color: var(--accent-primary); background: var(--accent-miku-glow); }
+.scheme-option:hover { background: var(--accent-miku-glow); color: var(--text-primary); }
+.scheme-option.active { color: var(--accent-primary); font-weight: 700; }
 .scheme-dot {
   display: inline-block; width: 12px; height: 12px;
   border-radius: 50%; flex-shrink: 0;
   border: 1.5px solid rgba(128,128,128,0.15);
 }
-.scheme-label { white-space: nowrap; }
 
 /* Admin Toggle */
 .admin-toggle {
@@ -497,11 +520,11 @@ body {
 /* Header - Gothic Cathedral Style */
 .site-header { text-align: center; padding: 60px 0 30px; position: relative; }
 
-.site-title { font-family: var(--font-display); font-size: 2.8rem; color: var(--text-primary); letter-spacing: 10px; margin-bottom: 6px; position: relative; display: inline-block; }
+.site-title { font-family: var(--font-display); font-size: 2.8rem; color: var(--text-primary); letter-spacing: 10px; margin-bottom: 6px; position: relative; display: block; text-align: center; }
 .site-title .star-left, .site-title .star-right { position: absolute; top: 50%; transform: translateY(-50%); font-size: 0.6rem; color: var(--accent-primary); opacity: 0.5; animation: twinkle 2s ease-in-out infinite; }
 .site-title .star-left { left: -24px; animation-delay: 0s; }
 .site-title .star-right { right: -24px; animation-delay: 1s; }
-.site-subtitle { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 6px; text-transform: uppercase; }
+.site-subtitle { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 6px; text-transform: uppercase; display: block; text-align: center; }
 .site-divider {
   width: 60px; height: 1px;
   background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
@@ -987,6 +1010,17 @@ body {
 .settings-row { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
 .settings-row:last-child { margin-bottom: 0; }
 .settings-label { font-size: 0.8rem; color: var(--text-muted); width: 50px; flex-shrink: 0; }
+.settings-select {
+  flex: 1;
+  padding: 4px 8px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-family: var(--font-serif);
+  font-size: 0.85rem;
+  border-radius: 0px;
+  cursor: pointer;
+}
 .settings-slider { flex: 1; -webkit-appearance: none; height: 4px; background: var(--border-light); outline: none; }
 .settings-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; background: var(--accent-primary); cursor: pointer; border-radius: 0px; }
 .settings-value { font-size: 0.75rem; color: var(--accent-primary); width: 40px; text-align: right; }
@@ -1001,8 +1035,9 @@ body {
   padding: 35px 38px; backdrop-filter: blur(10px); font-size: var(--reader-font-size);
   line-height: var(--reader-line-height); color: var(--text-primary); transition: var(--transition);
   border-radius: 0px;
+  text-align: justify;
 }
-.reader-content p { margin-bottom: 1.3em; text-indent: 2em; }
+.reader-content p { margin-bottom: 1em; text-indent: 2em; line-height: 1.9; }
 .reader-content p:first-child { text-indent: 0; }
 .reader-content p:first-child::first-letter {
   font-size: 1.6em;
@@ -1017,37 +1052,6 @@ body {
 .reader-content p:first-child {
   border-left: 3px solid var(--accent-primary);
   padding-left: 12px;
-}
-
-/* 章节导航栏 */
-.chapter-nav {
-  margin-bottom: 20px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border-light);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  justify-content: center;
-}
-.chapter-nav-btn {
-  padding: 6px 16px;
-  border: 1px solid var(--border-light);
-  background: var(--bg-card);
-  color: var(--text-muted);
-  font-family: var(--font-serif);
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: var(--transition);
-  border-radius: 0px;
-}
-.chapter-nav-btn:hover {
-  border-color: var(--accent-primary);
-  color: var(--accent-primary);
-}
-.chapter-nav-btn.active {
-  background: var(--accent-primary);
-  color: white;
-  border-color: var(--accent-primary);
 }
 
 /* 章节管理区域（后台） */
@@ -1141,11 +1145,6 @@ body {
   border-color: var(--accent-blood);
   color: var(--accent-blood);
 }
-
-.reader-progress { margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-light); }
-.progress-bar { height: 3px; background: var(--border-light); position: relative; }
-.progress-fill { height: 100%; background: var(--accent-primary); transition: width 0.3s; }
-.progress-text { font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; text-align: center; }
 
 /* Reader Nav */
 .reader-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-light); }
@@ -1464,10 +1463,7 @@ body {
   .site-title { font-size: 2rem; letter-spacing: 5px; }
   .theme-toggle, .admin-toggle { top: 10px; width: 36px; height: 36px; font-size: 0.8rem; }
   .top-toolbar { top: 10px; right: 10px; gap: 4px; }
-  .color-scheme-picker { padding: 3px 4px; gap: 2px; }
-  .scheme-btn { padding: 2px 4px; }
-  .scheme-label { display: none; }
-  .scheme-dot { width: 14px; height: 14px; }
+  .color-scheme-dropdown { flex-shrink: 0; }
   .admin-drawer { width: 100%; right: -100%; }
   .hero-section { flex-direction: column; text-align: center; padding: 28px 24px; gap: 20px; }
   .hero-avatar { width: 80px; height: 80px; font-size: 2rem; }
@@ -1540,11 +1536,16 @@ body {
 </div>
 <div class="scroll-progress" id="scrollProgress"></div>
 <div class="top-toolbar">
-  <div class="color-scheme-picker" id="colorSchemePicker">
-    <button class="scheme-btn active" data-scheme="miku" title="Miku 青" onclick="setColorScheme('miku')"><span class="scheme-dot" style="background:#39c5bb"></span><span class="scheme-label">Miku 青</span></button>
-    <button class="scheme-btn" data-scheme="rose" title="蔷薇粉" onclick="setColorScheme('rose')"><span class="scheme-dot" style="background:#F23172"></span><span class="scheme-label">蔷薇粉</span></button>
-    <button class="scheme-btn" data-scheme="coral" title="珊瑚橘" onclick="setColorScheme('coral')"><span class="scheme-dot" style="background:linear-gradient(135deg,#ED6D52 60%,#BADBF2 60%)"></span><span class="scheme-label">珊瑚橘</span></button>
-    <button class="scheme-btn" data-scheme="night" title="深夜蓝" onclick="setColorScheme('night')"><span class="scheme-dot" style="background:linear-gradient(135deg,#001E44 60%,#46266E 60%)"></span><span class="scheme-label">深夜蓝</span></button>
+  <div class="color-scheme-dropdown" id="colorSchemeDropdown">
+    <button class="color-scheme-toggle" id="colorSchemeToggle" title="切换配色" aria-label="切换配色">
+      <span class="scheme-current-dot" id="schemeCurrentDot" style="background:#39c5bb"></span>
+    </button>
+    <div class="color-scheme-menu" id="colorSchemeMenu">
+      <button class="scheme-option active" data-scheme="miku" onclick="setColorScheme('miku')"><span class="scheme-dot" style="background:#39c5bb"></span>Miku 青</button>
+      <button class="scheme-option" data-scheme="rose" onclick="setColorScheme('rose')"><span class="scheme-dot" style="background:#F23172"></span>蔷薇粉</button>
+      <button class="scheme-option" data-scheme="coral" onclick="setColorScheme('coral')"><span class="scheme-dot" style="background:linear-gradient(135deg,#ED6D52 60%,#BADBF2 60%)"></span>珊瑚橘</button>
+      <button class="scheme-option" data-scheme="night" onclick="setColorScheme('night')"><span class="scheme-dot" style="background:linear-gradient(135deg,#001E44 60%,#46266E 60%)"></span>深夜蓝</button>
+    </div>
   </div>
   <button class="admin-toggle" id="adminToggle" title="管理" aria-label="管理面板">⚙</button>
   <button class="theme-toggle" id="themeToggle" title="切换主题" aria-label="切换主题">☾</button>
@@ -1861,6 +1862,10 @@ body {
           <span class="settings-toggle" id="settingsToggle">▼</span>
         </div>
         <div class="settings-panel" id="settingsPanel">
+          <div class="settings-row" id="chapterSelectRow" style="display:none;">
+            <span class="settings-label">章节</span>
+            <select id="chapterSelect" class="settings-select" onchange="showNovel(currentNovelIndex, this.value)"></select>
+          </div>
           <div class="settings-row">
             <span class="settings-label">字号</span>
             <input type="range" class="settings-slider" id="fontSizeSlider" min="13" max="22" value="16" aria-label="调整字号">
@@ -1879,10 +1884,6 @@ body {
         </div>
       </div>
       <div class="reader-content" id="readerContent"></div>
-      <div class="reader-progress">
-        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-        <p class="progress-text" id="progressText">阅读进度 0%</p>
-      </div>
       <div class="reader-nav">
         <button class="reader-nav-btn" id="prevNovel">← 上一篇</button>
         <button class="reader-nav-btn" onclick="backToCategory()">返回列表</button>
@@ -2178,6 +2179,13 @@ function loadSiteData(data) {
 }
 
 async function syncToGitHub() {
+  const token = getGitHubToken();
+  if (!token) {
+    console.log('[Sync] No GitHub token, skipping sync.');
+    githubSyncStatus = 'error';
+    updateSyncUI();
+    return;
+  }
   if (githubSyncStatus === 'syncing') return;
   githubSyncStatus = 'syncing';
   updateSyncUI();
@@ -2190,7 +2198,7 @@ async function syncToGitHub() {
     if (!githubSha) {
       try {
         const res = await fetch(url, {
-          headers: { 'Authorization': `token ${getGitHubToken()}`, 'Accept': 'application/vnd.github.v3+json' }
+          headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
         });
         if (res.ok) {
           const file = await res.json();
@@ -2209,7 +2217,7 @@ async function syncToGitHub() {
 
     const res = await fetch(url, {
       method: 'PUT',
-      headers: { 'Authorization': `token ${getGitHubToken()}`, 'Accept': 'application/vnd.github.v3+json' },
+      headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' },
       body: JSON.stringify(body)
     });
 
@@ -2217,35 +2225,50 @@ async function syncToGitHub() {
       const result = await res.json();
       githubSha = result.content.sha;
       githubSyncStatus = 'synced';
+      console.log('[Sync] Data synced to GitHub successfully.');
     } else {
       const err = await res.json();
-      console.error('GitHub sync error:', err);
+      console.error('[Sync] GitHub sync error:', err);
       githubSyncStatus = 'error';
+      if (err.message) console.error('[Sync] Error message:', err.message);
     }
   } catch (e) {
-    console.error('GitHub sync failed:', e);
+    console.error('[Sync] GitHub sync failed:', e);
     githubSyncStatus = 'error';
   }
   updateSyncUI();
 }
 
 async function loadFromGitHub() {
+  const token = getGitHubToken();
+  if (!token) {
+    console.log('[Sync] No GitHub token found, using local data. Set a token in admin panel to enable cross-device sync.');
+    return false;
+  }
   const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.dataFile}?t=${Date.now()}`;
   try {
+    console.log('[Sync] Fetching latest data from GitHub...');
     const res = await fetch(url, {
-      headers: { 'Authorization': `token ${getGitHubToken()}`, 'Accept': 'application/vnd.github.v3+json' }
+      headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
     });
     if (!res.ok) {
-      console.log('No remote data found, using local data');
+      if (res.status === 401) {
+        console.error('[Sync] GitHub token is invalid or expired. Please update the token in admin panel.');
+      } else if (res.status === 404) {
+        console.log('[Sync] No remote data file found, using local data.');
+      } else {
+        console.error('[Sync] GitHub API returned status', res.status, await res.text());
+      }
       return false;
     }
     const file = await res.json();
     githubSha = file.sha;
     const content = decodeURIComponent(escape(atob(file.content)));
     const data = JSON.parse(content);
+    console.log('[Sync] Successfully loaded data from GitHub, updated at:', data._updatedAt);
     return loadSiteData(data);
   } catch (e) {
-    console.error('Failed to load from GitHub:', e);
+    console.error('[Sync] Failed to load from GitHub:', e);
     return false;
   }
 }
@@ -2386,10 +2409,20 @@ function initTheme() {
 function setColorScheme(scheme) {
   document.documentElement.setAttribute('data-color-scheme', scheme);
   localStorage.setItem('colorScheme', scheme);
-  // Update active button
-  document.querySelectorAll('.scheme-btn').forEach(btn => {
+  // Update active option and current dot
+  document.querySelectorAll('.scheme-option').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.scheme === scheme);
   });
+  // Update the current dot background
+  const activeOption = document.querySelector('.scheme-option.active');
+  const currentDot = document.getElementById('schemeCurrentDot');
+  if (activeOption && currentDot) {
+    const dot = activeOption.querySelector('.scheme-dot');
+    if (dot) currentDot.style.background = dot.style.background;
+  }
+  // Close the dropdown menu
+  const menu = document.getElementById('colorSchemeMenu');
+  if (menu) menu.classList.remove('active');
   // Update background pattern color
   updateBackgroundPattern();
   // Sync Giscus theme
@@ -2400,10 +2433,34 @@ function initColorScheme() {
   const saved = localStorage.getItem('colorScheme');
   const scheme = saved || 'miku';
   document.documentElement.setAttribute('data-color-scheme', scheme);
-  document.querySelectorAll('.scheme-btn').forEach(btn => {
+  document.querySelectorAll('.scheme-option').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.scheme === scheme);
   });
+  // Update the current dot background
+  const activeOption = document.querySelector('.scheme-option.active');
+  const currentDot = document.getElementById('schemeCurrentDot');
+  if (activeOption && currentDot) {
+    const dot = activeOption.querySelector('.scheme-dot');
+    if (dot) currentDot.style.background = dot.style.background;
+  }
 }
+
+// Color scheme dropdown toggle
+document.addEventListener('DOMContentLoaded', () => {
+  const toggle = document.getElementById('colorSchemeToggle');
+  const menu = document.getElementById('colorSchemeMenu');
+  if (toggle && menu) {
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      menu.classList.toggle('active');
+    });
+    document.addEventListener('click', (e) => {
+      if (!document.getElementById('colorSchemeDropdown').contains(e.target)) {
+        menu.classList.remove('active');
+      }
+    });
+  }
+});
 
 function updateBackgroundPattern() {
   const style = getComputedStyle(document.documentElement);
@@ -3306,31 +3363,26 @@ function showNovel(index, chapterIdx) {
   const currentChapter = chapters[currentChapterIndex];
 
   // 渲染章节导航（仅多章节时显示）
-  const settingsPanel = document.querySelector('.reader-settings');
   const contentDiv = document.getElementById('readerContent');
-
-  // 移除旧的章节导航
-  const oldNav = document.getElementById('chapterNav');
-  if (oldNav) oldNav.remove();
-
+  const chapterSelectRow = document.getElementById('chapterSelectRow');
+  const chapterSelect = document.getElementById('chapterSelect');
   if (chapters.length > 1) {
-    const navDiv = document.createElement('div');
-    navDiv.className = 'chapter-nav';
-    navDiv.id = 'chapterNav';
+    chapterSelectRow.style.display = 'flex';
+    chapterSelect.innerHTML = '';
     chapters.forEach((ch, i) => {
-      const btn = document.createElement('button');
-      btn.className = 'chapter-nav-btn' + (i === currentChapterIndex ? ' active' : '');
-      btn.textContent = ch.title;
-      btn.onclick = () => showNovel(index, i);
-      navDiv.appendChild(btn);
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = ch.title;
+      if (i === currentChapterIndex) opt.selected = true;
+      chapterSelect.appendChild(opt);
     });
-    // 插入到 settings 面板和 content 之间
-    settingsPanel.parentNode.insertBefore(navDiv, contentDiv);
+  } else {
+    chapterSelectRow.style.display = 'none';
   }
 
   // 渲染当前章节内容
   contentDiv.innerHTML = '';
-  const paragraphs = currentChapter.content.split('\n\n').filter(p => p.trim());
+  const paragraphs = currentChapter.content.split(/\n+/).filter(p => p.trim());
   paragraphs.forEach(p => {
     const para = document.createElement('p');
     para.textContent = p.trim();
@@ -3342,7 +3394,6 @@ function showNovel(index, chapterIdx) {
   document.getElementById('prevNovel').onclick = () => { if (index > 0) showNovel(index - 1); };
   document.getElementById('nextNovel').onclick = () => { if (index < currentCategory.novels.length - 1) showNovel(index + 1); };
 
-  updateReadProgress();
   showPage('reader', true);
   // Set title AFTER showPage to avoid being overwritten
   document.title = novel.title + ' - ' + siteConfig.siteName;
@@ -3421,40 +3472,6 @@ function setReaderStyle(style) {
   document.getElementById('readerContent').style.lineHeight = p.line;
   localStorage.setItem('readerFontSize', p.font);
   localStorage.setItem('readerLineHeight', p.line);
-}
-
-// ===== READ PROGRESS - Fixed: using addEventListener instead of window.onscroll =====
-let readProgressTimer = null;
-function debouncedSaveReadProgress() {
-  if (readProgressTimer) clearTimeout(readProgressTimer);
-  readProgressTimer = setTimeout(() => {
-    safeJSONStringify('readProgress', readProgress);
-  }, 1000);
-}
-
-function updateReadProgress() {
-  const novelId = currentCategory.novels[currentNovelIndex].id;
-  const progress = readProgress[novelId] || 0;
-  document.getElementById('progressFill').style.width = progress + '%';
-  document.getElementById('progressText').textContent = `阅读进度 ${progress}%`;
-
-  // Remove previous listener if any
-  if (updateReadProgress._handler) {
-    window.removeEventListener('scroll', updateReadProgress._handler);
-  }
-
-  const content = document.getElementById('readerContent');
-  updateReadProgress._handler = () => {
-    const rect = content.getBoundingClientRect();
-    const total = rect.height - window.innerHeight;
-    const scrolled = -rect.top;
-    const newProgress = Math.min(100, Math.max(0, Math.round(scrolled / total * 100)));
-    document.getElementById('progressFill').style.width = newProgress + '%';
-    document.getElementById('progressText').textContent = `阅读进度 ${newProgress}%`;
-    readProgress[novelId] = newProgress;
-    debouncedSaveReadProgress();
-  };
-  window.addEventListener('scroll', updateReadProgress._handler);
 }
 
 // ===== TIMELINE =====
