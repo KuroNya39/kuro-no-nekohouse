@@ -1354,69 +1354,11 @@ body {
 }
 
 /* Loading */
-.loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-primary); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), visibility 1s cubic-bezier(0.4, 0, 0.2, 1); }
+.loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.6s ease, visibility 0.6s ease; }
 .loading-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-
-/* Minimalist loading animation */
-.loading-brand {
-  margin-bottom: 40px;
-  text-align: center;
-}
-.loading-brand-symbol {
-  display: block;
-  width: 32px; height: 32px;
-  margin: 0 auto 20px;
-  border: 1.5px solid var(--accent-primary);
-  transform: rotate(45deg);
-  animation: loadingSymbolSpin 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  position: relative;
-}
-.loading-brand-symbol::before {
-  content: '';
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 8px; height: 8px;
-  background: var(--accent-primary);
-  transform: translate(-50%, -50%);
-}
-@keyframes loadingSymbolSpin {
-  0% { transform: rotate(45deg) scale(1); opacity: 0.4; }
-  50% { transform: rotate(225deg) scale(1.1); opacity: 1; }
-  100% { transform: rotate(405deg) scale(1); opacity: 0.4; }
-}
-
-.loading-brand-name {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  color: var(--text-muted);
-  letter-spacing: 6px;
-  text-transform: uppercase;
-  animation: loadingNamePulse 2s ease-in-out infinite;
-}
-@keyframes loadingNamePulse {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.8; }
-}
-
-/* Thin progress line */
-.loading-line {
-  width: 1px; height: 48px;
-  background: var(--border-light);
-  position: relative;
-  overflow: hidden;
-}
-.loading-line::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: var(--accent-primary);
-  animation: loadingLineMove 1.5s ease-in-out infinite;
-}
-@keyframes loadingLineMove {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
-}
+.loading-line { width: 1px; height: 40px; background: var(--border-light); position: relative; overflow: hidden; }
+.loading-line::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--accent-primary); animation: loadingLineMove 1.2s ease-in-out infinite; }
+@keyframes loadingLineMove { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
 
 /* Card hover glow - enhanced */
 .category-card:hover, .recent-card:hover, .link-card:hover, .guestbook-item:hover, .interest-card:hover {
@@ -1485,7 +1427,10 @@ body {
   .links-grid { grid-template-columns: 1fr; }
 
   /* Mobile bottom navigation */
-  .site-header { padding: 30px 0 15px; }
+  .site-header { padding: 30px 0 15px; text-align: center; }
+  .site-title { display: block; text-align: center; width: 100%; }
+  .site-subtitle { display: block; text-align: center; width: 100%; }
+  .site-divider { margin: 15px auto 0; }
   .nav-bar {
     position: fixed;
     bottom: 0;
@@ -1528,10 +1473,6 @@ body {
 <body>
 <a href="#main-content" class="skip-link">跳转到主内容</a>
 <div class="loading-overlay" id="loadingOverlay">
-  <div class="loading-brand">
-    <span class="loading-brand-symbol"></span>
-    <span class="loading-brand-name">Loading</span>
-  </div>
   <div class="loading-line"></div>
 </div>
 <div class="scroll-progress" id="scrollProgress"></div>
@@ -2246,7 +2187,7 @@ async function loadFromGitHub() {
     console.log('[Sync] Fetching latest data from GitHub...');
     const headers = { 'Accept': 'application/vnd.github.v3+json' };
     if (token) headers['Authorization'] = `token ${token}`;
-    const res = await fetch(url, { headers });
+    const res = await fetch(url, { headers, cache: 'no-cache' });
     if (!res.ok) {
       if (res.status === 401) {
         console.error('[Sync] GitHub token is invalid or expired. Please update the token in admin panel.');
@@ -2265,6 +2206,22 @@ async function loadFromGitHub() {
     return loadSiteData(data);
   } catch (e) {
     console.error('[Sync] Failed to load from GitHub:', e);
+    // Fallback: try to use localStorage data
+    try {
+      const localCategories = localStorage.getItem('categories');
+      if (localCategories) {
+        console.log('[Sync] GitHub fetch failed, using localStorage data as fallback.');
+        return loadSiteData({
+          categories: JSON.parse(localCategories),
+          siteConfig: JSON.parse(localStorage.getItem('siteConfig') || 'null'),
+          aboutData: JSON.parse(localStorage.getItem('aboutData') || 'null'),
+          timelineData: JSON.parse(localStorage.getItem('timelineData') || 'null'),
+          linksData: JSON.parse(localStorage.getItem('linksData') || 'null')
+        });
+      }
+    } catch (fallbackErr) {
+      console.error('[Sync] Fallback to localStorage also failed:', fallbackErr);
+    }
     return false;
   }
 }
@@ -3385,10 +3342,24 @@ function showNovel(index, chapterIdx) {
     contentDiv.appendChild(para);
   });
 
-  document.getElementById('prevNovel').style.visibility = index > 0 ? 'visible' : 'hidden';
-  document.getElementById('nextNovel').style.visibility = index < currentCategory.novels.length - 1 ? 'visible' : 'hidden';
-  document.getElementById('prevNovel').onclick = () => { if (index > 0) showNovel(index - 1); };
-  document.getElementById('nextNovel').onclick = () => { if (index < currentCategory.novels.length - 1) showNovel(index + 1); };
+  const prevBtn = document.getElementById('prevNovel');
+  const nextBtn = document.getElementById('nextNovel');
+  if (chapters.length > 1) {
+    prevBtn.style.visibility = currentChapterIndex > 0 ? 'visible' : 'hidden';
+    nextBtn.style.visibility = currentChapterIndex < chapters.length - 1 ? 'visible' : 'hidden';
+    prevBtn.onclick = () => { if (currentChapterIndex > 0) showNovel(currentNovelIndex, currentChapterIndex - 1); };
+    nextBtn.onclick = () => { if (currentChapterIndex < chapters.length - 1) showNovel(currentNovelIndex, currentChapterIndex + 1); };
+    prevBtn.textContent = '\u2190 \u4e0a\u4e00\u7ae0';
+    nextBtn.textContent = '\u4e0b\u4e00\u7ae0 \u2192';
+  } else {
+    // 单章节小说：切换不同小说
+    prevBtn.style.visibility = index > 0 ? 'visible' : 'hidden';
+    nextBtn.style.visibility = index < currentCategory.novels.length - 1 ? 'visible' : 'hidden';
+    prevBtn.onclick = () => { if (index > 0) showNovel(index - 1); };
+    nextBtn.onclick = () => { if (index < currentCategory.novels.length - 1) showNovel(index + 1); };
+    prevBtn.textContent = '\u2190 \u4e0a\u4e00\u7bc7';
+    nextBtn.textContent = '\u4e0b\u4e00\u7bc7 \u2192';
+  }
 
   showPage('reader', true);
   // Set title AFTER showPage to avoid being overwritten
