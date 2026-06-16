@@ -995,6 +995,8 @@ body::before {
 .sort-label { font-size: 0.8rem; color: var(--text-muted); margin-right: 4px; }
 .sort-btn { padding: 5px 14px; border: 1px solid var(--border-light); background: transparent; color: var(--text-muted); font-size: 0.8rem; cursor: pointer; transition: var(--transition); border-radius: var(--radius-sm); }
 .sort-btn:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
+.sort-order-btn { margin-left: auto; font-size: 0.75rem; opacity: 0.7; }
+.sort-order-btn:hover { opacity: 1; }
 .sort-btn.active { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
 
 /* Novel List */
@@ -1966,6 +1968,7 @@ body::before {
           <button class="sort-btn active" data-sort="default">默认</button>
           <button class="sort-btn" data-sort="date">按时间</button>
           <button class="sort-btn" data-sort="words">按字数</button>
+          <button class="sort-btn sort-order-btn" id="sortOrderBtn" title="切换升序/降序">↓ 降序</button>
         </div>
         <div class="novel-list" id="novelList"></div>
       </div>
@@ -2134,6 +2137,7 @@ let linksData = safeJSONParse('linksData', [
 let currentCategory = null;
 let currentNovelIndex = 0;
 let currentSort = 'default';
+let sortAscending = false; // 默认降序（最新的在前）
 let currentAuthorFilter = null;
 let isAdmin = false;
 let readProgress = safeJSONParse('readProgress', {});
@@ -2887,6 +2891,12 @@ function goToNovel(catId, novelId) {
 function initSort() {
   document.querySelectorAll('.sort-btn').forEach(btn => {
     btn.addEventListener('click', () => {
+      if (btn.id === 'sortOrderBtn') {
+        sortAscending = !sortAscending;
+        btn.textContent = sortAscending ? '↑ 升序' : '↓ 降序';
+        if (currentCategory) renderNovelList();
+        return;
+      }
       document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       currentSort = btn.dataset.sort;
@@ -3595,8 +3605,8 @@ function renderFilteredNovelList(novels) {
 function renderNovelList() {
   let novels = [...currentCategory.novels];
   if (currentAuthorFilter) novels = novels.filter(n => n.author === currentAuthorFilter);
-  if (currentSort === 'date') novels.sort((a, b) => new Date(b.date) - new Date(a.date));
-  if (currentSort === 'words') novels.sort((a, b) => b.wordCount - a.wordCount);
+  if (currentSort === 'date') novels.sort((a, b) => sortAscending ? new Date(a.date) - new Date(b.date) : new Date(b.date) - new Date(a.date));
+  if (currentSort === 'words') novels.sort((a, b) => sortAscending ? a.wordCount - b.wordCount : b.wordCount - a.wordCount);
   renderFilteredNovelList(novels);
 }
 
