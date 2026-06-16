@@ -2063,6 +2063,15 @@ body::before {
 // ===== DATA =====
 const DATA_VERSION = 1;
 
+// GitHub config (must be declared early, before any sync functions reference it)
+const GITHUB_CONFIG = {
+  owner: 'KuroNya39',
+  repo: 'kuro-no-nekohouse',
+  dataFile: 'data.json',
+  guestbookFile: 'guestbook.json',
+  branch: 'main'
+};
+
 function safeJSONParse(key, defaultValue) {
   try {
     const item = localStorage.getItem(key);
@@ -2163,6 +2172,7 @@ function showToast(message, type) {
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
+  try {
   initTheme();
   initColorScheme();
   initCanvas();
@@ -2193,9 +2203,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   initSwipeNavigation();
   updateSyncUI();
   hideLoading();
-}).catch(err => {
-  console.error('[Init] Error during initialization:', err);
-  hideLoading();
+  } catch(err) {
+    console.error('[Init] Error during initialization:', err);
+    hideLoading();
+  }
 });
 function hideLoading() {
   document.getElementById('loadingOverlay').classList.add('hidden');
@@ -2220,14 +2231,6 @@ function debouncedSyncToGitHub() {
     syncToGitHub();
   }, 2000);
 }
-
-const GITHUB_CONFIG = {
-  owner: 'KuroNya39',
-  repo: 'kuro-no-nekohouse',
-  dataFile: 'data.json',
-  guestbookFile: 'guestbook.json',
-  branch: 'main'
-};
 
 // Token is stored in localStorage (set once by admin, never in source code)
 function getGitHubToken() {
