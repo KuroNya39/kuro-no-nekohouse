@@ -2341,8 +2341,41 @@ async function syncToGitHub() {
     } else {
       const err = await res.json();
       console.error('[Sync] GitHub sync error:', err);
-      githubSyncStatus = 'error';
-      if (err.message) console.error('[Sync] Error message:', err.message);
+      // If SHA mismatch (409), refresh SHA and retry once
+      if (res.status === 409 || (err.message && err.message.includes('SHA'))) {
+        console.log('[Sync] SHA mismatch, refreshing and retrying...');
+        githubSha = null;
+        const retryUrl = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.dataFile}`;
+        const shaRes = await fetch(retryUrl, {
+          headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+        });
+        if (shaRes.ok) {
+          const shaFile = await shaRes.json();
+          githubSha = shaFile.sha;
+          // Retry the PUT with correct SHA
+          body.sha = githubSha;
+          const retryRes = await fetch(url, {
+            method: 'PUT',
+            headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' },
+            body: JSON.stringify(body)
+          });
+          if (retryRes.ok) {
+            const retryResult = await retryRes.json();
+            githubSha = retryResult.content.sha;
+            githubSyncStatus = 'synced';
+            console.log('[Sync] Retry succeeded.');
+          } else {
+            const retryErr = await retryRes.json();
+            console.error('[Sync] Retry also failed:', retryErr);
+            githubSyncStatus = 'error';
+          }
+        } else {
+          githubSyncStatus = 'error';
+        }
+      } else {
+        githubSyncStatus = 'error';
+        if (err.message) console.error('[Sync] Error message:', err.message);
+      }
     }
   } catch (e) {
     console.error('[Sync] GitHub sync failed:', e);
@@ -3391,18 +3424,37 @@ function showPage(name, pushState) {
 // ===== HASH ROUTER =====
 function initHashRouter() {
   window.addEventListener('popstate', (e) => {
-    const page = (e.state && e.state.page) ? e.state.page : 'home';
-    showPage(page, false);
-    document.querySelectorAll('.nav-btn').forEach(b => {
-      b.classList.toggle('active', b.dataset.page === page);
-    });
+    if (e.state && e.state.page === 'category' && e.state.catId) {
+      showCategory(e.state.catId);
+    } else if (e.state && e.state.page === 'reader' && e.state.catId !== undefined) {
+      const cat = categories.find(c => c.id === e.state.catId);
+      if (cat) {
+        currentCategory = cat;
+        showNovel(e.state.novelIdx, e.state.chapterIdx);
+      }
+    } else {
+      const page = (e.state && e.state.page) ? e.state.page : 'home';
+      showPage(page, false);
+      document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.page === page);
+      });
+    }
   });
 
   // Handle initial hash
   const hash = window.location.hash;
   if (hash && hash.startsWith('#/')) {
-    const page = hash.slice(2);
-    if (PAGE_TITLES[page]) {
+    const parts = hash.slice(2).split('/');
+    const page = parts[0];
+    if (parts[0] === 'category' && parts[1]) {
+      showCategory(parts[1]);
+    } else if (parts[0] === 'reader' && parts[1] && parts[2] !== undefined) {
+      const cat = categories.find(c => c.id === parts[1]);
+      if (cat) {
+        currentCategory = cat;
+        showNovel(parseInt(parts[2]), parseInt(parts[3]) || 0);
+      }
+    } else if (PAGE_TITLES[page]) {
       showPage(page, false);
       document.querySelectorAll('.nav-btn').forEach(b => {
         b.classList.toggle('active', b.dataset.page === page);
@@ -3465,7 +3517,8 @@ function showCategory(catId) {
   sidebar.appendChild(authorWidget);
 
   renderNovelList();
-  showPage('category');
+  showPage('category', false);
+  window.history.replaceState({ page: 'category', catId: catId }, '', '#/category/' + catId);
   document.title = currentCategory.name + ' - ' + siteConfig.siteName;
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
 }
@@ -3645,7 +3698,8 @@ function showNovel(index, chapterIdx) {
     nextBtn.textContent = '\u4e0b\u4e00\u7bc7 \u2192';
   }
 
-  showPage('reader', true);
+  showPage('reader', false);
+  window.history.replaceState({ page: 'reader', catId: currentCategory.id, novelIdx: index, chapterIdx: chapterIdx || 0 }, '', '#/reader/' + currentCategory.id + '/' + index + '/' + (chapterIdx || 0));
   // Set title AFTER showPage to avoid being overwritten
   document.title = novel.title + ' - ' + siteConfig.siteName;
 }
