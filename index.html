@@ -4236,6 +4236,8 @@ function addCategory() {
 function editCategory(catId) {
   const cat = categories.find(c => c.id === catId);
   if (!cat) return;
+  document.getElementById('newCatId').value = cat.id;
+  document.getElementById('newCatId').disabled = true;
   document.getElementById('newCatName').value = cat.name;
   document.getElementById('newCatDesc').value = cat.desc;
   // Change add button to save
@@ -4249,6 +4251,8 @@ function editCategory(catId) {
     renderHome();
     addBtn.textContent = '添加分类';
     addBtn.onclick = addCategory;
+    document.getElementById('newCatId').value = '';
+    document.getElementById('newCatId').disabled = false;
     document.getElementById('newCatName').value = '';
     document.getElementById('newCatDesc').value = '';
     showToast('分类已更新');
@@ -4321,15 +4325,26 @@ function addTimelineEvent() {
 function editTimelineEvent(index) {
   const item = timelineData[index];
   if (!item) return;
-  const newTitle = prompt('事件标题', item.title);
-  if (newTitle === null) return;
-  const newDate = prompt('日期', item.date);
-  if (newDate === null) return;
-  const newDesc = prompt('描述', item.desc);
-  if (newDesc === null) return;
-  item.title = newTitle.trim() || item.title;
-  item.date = newDate.trim() || item.date;
-  item.desc = newDesc.trim() || item.desc;
+  const list = document.getElementById('adminTimelineList');
+  const div = list.children[index];
+  if (!div) return;
+  div.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:6px;padding:8px;background:var(--bg-secondary);border-radius:var(--radius-sm);">
+      <input type="text" id="editTL-title" value="${escapeHTML(item.title)}" placeholder="事件标题" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);">
+      <input type="text" id="editTL-date" value="${escapeHTML(item.date)}" placeholder="日期" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);">
+      <textarea id="editTL-desc" placeholder="描述" rows="2" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);resize:vertical;">${escapeHTML(item.desc)}</textarea>
+      <div style="display:flex;gap:6px;">
+        <button class="admin-small-btn" onclick="saveTimelineEdit(${index})">保存</button>
+        <button class="admin-small-btn cancel" onclick="renderAdminTimelineList()">取消</button>
+      </div>
+    </div>`;
+}
+function saveTimelineEdit(index) {
+  const item = timelineData[index];
+  if (!item) return;
+  item.title = document.getElementById('editTL-title').value.trim() || item.title;
+  item.date = document.getElementById('editTL-date').value.trim() || item.date;
+  item.desc = document.getElementById('editTL-desc').value.trim() || item.desc;
   saveData();
   renderAdminTimelineList();
   renderTimeline();
@@ -4388,15 +4403,26 @@ function addLink() {
 function editLink(index) {
   const item = linksData[index];
   if (!item) return;
-  const newTitle = prompt('友链名称', item.title);
-  if (newTitle === null) return;
-  const newUrl = prompt('链接地址', item.url);
-  if (newUrl === null) return;
-  const newDesc = prompt('描述', item.desc);
-  if (newDesc === null) return;
-  item.title = newTitle.trim() || item.title;
-  item.url = newUrl.trim() || item.url;
-  item.desc = newDesc.trim() || item.desc;
+  const list = document.getElementById('adminLinksList');
+  const div = list.children[index];
+  if (!div) return;
+  div.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:6px;padding:8px;background:var(--bg-secondary);border-radius:var(--radius-sm);">
+      <input type="text" id="editLK-title" value="${escapeHTML(item.title)}" placeholder="友链名称" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);">
+      <input type="text" id="editLK-url" value="${escapeHTML(item.url)}" placeholder="链接地址" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);">
+      <input type="text" id="editLK-desc" value="${escapeHTML(item.desc)}" placeholder="描述" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);">
+      <div style="display:flex;gap:6px;">
+        <button class="admin-small-btn" onclick="saveLinkEdit(${index})">保存</button>
+        <button class="admin-small-btn cancel" onclick="renderAdminLinksList()">取消</button>
+      </div>
+    </div>`;
+}
+function saveLinkEdit(index) {
+  const item = linksData[index];
+  if (!item) return;
+  item.title = document.getElementById('editLK-title').value.trim() || item.title;
+  item.url = document.getElementById('editLK-url').value.trim() || item.url;
+  item.desc = document.getElementById('editLK-desc').value.trim() || item.desc;
   saveData();
   renderAdminLinksList();
   renderLinks();
