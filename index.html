@@ -976,9 +976,9 @@ body::before {
 .sidebar-widget .widget-count { float: right; font-size: 0.75rem; color: var(--text-muted); }
 
 /* Author Filter */
-.author-filter { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; align-items: center; }
+.author-filter { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-light); }
 .author-chip {
-  padding: 6px 14px; border: 1px solid var(--border-light); background: var(--bg-card);
+  padding: 5px 14px; border: 1px solid var(--border-light); background: transparent;
   color: var(--text-muted); font-size: 0.8rem; cursor: pointer; transition: var(--transition);
   border-radius: var(--radius-sm);
 }
@@ -3482,8 +3482,8 @@ function showCategory(catId) {
   const filterContainer = document.getElementById('authorFilter');
   filterContainer.innerHTML = '';
   const label = document.createElement('span');
-  label.style.cssText = 'font-size:0.8rem;color:var(--text-muted);margin-right:8px;';
-  label.textContent = '作者筛选：';
+  label.className = 'sort-label';
+  label.textContent = '作者：';
   filterContainer.appendChild(label);
 
   const allChip = document.createElement('span');
