@@ -546,14 +546,14 @@ body::before {
 /* Header - Gothic Cathedral Style */
 .site-header { text-align: center; padding: 60px 0 30px; position: relative; display: flex; flex-direction: column; align-items: center; }
 
-.site-title { font-family: var(--font-display); font-size: 2.8rem; color: var(--text-primary); letter-spacing: 10px; position: relative; display: flex; align-items: center; justify-content: center; animation: titleBreath 4s ease-in-out infinite; }
-@keyframes titleBreath {
-  0%, 100% { letter-spacing: 10px; }
-  50% { letter-spacing: 12px; }
-}
+.site-title { font-family: var(--font-display); font-size: 2.8rem; color: var(--text-primary); letter-spacing: 10px; position: relative; display: flex; align-items: center; justify-content: center; }
 .site-title .star-left, .site-title .star-right { position: absolute; top: 50%; transform: translateY(-50%); font-size: 0.6rem; color: var(--accent-primary); opacity: 0.5; animation: twinkle 2s ease-in-out infinite; }
 .site-title .star-left { left: -24px; animation-delay: 0s; }
 .site-title .star-right { right: -24px; animation-delay: 1s; }
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: translateY(-50%) scale(0.8); }
+  50% { opacity: 0.8; transform: translateY(-50%) scale(1.2); }
+}
 .site-subtitle { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 6px; text-transform: uppercase; display: block; text-align: center; margin-bottom: 0; }
 .site-divider {
   width: 60px; height: 1px;
@@ -687,6 +687,158 @@ body::before {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+/* ===== NEW ANIMATIONS ===== */
+
+/* Card shine sweep on hover */
+.card-shine { position: relative; overflow: hidden; }
+.card-shine::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  transition: none;
+  z-index: 1;
+  pointer-events: none;
+}
+.card-shine:hover::before {
+  animation: shineSweep 0.6s ease forwards;
+}
+@keyframes shineSweep {
+  to { left: 150%; }
+}
+
+/* Nav button ripple effect */
+.nav-btn { overflow: hidden; }
+.nav-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  background: var(--accent-primary);
+  opacity: 0.1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+  pointer-events: none;
+}
+.nav-btn:hover::before {
+  width: 120px; height: 120px;
+  opacity: 0.06;
+}
+
+/* Avatar hover rotation */
+.avatar-wrapper { transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.avatar-wrapper:hover { transform: rotate(8deg) scale(1.05); }
+
+/* Stat number count-up animation */
+.stat-number {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Novel item hover slide indicator */
+.novel-item { position: relative; overflow: hidden; }
+.novel-item::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; width: 3px; height: 100%;
+  background: var(--accent-primary);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.novel-item:hover::after {
+  transform: scaleY(1);
+}
+
+/* Category card tilt effect */
+.category-card { transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s ease, box-shadow 0.3s ease; }
+
+/* Page transition slide */
+.page { transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* Floating particles background */
+.bg-particles {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.bg-particle {
+  position: absolute;
+  width: 4px; height: 4px;
+  background: var(--accent-primary);
+  opacity: 0;
+  border-radius: 50%;
+  animation: particleFloat linear infinite;
+}
+@keyframes particleFloat {
+  0% { opacity: 0; transform: translateY(100vh) scale(0); }
+  10% { opacity: 0.15; }
+  90% { opacity: 0.15; }
+  100% { opacity: 0; transform: translateY(-10vh) scale(1); }
+}
+
+/* Social link hover bounce */
+.social-link { transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease, border-color 0.3s ease; }
+.social-link:hover { transform: translateY(-3px); }
+
+/* Tag hover color fill */
+.novel-tag {
+  transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+.novel-tag:hover {
+  transform: scale(1.05);
+}
+
+/* Reader page turn animation */
+.reader-content { transition: opacity 0.3s ease; }
+.reader-content.turning { opacity: 0; transform: translateX(20px); }
+
+/* Scroll progress indicator */
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0; height: 2px;
+  background: var(--accent-primary);
+  z-index: 9999;
+  transition: width 0.1s linear;
+  opacity: 0.6;
+}
+
+/* Back to top button appear animation */
+.back-to-top {
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.back-to-top.visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* Footer link hover underline animation */
+.footer-link {
+  position: relative;
+  display: inline-block;
+}
+.footer-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0;
+  width: 0; height: 1px;
+  background: var(--accent-primary);
+  transition: width 0.3s ease;
+}
+.footer-link:hover::after {
+  width: 100%;
+}
+
+/* Search input focus glow */
+.search-input:focus {
+  box-shadow: 0 0 0 3px rgba(57, 197, 187, 0.1);
+}
+
+/* ===== END NEW ANIMATIONS ===== */
 
 /* Search */
 .search-container { max-width: 500px; margin: 0 auto 35px; position: relative; }
@@ -1763,7 +1915,7 @@ body::before {
     <div class="search-results" id="searchResults"></div>
 
     <div class="hero-section" id="heroSection">
-      <img class="hero-avatar" src="avatar.png" alt="头像">
+      <img class="hero-avatar avatar-wrapper" src="avatar.png" alt="头像">
       <div class="hero-content">
         <h2 id="heroTitle"></h2>
         <p id="heroDesc"></p>
@@ -2982,11 +3134,20 @@ function renderStats() {
     { n: categories.length, l: '分类' },
     { n: totalNovels, l: '小说' },
     { n: authors.size, l: '作者' },
-    { n: totalWords > 0 ? totalWords.toLocaleString() : '-', l: '总字数' }
+    { n: totalWords > 0 ? totalWords : 0, l: '总字数', format: true }
   ].forEach((s, i) => {
     const div = document.createElement('div');
     div.className = 'stat-item';
-    div.innerHTML = `<div class="stat-number">${s.n}</div><div class="stat-label">${s.l}</div>`;
+    const numSpan = document.createElement('div');
+    numSpan.className = 'stat-number';
+    numSpan.dataset.target = s.n;
+    numSpan.dataset.format = s.format ? '1' : '0';
+    numSpan.textContent = '0';
+    const labelDiv = document.createElement('div');
+    labelDiv.className = 'stat-label';
+    labelDiv.textContent = s.l;
+    div.appendChild(numSpan);
+    div.appendChild(labelDiv);
     statsContainer.appendChild(div);
   });
   // Stat items entrance animation
@@ -2997,15 +3158,36 @@ function renderStats() {
       item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
       item.style.opacity = '1';
       item.style.transform = 'translateY(0)';
+      // Count-up animation
+      const numEl = item.querySelector('.stat-number');
+      if (numEl) animateCountUp(numEl);
     }, 100 + i * 80);
   });
+}
+
+function animateCountUp(el) {
+  const target = parseInt(el.dataset.target) || 0;
+  const shouldFormat = el.dataset.format === '1';
+  if (target === 0) { el.textContent = shouldFormat ? '-' : '0'; return; }
+  const duration = 1200;
+  const startTime = performance.now();
+  function update(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    // Ease out cubic
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(target * eased);
+    el.textContent = shouldFormat ? current.toLocaleString() : current;
+    if (progress < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
 }
 function renderCategories() {
   const grid = document.getElementById('categoryGrid');
   grid.innerHTML = '';
   categories.forEach((cat, i) => {
     const div = document.createElement('div');
-    div.className = 'category-card';
+    div.className = 'category-card card-shine';
     div.setAttribute('role', 'button');
     div.setAttribute('tabindex', '0');
     div.setAttribute('aria-label', `${cat.name}分类，${cat.novels.length}篇小说`);
@@ -3045,6 +3227,22 @@ function renderCategories() {
       card.style.opacity = '1';
       card.style.transform = 'translateY(0)';
     }, 100 + i * 80);
+  });
+  // Mouse tilt effect for category cards
+  document.querySelectorAll('.category-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = (y - centerY) / centerY * -3;
+      const rotateY = (x - centerX) / centerX * 3;
+      card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(600px) rotateX(0) rotateY(0) translateY(0)';
+    });
   });
 }
 
@@ -3329,6 +3527,13 @@ function showNovel(index, chapterIdx) {
   currentNovelIndex = index;
   const novel = currentCategory.novels[index];
 
+  // Page turn transition
+  const readerContent = document.getElementById('readerContent');
+  if (readerContent) {
+    readerContent.classList.add('turning');
+    setTimeout(() => readerContent.classList.remove('turning'), 300);
+  }
+
   document.getElementById('readerCategory').textContent = currentCategory.name;
   document.getElementById('readerCategory').onclick = () => showCategory(currentCategory.id);
   document.getElementById('readerTitle').textContent = novel.title;
@@ -3522,7 +3727,7 @@ function renderLinks() {
   linksData.forEach((item, i) => {
     const a = document.createElement('a');
     a.href = item.url;
-    a.className = 'link-card';
+    a.className = 'link-card card-shine';
     a.target = '_blank';
     a.rel = 'noopener noreferrer';
     a.style.animation = `staggerFadeIn 0.5s ease ${i * 0.1}s both`;
@@ -3582,7 +3787,7 @@ function renderAboutPage() {
   const socialItems = [
     { icon: '<img src="https://www.bilibili.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '哔哩哔哩', url: d.links.bili },
     { icon: '<img src="https://github.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'GitHub', url: d.links.github },
-    { icon: '<span style="font-size:14px;font-weight:bold;color:#12B7F5;display:inline-block;width:16px;text-align:center;">Q</span>', name: 'QQ空间', url: d.links.qq },
+    { icon: '<img src="https://qzone.qq.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'QQ空间', url: d.links.qq },
     { icon: '<img src="https://weibo.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '微博', url: d.links.weibo },
     { icon: '<img src="https://www.xiaohongshu.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '小红书', url: d.links.xiaohongshu },
     { icon: '<img src="https://abs.twimg.com/favicons/twitter.3.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'X', url: d.links.x }
