@@ -1794,10 +1794,6 @@ body::before {
           <label>分类描述</label>
           <input type="text" id="newCatDesc" placeholder="VOCALOID 相关创作">
         </div>
-        <div class="admin-about-section">
-          <label>封面图片文件名 <span style="color:var(--text-muted);font-size:0.7rem;">如 miku.jpg</span></label>
-          <input type="text" id="newCatImage" placeholder="图片文件名(如miku.jpg)或图片URL">
-        </div>
         <button class="admin-btn" onclick="addCategory()">添加分类</button>
       </div>
     </div>
@@ -4206,7 +4202,10 @@ function renderAdminCategoryList() {
           <strong>${escapeHTML(cat.name)}</strong>
           <span style="color:var(--text-muted);font-size:0.8rem;"> (${cat.id}) · ${escapeHTML(cat.desc)} · ${cat.novels.length}篇</span>
         </div>
-        <button class="admin-small-btn cancel" onclick="deleteCategory('${cat.id}')">删除</button>
+        <div style="display:flex;gap:6px;">
+          <button class="admin-small-btn" onclick="editCategory('${cat.id}')">编辑</button>
+          <button class="admin-small-btn cancel" onclick="deleteCategory('${cat.id}')">删除</button>
+        </div>
       </div>
     `;
     list.appendChild(div);
@@ -4232,6 +4231,28 @@ function addCategory() {
   document.getElementById('newCatName').value = '';
   document.getElementById('newCatDesc').value = '';
   document.getElementById('newCatImage').value = '';
+}
+
+function editCategory(catId) {
+  const cat = categories.find(c => c.id === catId);
+  if (!cat) return;
+  document.getElementById('newCatName').value = cat.name;
+  document.getElementById('newCatDesc').value = cat.desc;
+  // Change add button to save
+  const addBtn = document.querySelector('#adminCategoryForm .admin-btn');
+  addBtn.textContent = '保存修改';
+  addBtn.onclick = () => {
+    cat.name = document.getElementById('newCatName').value.trim() || cat.name;
+    cat.desc = document.getElementById('newCatDesc').value.trim() || cat.desc;
+    saveData();
+    renderAdminCategoryList();
+    renderHome();
+    addBtn.textContent = '添加分类';
+    addBtn.onclick = addCategory;
+    document.getElementById('newCatName').value = '';
+    document.getElementById('newCatDesc').value = '';
+    showToast('分类已更新');
+  };
 }
 
 function deleteCategory(catId) {
@@ -4271,7 +4292,10 @@ function renderAdminTimelineList() {
           <strong>${escapeHTML(item.title)}</strong>
           <span style="color:var(--text-muted);font-size:0.8rem;"> ${item.date} - ${escapeHTML(item.desc)}</span>
         </div>
-        <button class="admin-small-btn cancel" onclick="deleteTimelineEvent(${i})">删除</button>
+        <div style="display:flex;gap:6px;">
+          <button class="admin-small-btn" onclick="editTimelineEvent(${i})">编辑</button>
+          <button class="admin-small-btn cancel" onclick="deleteTimelineEvent(${i})">删除</button>
+        </div>
       </div>
     `;
     list.appendChild(div);
@@ -4292,6 +4316,24 @@ function addTimelineEvent() {
   document.getElementById('newTlDate').value = '';
   document.getElementById('newTlTitle').value = '';
   document.getElementById('newTlDesc').value = '';
+}
+
+function editTimelineEvent(index) {
+  const item = timelineData[index];
+  if (!item) return;
+  const newTitle = prompt('事件标题', item.title);
+  if (newTitle === null) return;
+  const newDate = prompt('日期', item.date);
+  if (newDate === null) return;
+  const newDesc = prompt('描述', item.desc);
+  if (newDesc === null) return;
+  item.title = newTitle.trim() || item.title;
+  item.date = newDate.trim() || item.date;
+  item.desc = newDesc.trim() || item.desc;
+  saveData();
+  renderAdminTimelineList();
+  renderTimeline();
+  showToast('事件已更新');
 }
 
 function deleteTimelineEvent(index) {
@@ -4315,7 +4357,10 @@ function renderAdminLinksList() {
           <strong>${escapeHTML(item.title)}</strong>
           <span style="color:var(--text-muted);font-size:0.8rem;"> ${escapeHTML(item.desc)}</span>
         </div>
-        <button class="admin-small-btn cancel" onclick="deleteLink(${i})">删除</button>
+        <div style="display:flex;gap:6px;">
+          <button class="admin-small-btn" onclick="editLink(${i})">编辑</button>
+          <button class="admin-small-btn cancel" onclick="deleteLink(${i})">删除</button>
+        </div>
       </div>
     `;
     list.appendChild(div);
@@ -4338,6 +4383,24 @@ function addLink() {
   document.getElementById('newLinkIcon').value = '';
   document.getElementById('newLinkDesc').value = '';
   document.getElementById('newLinkUrl').value = '';
+}
+
+function editLink(index) {
+  const item = linksData[index];
+  if (!item) return;
+  const newTitle = prompt('友链名称', item.title);
+  if (newTitle === null) return;
+  const newUrl = prompt('链接地址', item.url);
+  if (newUrl === null) return;
+  const newDesc = prompt('描述', item.desc);
+  if (newDesc === null) return;
+  item.title = newTitle.trim() || item.title;
+  item.url = newUrl.trim() || item.url;
+  item.desc = newDesc.trim() || item.desc;
+  saveData();
+  renderAdminLinksList();
+  renderLinks();
+  showToast('友链已更新');
 }
 
 function deleteLink(index) {
