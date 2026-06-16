@@ -4236,27 +4236,33 @@ function addCategory() {
 function editCategory(catId) {
   const cat = categories.find(c => c.id === catId);
   if (!cat) return;
-  document.getElementById('newCatId').value = cat.id;
-  document.getElementById('newCatId').disabled = true;
-  document.getElementById('newCatName').value = cat.name;
-  document.getElementById('newCatDesc').value = cat.desc;
-  // Change add button to save
-  const addBtn = document.querySelector('#adminCategoryForm .admin-btn');
-  addBtn.textContent = '保存修改';
-  addBtn.onclick = () => {
-    cat.name = document.getElementById('newCatName').value.trim() || cat.name;
-    cat.desc = document.getElementById('newCatDesc').value.trim() || cat.desc;
-    saveData();
-    renderAdminCategoryList();
-    renderHome();
-    addBtn.textContent = '添加分类';
-    addBtn.onclick = addCategory;
-    document.getElementById('newCatId').value = '';
-    document.getElementById('newCatId').disabled = false;
-    document.getElementById('newCatName').value = '';
-    document.getElementById('newCatDesc').value = '';
-    showToast('分类已更新');
-  };
+  const list = document.getElementById('adminCategoryList');
+  const index = categories.indexOf(cat);
+  const div = list.children[index];
+  if (!div) return;
+  div.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:6px;padding:8px;background:var(--bg-secondary);border-radius:var(--radius-sm);">
+      <input type="text" id="editCat-id" value="${escapeHTML(cat.id)}" disabled placeholder="分类ID（不可修改）" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-muted);font-family:var(--font-serif);opacity:0.6;">
+      <input type="text" id="editCat-name" value="${escapeHTML(cat.name)}" placeholder="分类名称" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);">
+      <input type="text" id="editCat-desc" value="${escapeHTML(cat.desc)}" placeholder="分类描述" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);">
+      <div style="display:flex;gap:6px;">
+        <button class="admin-small-btn" onclick="saveCategoryEdit('${cat.id}')">保存</button>
+        <button class="admin-small-btn cancel" onclick="renderAdminCategoryList()">取消</button>
+      </div>
+    </div>`;
+}
+function saveCategoryEdit(catId) {
+  const cat = categories.find(c => c.id === catId);
+  if (!cat) return;
+  cat.name = document.getElementById('editCat-name').value.trim() || cat.name;
+  cat.desc = document.getElementById('editCat-desc').value.trim() || cat.desc;
+  saveData();
+  renderAdminCategoryList();
+  renderHome();
+  renderStats();
+  renderCategories();
+  updateCategorySelect();
+  showToast('分类已更新');
 }
 
 function deleteCategory(catId) {
