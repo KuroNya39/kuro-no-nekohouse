@@ -517,7 +517,11 @@ body::before {
 /* Header - Gothic Cathedral Style */
 .site-header { text-align: center; padding: 60px 0 30px; position: relative; display: flex; flex-direction: column; align-items: center; }
 
-.site-title { font-family: var(--font-display); font-size: 2.8rem; color: var(--text-primary); letter-spacing: 10px; position: relative; display: flex; align-items: center; justify-content: center; }
+.site-title { font-family: var(--font-display); font-size: 2.8rem; color: var(--text-primary); letter-spacing: 10px; position: relative; display: flex; align-items: center; justify-content: center; animation: titleBreath 4s ease-in-out infinite; }
+@keyframes titleBreath {
+  0%, 100% { letter-spacing: 10px; }
+  50% { letter-spacing: 12px; }
+}
 .site-title .star-left, .site-title .star-right { position: absolute; top: 50%; transform: translateY(-50%); font-size: 0.6rem; color: var(--accent-primary); opacity: 0.5; animation: twinkle 2s ease-in-out infinite; }
 .site-title .star-left { left: -24px; animation-delay: 0s; }
 .site-title .star-right { right: -24px; animation-delay: 1s; }
@@ -525,10 +529,16 @@ body::before {
 .site-divider {
   width: 60px; height: 1px;
   background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+  background-size: 200% 100%;
+  animation: dividerGlow 3s ease-in-out infinite;
   margin: 16px auto 0;
   opacity: 0.5;
   transition: var(--transition);
   flex-shrink: 0;
+}
+@keyframes dividerGlow {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 /* Navigation with star-moon divider */
@@ -571,13 +581,28 @@ body::before {
 
 /* Page Sections */
 .page { display: none; opacity: 0; transform: translateY(20px) scale(0.98); transition: opacity 0.5s ease, transform 0.5s ease; }
-.page.active { display: block; opacity: 1; transform: translateY(0) scale(1); }
+.page.active { display: block; opacity: 1; transform: translateY(0) scale(1); animation: pageFadeIn 0.4s ease; }
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
 /* Staggered fade-in for lists */
 @keyframes staggerFadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Scroll reveal */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Floating decorative elements */
@@ -662,7 +687,7 @@ body::before {
 .search-empty { text-align: center; padding: 40px; color: var(--text-muted); }
 
 /* Hero Section */
-.hero-section { background: var(--bg-secondary); border: 1px solid var(--border-light); padding: 24px; margin-bottom: 32px; display: flex; gap: 24px; align-items: center; transition: var(--transition); backdrop-filter: blur(10px); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5); }
+.hero-section { background: var(--bg-card); border: 1px solid var(--border-light); padding: 24px; margin-bottom: 32px; display: flex; gap: 24px; align-items: center; transition: var(--transition); backdrop-filter: blur(10px); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5); }
 .hero-section:hover { border-color: var(--border-hover); }
 .hero-avatar { width: 100px; height: 100px; flex-shrink: 0; object-fit: cover; transition: transform 0.4s ease; border: 2px solid var(--border-light); border-radius: var(--radius-sm); display: block; }
 .hero-section:hover .hero-avatar { transform: scale(1.05); }
@@ -675,7 +700,7 @@ body::before {
 
 /* Stats Row */
 .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 35px; }
-.stat-item { background: var(--bg-secondary); border: 1px solid var(--border-light); padding: 20px; text-align: center; transition: var(--transition); border-radius: var(--radius-sm); backdrop-filter: blur(10px); }
+.stat-item { background: var(--bg-card); border: 1px solid var(--border-light); padding: 20px; text-align: center; transition: var(--transition); border-radius: var(--radius-sm); backdrop-filter: blur(10px); }
 .stat-item:hover { border-color: var(--border-hover); }
 .stat-number { font-family: var(--font-display); font-size: 1.8rem; color: var(--accent-miku); font-weight: 700; }
 .stat-label { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 1px; }
@@ -697,7 +722,7 @@ body::before {
 /* Category Grid */
 .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; margin-bottom: 50px; }
 .category-card {
-  background: var(--bg-secondary); border: 1px solid var(--border-light);
+  background: var(--bg-card); border: 1px solid var(--border-light);
   padding: 20px;
   cursor: pointer; transition: var(--transition);
   overflow: hidden; position: relative;
@@ -710,17 +735,17 @@ body::before {
   box-shadow: 0 4px 20px var(--accent-miku-glow);
 }
 .category-card:hover .category-image { transform: scale(1.03); }
-.category-image { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: transform 0.5s ease; border-bottom: 1px solid var(--border-light); }
+.category-image { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; transition: transform 0.5s ease; display: block; }
 /* Decorative frame border for category images */
 .category-card .category-image-wrapper {
   position: relative;
-  padding: 4px;
   background: linear-gradient(135deg, var(--accent-primary-light), var(--accent-rose));
   opacity: 0.3;
+  overflow: hidden;
 }
 .category-card:hover .category-image-wrapper { opacity: 0.6; }
 .category-image-fallback {
-  width: 100%; aspect-ratio: 4 / 3;
+  width: 100%; aspect-ratio: 16 / 9;
   background: linear-gradient(135deg, var(--accent-primary-light), var(--accent-rose), var(--accent-primary));
   display: flex; align-items: center; justify-content: center;
   font-size: 2rem; color: white; opacity: 0.6;
@@ -792,7 +817,7 @@ body::before {
 /* Novel List */
 .novel-list { display: flex; flex-direction: column; gap: 14px; padding-bottom: 60px; }
 .novel-item {
-  background: var(--bg-secondary); border: 1px solid var(--border-light);
+  background: var(--bg-card); border: 1px solid var(--border-light);
   padding: 16px 20px; cursor: pointer; transition: var(--transition);
   display: flex; gap: 16px; align-items: center;
   position: relative;
@@ -2905,17 +2930,16 @@ function loadGiscus() {
   const script = document.createElement('script');
   script.src = 'https://giscus.app/client.js';
   script.setAttribute('data-repo', 'KuroNya39/kuro-no-nekohouse');
-  script.setAttribute('data-repo-id', 'R_kgDOYOUR_REPO_ID');
+  script.setAttribute('data-repo-id', 'R_kgDOS6pURQ');
   script.setAttribute('data-category', 'General');
-  script.setAttribute('data-category-id', 'DIC_kwDOYOUR_CATEGORY_ID');
+  script.setAttribute('data-category-id', 'DIC_kwDOS6pURQ');
   script.setAttribute('data-mapping', 'pathname');
   script.setAttribute('data-strict', '0');
   script.setAttribute('data-reactions-enabled', '1');
   script.setAttribute('data-emit-metadata', '0');
-  script.setAttribute('data-input-position', 'top');
+  script.setAttribute('data-input-position', 'bottom');
   script.setAttribute('data-theme', theme);
   script.setAttribute('data-lang', 'zh-CN');
-  script.setAttribute('data-loading', 'lazy');
   script.crossOrigin = 'anonymous';
   script.async = true;
   
@@ -2947,20 +2971,26 @@ function renderStats() {
   ].forEach((s, i) => {
     const div = document.createElement('div');
     div.className = 'stat-item';
-    div.style.animation = `staggerFadeIn 0.5s ease ${i * 0.1}s both`;
     div.innerHTML = `<div class="stat-number">${s.n}</div><div class="stat-label">${s.l}</div>`;
     statsContainer.appendChild(div);
   });
+  // Stat items entrance animation
+  document.querySelectorAll('.stat-item').forEach((item, i) => {
+    item.style.opacity = '0';
+    item.style.transform = 'translateY(20px)';
+    setTimeout(() => {
+      item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      item.style.opacity = '1';
+      item.style.transform = 'translateY(0)';
+    }, 100 + i * 80);
+  });
 }
-
-// ===== CATEGORIES =====
 function renderCategories() {
   const grid = document.getElementById('categoryGrid');
   grid.innerHTML = '';
   categories.forEach((cat, i) => {
     const div = document.createElement('div');
     div.className = 'category-card';
-    div.style.animation = `staggerFadeIn 0.5s ease ${i * 0.12}s both`;
     div.setAttribute('role', 'button');
     div.setAttribute('tabindex', '0');
     div.setAttribute('aria-label', `${cat.name}分类，${cat.novels.length}篇小说`);
@@ -2990,6 +3020,16 @@ function renderCategories() {
     div.appendChild(img);
     div.appendChild(body);
     grid.appendChild(div);
+  });
+  // Card entrance animation
+  document.querySelectorAll('.category-card').forEach((card, i) => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(20px)';
+    setTimeout(() => {
+      card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+    }, 100 + i * 80);
   });
 }
 
@@ -3063,6 +3103,19 @@ const PAGE_TITLES = {
   about: '关于 - 黒の猫窝'
 };
 
+// Scroll reveal observer
+const scrollRevealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+function observeScrollReveal() {
+  document.querySelectorAll('.scroll-reveal').forEach(el => scrollRevealObserver.observe(el));
+}
+
 function showPage(name, pushState) {
   if (pushState === undefined) pushState = true;
   
@@ -3095,6 +3148,9 @@ function showPage(name, pushState) {
       window.history.pushState({ page: 'home' }, '', window.location.pathname);
     }
   }
+
+  // Scroll reveal
+  observeScrollReveal();
 }
 
 // ===== HASH ROUTER =====
@@ -3203,7 +3259,6 @@ function renderFilteredNovelList(novels) {
   novels.forEach((novel, i) => {
     const div = document.createElement('div');
     div.className = 'novel-item';
-    div.style.animation = `staggerFadeIn 0.4s ease ${i * 0.08}s both`;
     div.setAttribute('role', 'button');
     div.setAttribute('tabindex', '0');
     div.onclick = () => showNovel(currentCategory.novels.findIndex(n => n.id === novel.id));
@@ -3232,9 +3287,17 @@ function renderFilteredNovelList(novels) {
     `;
     list.appendChild(div);
   });
+  // Novel list entrance animation
+  document.querySelectorAll('.novel-item').forEach((item, i) => {
+    item.style.opacity = '0';
+    item.style.transform = 'translateX(-10px)';
+    setTimeout(() => {
+      item.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      item.style.opacity = '1';
+      item.style.transform = 'translateX(0)';
+    }, 50 + i * 60);
+  });
 }
-
-function renderNovelList() {
   let novels = [...currentCategory.novels];
   if (currentAuthorFilter) novels = novels.filter(n => n.author === currentAuthorFilter);
   if (currentSort === 'date') novels.sort((a, b) => new Date(b.date) - new Date(a.date));
