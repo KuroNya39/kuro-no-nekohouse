@@ -3297,7 +3297,6 @@ function renderFilteredNovelList(novels) {
       item.style.transform = 'translateX(0)';
     }, 50 + i * 60);
   });
-}
   let novels = [...currentCategory.novels];
   if (currentAuthorFilter) novels = novels.filter(n => n.author === currentAuthorFilter);
   if (currentSort === 'date') novels.sort((a, b) => new Date(b.date) - new Date(a.date));
