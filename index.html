@@ -3664,20 +3664,20 @@ function showNovel(index, chapterIdx) {
   // 渲染当前章节内容
   contentDiv.innerHTML = '';
 
+  // 前言（仅在第一章/全文时显示，放在章节标题上面）
+  if (novel.preface && currentChapterIndex === 0) {
+    const prefaceBlock = document.createElement('div');
+    prefaceBlock.className = 'reader-preface-block';
+    prefaceBlock.textContent = novel.preface;
+    contentDiv.appendChild(prefaceBlock);
+  }
+
   // 多章节时显示章节标题
   if (chapters.length > 1) {
     const chapterTitle = document.createElement('div');
     chapterTitle.className = 'reader-chapter-title';
     chapterTitle.textContent = currentChapter.title;
     contentDiv.appendChild(chapterTitle);
-  }
-
-  // 前言（仅在第一章/全文时显示）
-  if (novel.preface && currentChapterIndex === 0) {
-    const prefaceBlock = document.createElement('div');
-    prefaceBlock.className = 'reader-preface-block';
-    prefaceBlock.textContent = novel.preface;
-    contentDiv.appendChild(prefaceBlock);
   }
 
   const paragraphs = currentChapter.content.split(/\n+/).filter(p => p.trim());
