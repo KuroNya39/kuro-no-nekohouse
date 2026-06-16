@@ -1605,7 +1605,7 @@ body::before {
   .category-grid { grid-template-columns: 1fr; gap: 18px; }
   .content-with-sidebar { flex-direction: column; }
   .sidebar { width: 100%; }
-  .sort-bar { flex-direction: column; align-items: flex-start; }
+  .sort-bar { flex-wrap: wrap; gap: 6px; }
   .novel-item { padding: 16px 18px; }
   .reader-content { padding: 24px 20px; font-size: var(--reader-font-size); }
   .reader-nav { flex-direction: column; gap: 10px; }
@@ -1998,7 +1998,7 @@ body::before {
         <div class="settings-panel" id="settingsPanel">
           <div class="settings-row" id="chapterSelectRow" style="display:none;">
             <span class="settings-label">章节</span>
-            <select id="chapterSelect" class="settings-select" onchange="showNovel(currentNovelIndex, this.value)"></select>
+            <select id="chapterSelect" class="settings-select" onchange="showNovel(currentNovelIndex, parseInt(this.value))"></select>
           </div>
           <div class="settings-row">
             <span class="settings-label">字号</span>
@@ -4023,6 +4023,7 @@ function startEditNovel(catId, novelId) {
       <div id="editChapterList-${novelId}">
         ${chaptersHTML}
       </div>
+      <button class="chapter-add-btn" style="width:auto;margin-top:8px;" onclick="addEditChapter('${novelId}')">+ 添加章节</button>
     </div>
     <div style="display:flex;gap:8px;margin-top:8px;">
       <button class="admin-small-btn" onclick="saveEditNovel('${catId}','${novelId}')">保存</button>
