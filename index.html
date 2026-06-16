@@ -17,7 +17,7 @@
 <meta name="twitter:description" content="个人同人小说收藏站，收录VOCALOID、偶像梦幻祭等优秀同人创作">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
 <noscript>
 <style>
   .loading-overlay { display: none !important; }
@@ -77,6 +77,18 @@ select {
   --radius-sm: 0px;
   --radius-md: 0px;
   --radius-lg: 0px;
+  /* Default accent (Miku Teal) */
+  --accent-primary: #39c5bb;
+  --accent-primary-light: #5bbfb8;
+  --accent-pink: #5bbfb8;
+  --accent-rose: #8dd8d2;
+  --accent-miku: #39c5bb;
+  --accent-miku-light: #5bbfb8;
+  --accent-miku-glow: rgba(57, 197, 187, 0.15);
+  --accent-gothic: #7a9e8a;
+  --accent-gothic-light: #a0c4b0;
+  --accent-blood: #b08080;
+  --accent-silver: #8a8a8a;
 }
 
 /* ===== DARK MODE ===== */
@@ -506,9 +518,6 @@ body::before {
 .admin-toggle:hover { background: var(--accent-primary); color: white; transform: scale(1.1); }
 .admin-toggle.active { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
 
-/* Scroll Progress */
-.scroll-progress { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, var(--accent-primary), var(--accent-rose)); z-index: 1001; transition: width 0.1s linear; }
-
 /* Canvas Background - Disabled */
 #bgCanvas { display: none; }
 
@@ -614,7 +623,7 @@ body::before {
 .nav-btn.active::after { width: 80%; }
 
 /* Page Sections */
-.page { display: none; opacity: 0; transform: translateY(20px) scale(0.98); transition: opacity 0.5s ease, transform 0.5s ease; }
+.page { display: none; opacity: 0; transform: translateY(20px) scale(0.98); }
 .page.active { display: block; opacity: 1; transform: translateY(0) scale(1); animation: pageFadeIn 0.4s ease; }
 @keyframes pageFadeIn {
   from { opacity: 0; transform: translateY(8px); }
@@ -761,7 +770,7 @@ body::before {
 .category-card { transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s ease, box-shadow 0.3s ease; }
 
 /* Page transition slide */
-.page { transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+.page { }
 
 /* Floating particles background */
 .bg-particles {
@@ -798,9 +807,9 @@ body::before {
   transform: scale(1.05);
 }
 
-/* Reader page turn animation */
+/* Reader page fade transition */
 .reader-content { transition: opacity 0.3s ease; }
-.reader-content.turning { opacity: 0; transform: translateX(20px); }
+.reader-content.turning { opacity: 0; }
 
 /* Scroll progress indicator */
 .scroll-progress {
@@ -996,13 +1005,11 @@ body::before {
   border-radius: var(--radius-sm);
   overflow: hidden;
 }
-.novel-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--accent-primary); transform: scaleY(0); transition: transform 0.3s ease; z-index: 1; }
 .novel-item:hover {
   transform: translateX(4px);
   border-color: var(--accent-primary);
   box-shadow: 0 2px 12px var(--accent-miku-glow);
 }
-.novel-item:hover::before { transform: scaleY(1); }
 .novel-item:hover .novel-number { background: var(--accent-primary); color: white; border-color: var(--accent-primary); transform: scale(1.1); transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
 .novel-item:hover .novel-arrow { transform: translateX(6px); opacity: 1; }
 .novel-item:hover .novel-title { color: var(--accent-primary); }
@@ -1634,7 +1641,7 @@ body::before {
   .nav-btn.active { color: var(--accent-primary); background: rgba(122, 158, 138, 0.06); border-radius: var(--radius-sm); }
 
   /* Add bottom padding for content to avoid nav overlap */
-  .app-container { padding-bottom: 70px; }
+  .app-container { padding-bottom: 80px; }
   .site-footer { padding-bottom: 80px; }
   .back-to-top { bottom: 100px; }
 }
@@ -1643,6 +1650,16 @@ body::before {
   .site-title { font-size: 1.7rem; letter-spacing: 3px; }
   .search-container { margin-bottom: 25px; }
   .stats-row { grid-template-columns: 1fr; }
+}
+
+/* ===== ACCESSIBILITY: Reduced Motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 </style>
 </head>
@@ -2177,9 +2194,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   hideLoading();
 });
 function hideLoading() {
-  setTimeout(() => {
-    document.getElementById('loadingOverlay').classList.add('hidden');
-  }, 1800);
+  document.getElementById('loadingOverlay').classList.add('hidden');
 }
 
 function saveAllData() {
@@ -3233,8 +3248,9 @@ function renderCategories() {
       card.style.transform = 'translateY(0)';
     }, 100 + i * 80);
   });
-  // Mouse tilt effect for category cards
-  document.querySelectorAll('.category-card').forEach(card => {
+  // Mouse tilt effect for category cards (desktop only)
+  if (!window.matchMedia('(hover: none)').matches) {
+    document.querySelectorAll('.category-card').forEach(card => {
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -3249,6 +3265,7 @@ function renderCategories() {
       card.style.transform = 'perspective(600px) rotateX(0) rotateY(0) translateY(0)';
     });
   });
+  }
 }
 
 // ===== CONTINUE READING =====
