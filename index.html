@@ -32,16 +32,6 @@
 </style>
 </noscript>
 <style>
-/* ===== DEPLOYMENT NOTE ===== */
-/* 本文件为纯静态HTML，可直接部署到任何静态托管服务 */
-/* 
-  部署说明：
-  1. 将 index.html 和 miku.jpg / leoizumi.jpg / reiritsu.jpg 放在同一目录下
-  2. 使用任意静态托管服务部署即可（GitHub Pages / Netlify / Vercel / Cloudflare Pages）
-  3. 推荐 Cloudflare Pages（无限带宽 + 国内访问友好）
-*/
-/* 推荐部署方式：GitHub Pages / Vercel / Netlify / Cloudflare Pages */
-
 /* ===== GOTHIC SCROLLBAR ===== */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-primary); }
@@ -50,6 +40,21 @@
 * { scrollbar-width: thin; scrollbar-color: var(--accent-primary) var(--bg-primary); }
 
 /* ===== LIGHT MODE - Pixiv Style ===== */
+/* Global form element reset - consistent font and no border-radius */
+input, select, textarea, button {
+  font-family: var(--font-serif);
+  border-radius: var(--radius-sm);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+}
+
 :root {
   --bg-primary: #fafcfc;
   --bg-secondary: #f0f5f5;
