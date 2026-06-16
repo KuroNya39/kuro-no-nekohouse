@@ -1,6 +1,6 @@
 {
   "_version": 2,
-  "_updatedAt": "2026-06-16T20:57:35.895Z",
+  "_updatedAt": "2026-06-16T20:57:39.450Z",
   "categories": [
     {
       "id": "miku",
@@ -196,6 +196,11 @@
     "_lastSync": "2026-06-14T21:06:29.568Z"
   },
   "timelineData": [
+    {
+      "date": "2026-06-17",
+      "title": "修bug",
+      "desc": "把影响使用的bug基本都修完了。"
+    },
     {
       "date": "2026-06-10",
       "title": "网站上线",
