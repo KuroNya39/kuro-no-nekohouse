@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>配色方案 v3 - 黒の猫窝</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap');
+
+/* ===== Page itself uses miku scheme ===== */
+:root {
+  --page-accent: #39c5bb;
+  --page-accent2: #7ecba1;
+  --page-bg: #f6fbfa;
+  --page-bg2: #eef5f3;
+  --page-text: #2a3a38;
+  --page-text2: #5a7a76;
+  --page-text-muted: #8aa8a4;
+  --page-card-bg: rgba(255,255,255,0.7);
+  --page-border: rgba(57,197,187,0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background-color: var(--page-bg);
+  color: var(--page-text);
+  line-height: 1.6;
+  position: relative;
+}
+
+/* ===== Dual-color polka dot background for the page itself ===== */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.06;
+  background-image:
+    radial-gradient(circle, var(--page-accent) 1px, transparent 1px),
+    radial-gradient(circle, var(--page-accent2) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== Page Header ===== */
+.page-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.page-header h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.8rem;
+  color: var(--page-text);
+  letter-spacing: 4px;
+  margin-bottom: 8px;
+}
+
+.page-header .subtitle {
+  color: var(--page-text-muted);
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+
+.page-header .version-tag {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 3px 14px;
+  font-size: 0.72rem;
+  background: rgba(57,197,187,0.08);
+  color: var(--page-accent);
+  border: 1px solid var(--page-border);
+  letter-spacing: 1px;
+}
+
+/* ===== Section Title ===== */
+.section-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.3rem;
+  letter-spacing: 3px;
+  text-align: center;
+  margin-bottom: 28px;
+  color: var(--page-text);
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--page-accent), transparent);
+  margin: 12px auto 0;
+}
+
+/* ===== Scheme Grid ===== */
+.scheme-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+@media (max-width: 900px) {
+  .scheme-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== Scheme Card ===== */
+.scheme-card {
+  border: 1px solid var(--page-border);
+  background: var(--page-card-bg);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.scheme-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+/* ===== Scheme Header ===== */
+.scheme-header {
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(128,128,128,0.1);
+}
+
+.scheme-name {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--page-text);
+}
+
+.scheme-inspiration {
+  font-size: 0.72rem;
+  color: var(--page-text-muted);
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-family: monospace;
+}
+
+.color-dot {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.color-dot-label {
+  font-size: 0.65rem;
+  color: var(--page-text-muted);
+  margin-left: 2px;
+}
+
+/* ===== Preview Area ===== */
+.scheme-preview {
+  padding: 24px;
+  min-height: 340px;
+  position: relative;
+}
+
+/* ===== Dual-color polka dot inside preview ===== */
+.preview-dots {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  opacity: 0.05;
+}
+
+/* ===== Color Palette ===== */
+.palette {
+  display: flex;
+  gap: 8px;
+  padding: 14px 24px;
+  border-top: 1px solid rgba(128,128,128,0.1);
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.palette-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.palette-swatch {
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+.palette-label {
+  font-size: 0.6rem;
+  color: var(--page-text-muted);
+  font-family: monospace;
+}
+
+/* ===== CSS Variables Display ===== */
+.vars-section {
+  padding: 14px 24px;
+  border-top: 1px solid rgba(128,128,128,0.08);
+  font-family: monospace;
+  font-size: 0.65rem;
+  color: var(--page-text-muted);
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+/* ===== UI Components Preview ===== */
+.preview-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.25rem;
+  margin-bottom: 4px;
+  letter-spacing: 2px;
+}
+
+.preview-subtitle {
+  font-size: 0.78rem;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.preview-divider {
+  width: 60px;
+  height: 1px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.preview-nav {
+  display: flex;
+  gap: 0;
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(128,128,128,0.12);
+}
+
+.preview-nav-item {
+  padding: 6px 14px;
+  font-size: 0.78rem;
+  cursor: default;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  font-family: 'Noto Serif SC', serif;
+}
+
+.preview-nav-item.active {
+  border-bottom-color: currentColor;
+}
+
+.preview-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.preview-card {
+  padding: 14px;
+  border: 1px solid rgba(128,128,128,0.15);
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease;
+}
+
+.preview-card:hover {
+  transform: translateY(-1px);
+}
+
+.preview-card-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.preview-card-meta {
+  font-size: 0.68rem;
+  opacity: 0.55;
+  margin-bottom: 6px;
+}
+
+.preview-card-desc {
+  font-size: 0.75rem;
+  line-height: 1.7;
+  opacity: 0.75;
+}
+
+.preview-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 0.62rem;
+  margin-right: 4px;
+  margin-top: 6px;
+}
+
+.preview-btn {
+  display: inline-block;
+  padding: 5px 14px;
+  font-size: 0.75rem;
+  cursor: default;
+  font-family: 'Noto Serif SC', serif;
+  margin-right: 6px;
+  margin-top: 10px;
+}
+
+.preview-btn-primary {
+  color: #fff;
+}
+
+.preview-btn-outline {
+  background: transparent;
+}
+
+.preview-input {
+  width: 100%;
+  padding: 7px 10px;
+  font-size: 0.78rem;
+  border: 1px solid rgba(128,128,128,0.18);
+  font-family: 'Noto Serif SC', serif;
+  margin-top: 10px;
+  outline: none;
+}
+
+.preview-text {
+  font-size: 0.78rem;
+  line-height: 1.9;
+  text-align: justify;
+  text-indent: 2em;
+  margin-top: 10px;
+  opacity: 0.82;
+}
+
+/* ===== Dark Mode Section ===== */
+.dark-section {
+  margin-top: 48px;
+  padding: 32px;
+  border: 1px solid var(--page-border);
+  background: var(--page-card-bg);
+  backdrop-filter: blur(10px);
+}
+
+.dark-section h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.2rem;
+  margin-bottom: 24px;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+.dark-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .dark-grid { grid-template-columns: 1fr; }
+}
+
+.dark-card {
+  border: 1px solid rgba(128,128,128,0.1);
+  overflow: hidden;
+}
+
+.dark-card-header {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(128,128,128,0.08);
+  background: var(--page-card-bg);
+}
+
+.dark-card-name {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: var(--page-text);
+}
+
+.dark-card-colors {
+  font-size: 0.65rem;
+  color: var(--page-text-muted);
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  font-family: monospace;
+}
+
+.dark-preview {
+  padding: 20px;
+  min-height: 280px;
+  position: relative;
+}
+
+.dark-preview .preview-title {
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+.dark-preview .preview-cards {
+  gap: 8px;
+}
+
+.dark-preview .preview-card {
+  padding: 10px;
+  margin-bottom: 0;
+}
+
+.dark-preview .preview-card-title {
+  font-size: 0.78rem;
+}
+
+.dark-preview .preview-card-meta {
+  font-size: 0.62rem;
+}
+
+.dark-preview .preview-card-desc {
+  font-size: 0.68rem;
+}
+
+.dark-preview .preview-text {
+  font-size: 0.72rem;
+  margin-top: 8px;
+}
+
+.dark-preview .preview-btn {
+  font-size: 0.7rem;
+  padding: 4px 12px;
+}
+
+.dark-palette {
+  display: flex;
+  gap: 6px;
+  padding: 10px 16px;
+  border-top: 1px solid rgba(128,128,128,0.08);
+  flex-wrap: wrap;
+  background: var(--page-card-bg);
+}
+
+.dark-palette .palette-swatch {
+  width: 26px;
+  height: 26px;
+}
+
+.dark-palette .palette-label {
+  font-size: 0.55rem;
+}
+
+/* ===== Design Notes ===== */
+.notes {
+  margin-top: 48px;
+  padding: 28px;
+  border: 1px solid var(--page-border);
+  background: var(--page-card-bg);
+  backdrop-filter: blur(10px);
+}
+
+.notes h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  letter-spacing: 2px;
+}
+
+.notes ul {
+  padding-left: 20px;
+  font-size: 0.85rem;
+  line-height: 2;
+  color: var(--page-text2);
+}
+
+.notes li {
+  margin-bottom: 4px;
+}
+
+.notes code {
+  background: rgba(57,197,187,0.06);
+  padding: 1px 6px;
+  font-size: 0.8rem;
+  font-family: monospace;
+  color: var(--page-accent);
+}
+
+/* ===== Footer ===== */
+.page-footer {
+  text-align: center;
+  margin-top: 40px;
+  padding: 20px;
+  font-size: 0.75rem;
+  color: var(--page-text-muted);
+  letter-spacing: 1px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ===== Page Header ===== -->
+<div class="page-header">
+  <h1>✦ 黒の猫窝 ✦</h1>
+  <p class="subtitle">配色方案 v3 — 双灵感色 · 双色波点</p>
+  <span class="version-tag">v3.0 · 2026-06-17</span>
+</div>
+
+<!-- ===== Light Mode Previews ===== -->
+<h2 class="section-title">☀ 亮色模式预览</h2>
+
+<div class="scheme-grid">
+
+<!-- ===== Scheme 1: Miku 青 (Light) ===== -->
+<div class="scheme-card">
+  <div class="scheme-header">
+    <span class="scheme-name">Miku 青</span>
+    <span class="scheme-inspiration">
+      <span class="color-dot" style="background:#39c5bb;"></span><span class="color-dot-label">#39c5bb</span>
+      <span class="color-dot" style="background:#7ecba1;"></span><span class="color-dot-label">#7ecba1</span>
+    </span>
+  </div>
+  <div class="scheme-preview" style="background:#f6fbfa; color:#2a3a38;">
+    <!-- Dual-color polka dot background -->
+    <div class="preview-dots" style="background-image:
+      radial-gradient(circle, #39c5bb 1px, transparent 1px),
+      radial-gradient(circle, #7ecba1 1px, transparent 1px);
+      background-size: 32px 32px;
+      background-position: 0 0, 16px 16px;"></div>
+    <div class="preview-title">✦ 黒の猫窝 ✦</div>
+    <div class="preview-subtitle">同人小说收藏站</div>
+    <div class="preview-divider" style="background:linear-gradient(90deg,transparent,#39c5bb,transparent);"></div>
+    <div class="preview-nav">
+      <div class="preview-nav-item active" style="color:#39c5bb;">首页</div>
+      <div class="preview-nav-item" style="color:#7a9a96;">时间轴</div>
+      <div class="preview-nav-item" style="color:#7a9a96;">留言</div>
+      <div class="preview-nav-item" style="color:#7a9a96;">关于</div>
+    </div>
+    <div class="preview-cards">
+      <div class="preview-card" style="background:rgba(255,255,255,0.7); border-color:rgba(57,197,187,0.15);">
+        <div class="preview-card-title">月夜下的兄弟</div>
+        <div class="preview-card-meta">2026-06-01 · 4100字 · 虐文</div>
+        <div class="preview-card-desc">朔间兄弟的故事在这里等待被阅读。</div>
+        <span class="preview-tag" style="background:rgba(57,197,187,0.08); color:#39c5bb;">零凛</span>
+        <span class="preview-tag" style="background:rgba(126,203,161,0.1); color:#5aaa82;">中篇</span>
+      </div>
+      <div class="preview-card" style="background:rgba(255,255,255,0.7); border-color:rgba(57,197,187,0.15);">
+        <div class="preview-card-title">星之声</div>
+        <div class="preview-card-meta">2026-06-10 · 2800字</div>
+        <div class="preview-card-desc">来自宇宙的声音，穿越时空的思念。</div>
+        <span class="preview-tag" style="background:rgba(126,203,161,0.1); color:#5aaa82;">初音未来</span>
+        <span class="preview-tag" style="background:rgba(126,203,161,0.1); color:#5aaa82;">短篇</span>
+      </div>
+    </div>
+    <div class="preview-text">这是正文内容示例。青色作为主色调占60-70%，薄荷绿作为副色占30-40%。副色体现在标签、装饰元素和波点背景中，形成清新而有层次的视觉体验。</div>
+    <div style="margin-top:10px;">
+      <span class="preview-btn preview-btn-primary" style="background:#39c5bb;">← 上一章</span>
+      <span class="preview-btn preview-btn-outline" style="border:1px solid rgba(126,203,161,0.35); color:#5aaa82;">下一章 →</span>
+    </div>
+    <input class="preview-input" type="text" placeholder="搜索小说..." style="background:rgba(255,255,255,0.6); border-color:rgba(57,197,187,0.2); color:#2a3a38;">
+  </div>
+  <div class="palette">
+    <div class="palette-item"><div class="palette-swatch" style="background:#f6fbfa;"></div><span class="palette-label">bg-primary</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#eef5f3;"></div><span class="palette-label">bg-secondary</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:rgba(255,255,255,0.7);"></div><span class="palette-label">bg-card</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#2a3a38;"></div><span class="palette-label">text-primary</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#5a7a76;"></div><span class="palette-label">text-secondary</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#8aa8a4;"></div><span class="palette-label">text-muted</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#39c5bb;"></div><span class="palette-label">accent</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#7ecba1;"></div><span class="palette-label">accent2</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:rgba(57,197,187,0.15);"></div><span class="palette-label">border</span></div>
+  </div>
+  <div class="vars-section">--bg-primary: #f6fbfa;
+--bg-secondary: #eef5f3;
+--bg-card: rgba(255,255,255,0.7);
+--text-primary: #2a3a38;
+--text-secondary: #5a7a76;
+--text-muted: #8aa8a4;
+--accent: #39c5bb;
+--accent2: #7ecba1;
+--border: rgba(57,197,187,0.15);
+--dot-color-1: #39c5bb;
+--dot-color-2: #7ecba1;</div>
+</div>
+
+<!-- ===== Scheme 2: 蔷薇粉 (Light) ===== -->
+<div class="scheme-card">
+  <div class="scheme-header">
+    <span class="scheme-name">蔷薇粉</span>
+    <span class="scheme-inspiration">
+      <span class="color-dot" style="background:#F23172;"></span><span class="color-dot-label">#F23172</span>
+      <span class="color-dot" style="background:#f0a060;"></span><span class="color-dot-label">#f0a060</span>
+    </span>
+  </div>
+  <div class="scheme-preview" style="background:#fdf6f8; color:#3a2a2e;">
+    <div class="preview-dots" style="background-image:
+      radial-gradient(circle, #F23172 1px, transparent 1px),
+      radial-gradient(circle, #f0a060 1px, transparent 1px);
+      background-size: 32px 32px;
+      background-position: 0 0, 16px 16px;"></div>
+    <div class="preview-title">✦ 黒の猫窝 ✦</div>
+    <div class="preview-subtitle">同人小说收藏站</div>
+    <div class="preview-divider" style="background:linear-gradient(90deg,transparent,#F23172,transparent);"></div>
+    <div class="preview-nav">
+      <div class="preview-nav-item active" style="color:#F23172;">首页</div>
+      <div class="preview-nav-item" style="color:#9a7a82;">时间轴</div>
+      <div class="preview-nav-item" style="color:#9a7a82;">留言</div>
+      <div class="preview-nav-item" style="color:#9a7a82;">关于</div>
+    </div>
+    <div class="preview-cards">
+      <div class="preview-card" style="background:rgba(255,255,255,0.7); border-color:rgba(242,49,114,0.12);">
+        <div class="preview-card-title">月夜下的兄弟</div>
+        <div class="preview-card-meta">2026-06-01 · 4100字 · 虐文</div>
+        <div class="preview-card-desc">朔间兄弟的故事在这里等待被阅读。</div>
+        <span class="preview-tag" style="background:rgba(242,49,114,0.06); color:#F23172;">零凛</span>
+        <span class="preview-tag" style="background:rgba(240,160,96,0.1); color:#c08040;">中篇</span>
+      </div>
+      <div class="preview-card" style="background:rgba(255,255,255,0.7); border-color:rgba(242,49,114,0.12);">
+        <div class="preview-card-title">星之声</div>
+        <div class="preview-card-meta">2026-06-10 · 2800字</div>
+        <div class="preview-card-desc">来自宇宙的声音，穿越时空的思念。</div>
+        <span class="preview-tag" style="background:rgba(240,160,96,0.1); color:#c08040;">初音未来</span>
+        <span class="preview-tag" style="background:rgba(240,160,96,0.1); color:#c08040;">短篇</span>
+      </div>
+    </div>
+    <div class="preview-text">这是正文内容示例。玫红作为主色调占60-70%，暖杏作为副色占30-40%。副色体现在标签和次要按钮中，形成温暖而富有层次的视觉体验。</div>
+    <div style="margin-top:10px;">
+      <span class="preview-btn preview-btn-primary" style="background:#F23172;">← 上一章</span>
+      <span class="preview-btn preview-btn-outline" style="border:1px solid rgba(240,160,96,0.35); color:#c08040;">下一章 →</span>
+    </div>
+    <input class="preview-input" type="text" placeholder="搜索小说..." style="background:rgba(255,255,255,0.6); border-color:rgba(242,49,114,0.18); color:#3a2a2e;">
+  </div>
+  <div class="palette">
+    <div class="palette-item"><div class="palette-swatch" style="background:#fdf6f8;"></div><span class="palette-label">bg-primary</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#f8eef2;"></div><span class="palette-label">bg-secondary</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:rgba(255,255,255,0.7);"></div><span class="palette-label">bg-card</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#3a2a2e;"></div><span class="palette-label">text-primary</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#7a5a62;"></div><span class="palette-label">text-secondary</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#aa8a92;"></div><span class="palette-label">text-muted</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#F23172;"></div><span class="palette-label">accent</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#f0a060;"></div><span class="palette-label">accent2</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:rgba(242,49,114,0.12);"></div><span class="palette-label">border</span></div>
+  </div>
+  <div class="vars-section">--bg-primary: #fdf6f8;
+--bg-secondary: #f8eef2;
+--bg-card: rgba(255,255,255,0.7);
+--text-primary: #3a2a2e;
+--text-secondary: #7a5a62;
+--text-muted: #aa8a92;
+--accent: #F23172;
+--accent2: #f0a060;
+--border: rgba(242,49,114,0.12);
+--dot-color-1: #F23172;
+--dot-color-2: #f0a060;</div>
+</div>
+
+<!-- ===== Scheme 3: 珊瑚橘 (Light) ===== -->
+<div class="scheme-card">
+  <div class="scheme-header">
+    <span class="scheme-name">珊瑚橘</span>
+    <span class="scheme-inspiration">
+      <span class="color-dot" style="background:#ED6D52;"></span><span class="color-dot-label">#ED6D52</span>
+      <span class="color-dot" style="background:#5ba8d0;"></span><span class="color-dot-label">#5ba8d0</span>
+    </span>
+  </div>
+  <div class="scheme-preview" style="background:#fefcfa; color:#2e2a28;">
+    <div class="preview-dots" style="background-image:
+      radial-gradient(circle, #ED6D52 1px, transparent 1px),
+      radial-gradient(circle, #5ba8d0 1px, transparent 1px);
+      background-size: 32px 32px;
+      background-position: 0 0, 16px 16px;"></div>
+    <div class="preview-title">✦ 黒の猫窝 ✦</div>
+    <div class="preview-subtitle">同人小说收藏站</div>
+    <div class="preview-divider" style="background:linear-gradient(90deg,transparent,#ED6D52,transparent);"></div>
+    <div class="preview-nav">
+      <div class="preview-nav-item active" style="color:#ED6D52;">首页</div>
+      <div class="preview-nav-item" style="color:#8a7a72;">时间轴</div>
+      <div class="preview-nav-item" style="color:#8a7a72;">留言</div>
+      <div class="preview-nav-item" style="color:#8a7a72;">关于</div>
+    </div>
+    <div class="preview-cards">
+      <div class="preview-card" style="background:rgba(255,255,255,0.7); border-color:rgba(237,109,82,0.15);">
+        <div class="preview-card-title">月夜下的兄弟</div>
+        <div class="preview-card-meta">2026-06-01 · 4100字 · 虐文</div>
+        <div class="preview-card-desc">朔间兄弟的故事在这里等待被阅读。</div>
+        <span class="preview-tag" style="background:rgba(237,109,82,0.08); color:#ED6D52;">零凛</span>
+        <span class="preview-tag" style="background:rgba(91,168,208,0.1); color:#4a8ab0;">中篇</span>
+      </div>
+      <div class="preview-card" style="background:rgba(255,255,255,0.7); border-color:rgba(237,109,82,0.15);">
+        <div class="preview-card-title">星之声</div>
+        <div class="preview-card-meta">2026-06-10 · 2800字</div>
+        <div class="preview-card-desc">来自宇宙的声音，穿越时空的思念。</div>
+        <span class="preview-tag" style="background:rgba(91,168,208,0.1); color:#4a8ab0;">初音未来</span>
+        <span class="preview-tag" style="background:rgba(91,168,208,0.1); color:#4a8ab0;">短篇</span>
+      </div>
+    </div>
+    <div class="preview-text">这是正文内容示例。珊瑚橘作为主色调占60-70%，天蓝作为副色占30-40%。副色体现在标签和次要按钮中，形成温暖而不失清新的阅读氛围。</div>
+    <div style="margin-top:10px;">
+      <span class="preview-btn preview-btn-primary" style="background:#ED6D52;">← 上一章</span>
+      <span class="preview-btn preview-btn-outline" style="border:1px solid rgba(91,168,208,0.35); color:#4a8ab0;">下一章 →</span>
+    </div>
+    <input class="preview-input" type="text" placeholder="搜索小说..." style="background:rgba(255,255,255,0.6); border-color:rgba(237,109,82,0.18); color:#2e2a28;">
+  </div>
+  <div class="palette">
+    <div class="palette-item"><div class="palette-swatch" style="background:#fefcfa;"></div><span class="palette-label">bg-primary</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#f8f4f0;"></div><span class="palette-label">bg-secondary</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:rgba(255,255,255,0.7);"></div><span class="palette-label">bg-card</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#2e2a28;"></div><span class="palette-label">text-primary</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#7a6a62;"></div><span class="palette-label">text-secondary</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#aa9a92;"></div><span class="palette-label">text-muted</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#ED6D52;"></div><span class="palette-label">accent</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#5ba8d0;"></div><span class="palette-label">accent2</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:rgba(237,109,82,0.15);"></div><span class="palette-label">border</span></div>
+  </div>
+  <div class="vars-section">--bg-primary: #fefcfa;
+--bg-secondary: #f8f4f0;
+--bg-card: rgba(255,255,255,0.7);
+--text-primary: #2e2a28;
+--text-secondary: #7a6a62;
+--text-muted: #aa9a92;
+--accent: #ED6D52;
+--accent2: #5ba8d0;
+--border: rgba(237,109,82,0.15);
+--dot-color-1: #ED6D52;
+--dot-color-2: #5ba8d0;</div>
+</div>
+
+<!-- ===== Scheme 4: 深夜蓝 (Light) ===== -->
+<div class="scheme-card">
+  <div class="scheme-header">
+    <span class="scheme-name">深夜蓝</span>
+    <span class="scheme-inspiration">
+      <span class="color-dot" style="background:#3a5a9a;"></span><span class="color-dot-label">#3a5a9a</span>
+      <span class="color-dot" style="background:#8a5cb0;"></span><span class="color-dot-label">#8a5cb0</span>
+    </span>
+  </div>
+  <div class="scheme-preview" style="background:#f5f6fa; color:#1a1a2e;">
+    <div class="preview-dots" style="background-image:
+      radial-gradient(circle, #3a5a9a 1px, transparent 1px),
+      radial-gradient(circle, #8a5cb0 1px, transparent 1px);
+      background-size: 32px 32px;
+      background-position: 0 0, 16px 16px;"></div>
+    <div class="preview-title">✦ 黒の猫窝 ✦</div>
+    <div class="preview-subtitle">同人小说收藏站</div>
+    <div class="preview-divider" style="background:linear-gradient(90deg,transparent,#3a5a9a,transparent);"></div>
+    <div class="preview-nav">
+      <div class="preview-nav-item active" style="color:#3a5a9a;">首页</div>
+      <div class="preview-nav-item" style="color:#7a7a9a;">时间轴</div>
+      <div class="preview-nav-item" style="color:#7a7a9a;">留言</div>
+      <div class="preview-nav-item" style="color:#7a7a9a;">关于</div>
+    </div>
+    <div class="preview-cards">
+      <div class="preview-card" style="background:rgba(255,255,255,0.7); border-color:rgba(58,90,154,0.12);">
+        <div class="preview-card-title">月夜下的兄弟</div>
+        <div class="preview-card-meta">2026-06-01 · 4100字 · 虐文</div>
+        <div class="preview-card-desc">朔间兄弟的故事在这里等待被阅读。</div>
+        <span class="preview-tag" style="background:rgba(58,90,154,0.06); color:#3a5a9a;">零凛</span>
+        <span class="preview-tag" style="background:rgba(138,92,176,0.08); color:#7a4ca0;">中篇</span>
+      </div>
+      <div class="preview-card" style="background:rgba(255,255,255,0.7); border-color:rgba(58,90,154,0.12);">
+        <div class="preview-card-title">星之声</div>
+        <div class="preview-card-meta">2026-06-10 · 2800字</div>
+        <div class="preview-card-desc">来自宇宙的声音，穿越时空的思念。</div>
+        <span class="preview-tag" style="background:rgba(138,92,176,0.08); color:#7a4ca0;">初音未来</span>
+        <span class="preview-tag" style="background:rgba(138,92,176,0.08); color:#7a4ca0;">短篇</span>
+      </div>
+    </div>
+    <div class="preview-text">这是正文内容示例。靛蓝作为主色调占60-70%，紫罗兰作为副色占30-40%。副色体现在标签和次要按钮中，营造出深邃宁静的阅读氛围。</div>
+    <div style="margin-top:10px;">
+      <span class="preview-btn preview-btn-primary" style="background:#3a5a9a;">← 上一章</span>
+      <span class="preview-btn preview-btn-outline" style="border:1px solid rgba(138,92,176,0.3); color:#7a4ca0;">下一章 →</span>
+    </div>
+    <input class="preview-input" type="text" placeholder="搜索小说..." style="background:rgba(255,255,255,0.6); border-color:rgba(58,90,154,0.18); color:#1a1a2e;">
+  </div>
+  <div class="palette">
+    <div class="palette-item"><div class="palette-swatch" style="background:#f5f6fa;"></div><span class="palette-label">bg-primary</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#eef0f5;"></div><span class="palette-label">bg-secondary</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:rgba(255,255,255,0.7);"></div><span class="palette-label">bg-card</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#1a1a2e;"></div><span class="palette-label">text-primary</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#5a5a7a;"></div><span class="palette-label">text-secondary</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#8a8aaa;"></div><span class="palette-label">text-muted</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#3a5a9a;"></div><span class="palette-label">accent</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:#8a5cb0;"></div><span class="palette-label">accent2</span></div>
+    <div class="palette-item"><div class="palette-swatch" style="background:rgba(58,90,154,0.12);"></div><span class="palette-label">border</span></div>
+  </div>
+  <div class="vars-section">--bg-primary: #f5f6fa;
+--bg-secondary: #eef0f5;
+--bg-card: rgba(255,255,255,0.7);
+--text-primary: #1a1a2e;
+--text-secondary: #5a5a7a;
+--text-muted: #8a8aaa;
+--accent: #3a5a9a;
+--accent2: #8a5cb0;
+--border: rgba(58,90,154,0.12);
+--dot-color-1: #3a5a9a;
+--dot-color-2: #8a5cb0;</div>
+</div>
+
+</div><!-- end scheme-grid -->
+
+<!-- ===== Dark Mode Previews ===== -->
+<div class="dark-section">
+  <h2>☾ 暗色模式预览</h2>
+  <div class="dark-grid">
+
+  <!-- ===== Miku 青 (Dark) ===== -->
+  <div class="dark-card">
+    <div class="dark-card-header">
+      <span class="dark-card-name">Miku 青 · 暗</span>
+      <span class="dark-card-colors">
+        <span class="color-dot" style="background:#39c5bb;"></span>
+        <span class="color-dot" style="background:#7ecba1;"></span>
+      </span>
+    </div>
+    <div class="dark-preview" style="background:#0a1a1a; color:#d0e8e4;">
+      <div class="preview-dots" style="background-image:
+        radial-gradient(circle, #39c5bb 1px, transparent 1px),
+        radial-gradient(circle, #7ecba1 1px, transparent 1px);
+        background-size: 32px 32px;
+        background-position: 0 0, 16px 16px;"></div>
+      <div class="preview-title">✦ 黒の猫窝 ✦</div>
+      <div class="preview-divider" style="background:linear-gradient(90deg,transparent,#39c5bb,transparent);"></div>
+      <div class="preview-cards">
+        <div class="preview-card" style="background:rgba(20,40,38,0.6); border-color:rgba(57,197,187,0.12);">
+          <div class="preview-card-title">月夜下的兄弟</div>
+          <div class="preview-card-meta">2026-06-01 · 4100字</div>
+          <div class="preview-card-desc">朔间兄弟的故事。</div>
+          <span class="preview-tag" style="background:rgba(57,197,187,0.1); color:#39c5bb;">零凛</span>
+          <span class="preview-tag" style="background:rgba(126,203,161,0.1); color:#7ecba1;">中篇</span>
+        </div>
+        <div class="preview-card" style="background:rgba(20,40,38,0.6); border-color:rgba(57,197,187,0.12);">
+          <div class="preview-card-title">星之声</div>
+          <div class="preview-card-meta">2026-06-10 · 2800字</div>
+          <div class="preview-card-desc">来自宇宙的声音。</div>
+          <span class="preview-tag" style="background:rgba(126,203,161,0.1); color:#7ecba1;">初音未来</span>
+        </div>
+      </div>
+      <div class="preview-text">暗色模式下青色与薄荷绿交替波点若隐若现，营造宁静的深夜阅读氛围。</div>
+      <div style="margin-top:8px;">
+        <span class="preview-btn preview-btn-primary" style="background:#39c5bb;">← 上一章</span>
+        <span class="preview-btn preview-btn-outline" style="border:1px solid rgba(126,203,161,0.3); color:#7ecba1;">下一章 →</span>
+      </div>
+    </div>
+    <div class="dark-palette">
+      <div class="palette-item"><div class="palette-swatch" style="background:#0a1a1a;"></div><span class="palette-label">bg</span></div>
+      <div class="palette-item"><div class="palette-swatch" style="background:rgba(20,40,38,0.6);"></div><span class="palette-label">card</span></div>
+      <div class="palette-item"><div class="palette-swatch" style="background:#d0e8e4;"></div><span class="palette-label">text</span></div>
+      <div class="palette-item"><div class="palette-swatch" style="background:#39c5bb;"></div><span class="palette-label">accent</span></div>
+      <div class="palette-item"><div class="palette-swatch" style="background:#7ecba1;"></div><span class="palette-label">accent2</span></div>
+    </div>
+  </div>
+
+  <!-- ===== 蔷薇粉 (Dark) ===== -->
+  <div class="dark-card">
+    <div class="dark-card-header">
+      <span class="dark-card-name">蔷薇粉 · 暗</span>
+      <span class="dark-card-colors">
+        <span class="color-dot" style="background:#F23172;"></span>
+        <span class="color-dot" style="background:#f0a060;"></span>
+      </span>
+    </div>
+    <div class="dark-preview" style="background:#1a0a10; color:#e8d0d6;">
+      <div class="preview-dots" style="background-image:
+        radial-gradient(circle, #F23172 1px, transparent 1px),
+        radial-gradient(circle, #f0a060 1px, transparent 1px);
+        background-size: 32px 32px;
+        background-position: 0 0, 16px 16px;"></div>
+      <div class="preview-title">✦ 黒の猫窝 ✦</div>
+      <div class="preview-divider" style="background:linear-gradient(90deg,transparent,#F23172,transparent);"></div>
+      <div class="preview-cards">
+        <div class="preview-card" style="background:rgba(40,20,28,0.6); border-color:rgba(242,49,114,0.12);">
+          <div class="preview-card-title">月夜下的兄弟</div>
+          <div class="preview-card-meta">2026-06-01 · 4100字</div>
+          <div class="preview-card-desc">朔间兄弟的故事。</div>
+          <span class="preview-tag" style="background:rgba(242,49,114,0.1); color:#F23172;">零凛</span>
+          <span class="preview-tag" style="background:rgba(240,160,96,0.1); color:#f0a060;">中篇</span>
+        </div>
+        <div class="preview-card" style="background:rgba(40,20,28,0.6); border-color:rgba(242,49,114,0.12);">
+          <div class="preview-card-title">星之声</div>
+          <div class="preview-card-meta">2026-06-10 · 2800字</div>
+          <div class="preview-card-desc">来自宇宙的声音。</div>
+          <span class="preview-tag" style="background:rgba(240,160,96,0.1); color:#f0a060;">初音未来</span>
+        </div>
+      </div>
+      <div class="preview-text">暗色模式下玫红与暖杏交替波点，营造温暖而神秘的深夜阅读氛围。</div>
+      <div style="margin-top:8px;">
+        <span class="preview-btn preview-btn-primary" style="background:#F23172;">← 上一章</span>
+        <span class="preview-btn preview-btn-outline" style="border:1px solid rgba(240,160,96,0.3); color:#f0a060;">下一章 →</span>
+      </div>
+    </div>
+    <div class="dark-palette">
+      <div class="palette-item"><div class="palette-swatch" style="background:#1a0a10;"></div><span class="palette-label">bg</span></div>
+      <div class="palette-item"><div class="palette-swatch" style="background:rgba(40,20,28,0.6);"></div><span class="palette-label">card</span></div>
+      <div class="palette-item"><div class="palette-swatch" style="background:#e8d0d6;"></div><span class="palette-label">text</span></div>
+      <div class="palette-item"><div class="palette-swatch" style="background:#F23172;"></div><span class="palette-label">accent</span></div>
+      <div class="palette-item"><div class="palette-swatch" style="background:#f0a060;"></div><span class="palette-label">accent2</span></div>
+    </div>
+  </div>
+
+  <!-- ===== 珊瑚橘 (Dark) ===== -->
+  <div class="dark-card">
+    <div class="dark-card-header">
+      <span class="dark-card-name">珊瑚橘 · 暗</span>
+      <span class="dark-card-colors">
+        <span class="color-dot" style="background:#ED6D52;"></span>
+        <span class="color-dot" style="background:#5ba8d0;"></span>
+      </span>
+    </div>
+    <div class="dark-preview" style="background:#1a1410; color:#e0d8d0;">
+      <div class="preview-dots" style="background-image:
+        radial-gradient(circle, #ED6D52 1px, transparent 1px),
+        radial-gradient(circle, #5ba8d0 1px, transparent 1px);
+        background-size: 32px 32px;
+        background-position: 0 0, 16px 16px;"></div>
+      <div class="preview-title">✦ 黒の猫窝 ✦</div>
+      <div class="preview-divider" style="background:linear-gradient(90deg,transparent,#ED6D52,transparent);"></div>
+      <div class="preview-cards">
+        <div class="preview-card" style="background:rgba(40,30,24,0.6); border-color:rgba(237,109,82,0.12);">
+          <div class="preview-card-title">月夜下的兄弟</div>
+          <div class="preview-card-meta">2026-06-01 · 4100字</div>
+          <div class="preview-card-desc">朔间兄弟的故事。</div>
+          <span class="preview-tag" style="background:rgba(237,109,82,0.1); color:#ED6D52;">零凛</span>
+          <span class="preview-tag" style="background:rgba(91,168,208,0.1); color:#5ba8d0;">中篇</span>
+        </div>
+        <div class="preview-card" style="background:rgba(40,30,24,0.6); border-color:rgba(237,109,82,0.12);">
+          <div class="preview-card-title">星之声</div>
+          <div class="preview-card-meta">2026-06-10 · 2800字</div>
+          <div class="preview-card-desc">来自宇宙的声音。</div>
+          <span class="preview-tag" style="background:rgba(91,168,208,0.1); color:#5ba8d0;">初音未来</span>
+        </div>
+      </div>
+      <div class="preview-text">暗色模式下珊瑚橘与天蓝交替波点，营造温暖而宁静的深夜阅读氛围。</div>
+      <div style="margin-top:8px;">
+        <span class="preview-btn preview-btn-primary" style="background:#ED6D52;">← 上一章</span>
+        <span class="preview-btn preview-btn-outline" style="border:1px solid rgba(91,168,208,0.3); color:#5ba8d0;">下一章 →</span>
+      </div>
+    </div>
+    <div class="dark-palette">
+      <div class="palette-item"><div class="palette-swatch" style="background:#1a1410;"></div><span class="palette-label">bg</span></div>
+      <div class="palette-item"><div class="palette-swatch" style="background:rgba(40,30,24,0.6);"></div><span class="palette-label">card</span></div>
+      <div class="palette-item"><div class="palette-swatch" style="background:#e0d8d0;"></div><span class="palette-label">text</span></div>
+      <div class="palette-item"><div class="palette-swatch" style="background:#ED6D52;"></div><span class="palette-label">accent</span></div>
+      <div class="palette-item"><div class="palette-swatch" style="background:#5ba8d0;"></div><span class="palette-label">accent2</span></div>
+    </div>
+  </div>
+
+  <!-- ===== 深夜蓝 (Dark) ===== -->
+  <div class="dark-card">
+    <div class="dark-card-header">
+      <span class="dark-card-name">深夜蓝 · 暗</span>
+      <span class="dark-card-colors">
+        <span class="color-dot" style="background:#3a5a9a;"></span>
+        <span class="color-dot" style="background:#8a5cb0;"></span>
+      </span>
+    </div>
+    <div class="dark-preview" style="background:#0a0a1a; color:#d0d0e8;">
+      <div class="preview-dots" style="background-image:
+        radial-gradient(circle, #3a5a9a 1px, transparent 1px),
+        radial-gradient(circle, #8a5cb0 1px, transparent 1px);
+        background-size: 32px 32px;
+        background-position: 0 0, 16px 16px;"></div>
+      <div class="preview-title">✦ 黒の猫窝 ✦</div>
+      <div class="preview-divider" style="background:linear-gradient(90deg,transparent,#3a5a9a,transparent);"></div>
+      <div class="preview-cards">
+        <div class="preview-card" style="background:rgba(16,16,36,0.6); border-color:rgba(58,90,154,0.15);">
+          <div class="preview-card-title">月夜下的兄弟</div>
+          <div class="preview-card-meta">2026-06-01 · 4100字</div>
+          <div class="preview-card-desc">朔间兄弟的故事。</div>
+          <span class="preview-tag" style="background:rgba(58,90,154,0.1); color:#3a5a9a;">零凛</span>
+          <span class="preview-tag" style="background:rgba(138,92,176,0.1); color:#8a5cb0;">中篇</span>
+        </div>
+        <div class="preview-card" style="background:rgba(16,16,36,0.6); border-color:rgba(58,90,154,0.15);">
+          <div class="preview-card-title">星之声</div>
+          <div class="preview-card-meta">2026-06-10 · 2800字</div>
+          <div class="preview-card-desc">来自宇宙的声音。</div>
+          <span class="preview-tag" style="background:rgba(138,92,176,0.1); color:#8a5cb0;">初音未来</span>
+        </div>
+      </div>
+      <div class="preview-text">暗色模式下靛蓝与紫罗兰交替波点，营造深邃而神秘的深夜阅读氛围。</div>
+      <div style="margin-top:8px;">
+        <span class="preview-btn preview-btn-primary" style="background:#3a5a9a;">← 上一章</span>
+        <span class="preview-btn preview-btn-outline" style="border:1px solid rgba(138,92,176,0.3); color:#8a5cb0;">下一章 →</span>
+      </div>
+    </div>
+    <div class="dark-palette">
+      <div class="palette-item"><div class="palette-swatch" style="background:#0a0a1a;"></div><span class="palette-label">bg</span></div>
+      <div class="palette-item"><div class="palette-swatch" style="background:rgba(16,16,36,0.6);"></div><span class="palette-label">card</span></div>
+      <div class="palette-item"><div class="palette-swatch" style="background:#d0d0e8;"></div><span class="palette-label">text</span></div>
+      <div class="palette-item"><div class="palette-swatch" style="background:#3a5a9a;"></div><span class="palette-label">accent</span></div>
+      <div class="palette-item"><div class="palette-swatch" style="background:#8a5cb0;"></div><span class="palette-label">accent2</span></div>
+    </div>
+  </div>
+
+  </div><!-- end dark-grid -->
+</div><!-- end dark-section -->
+
+<!-- ===== Design Notes ===== -->
+<div class="notes">
+  <h2>设计说明</h2>
+  <ul>
+    <li><strong>双灵感色（v3 核心变化）</strong>：每个方案有两个灵感色。主色（accent）占 60-70%，用于标题、主按钮、导航高亮、装饰线等核心元素；副色（accent2）占 30-40%，用于标签、次要按钮、波点背景等辅助元素</li>
+    <li><strong>双色波点背景</strong>：<code>body::before</code> 使用两个 <code>radial-gradient</code> 交替排列，通过 <code>background-position</code> 偏移半个周期实现棋盘式双色波点。CSS 变量 <code>--dot-color-1</code> 和 <code>--dot-color-2</code> 分别控制两种波点颜色</li>
+    <li><strong>副色使用场景</strong>：标签（tag）使用副色背景 + 副色文字；次要按钮使用副色边框 + 副色文字；波点背景中副色与主色交替出现，形成丰富的视觉层次</li>
+    <li><strong>阅读优先</strong>：所有配色以长时间阅读舒适度为第一目标，背景使用微妙的色调倾向（而非纯白），减少视觉疲劳</li>
+    <li><strong>卡片半透明</strong>：卡片使用 <code>rgba(255,255,255,0.7)</code> 半透明背景 + <code>backdrop-filter: blur(10px)</code> 毛玻璃效果，让背景波点若隐若现</li>
+    <li><strong>边框透明度</strong>：边框使用主题色的低透明度（12%-15%），比纯灰色边框更有设计感，同时不会太抢眼</li>
+    <li><strong>文字层次</strong>：主文字使用带色调倾向的深色（如 <code>#2a3a38</code> 而非纯黑 <code>#000</code>），次要文字和灰色文字层次分明</li>
+    <li><strong>暗色模式</strong>：暗色背景使用灵感色的极深版本（如 <code>#0a1a1a</code> 而非纯黑），卡片使用半透明深色，双色波点在暗色模式下透明度略微提高以保持可见性</li>
+    <li><strong>直角设计</strong>：所有元素保持直角（<code>border-radius: 0</code>），符合网站哥特风格</li>
+    <li><strong>字体</strong>：标题使用 <code>Noto Serif SC</code> 衬线体，正文使用 <code>Noto Sans SC</code> 无衬线体，哥特装饰符号 <code>✦</code> 贯穿全站</li>
+  </ul>
+</div>
+
+<!-- ===== Footer ===== -->
+<div class="page-footer">
+  ✦ 黒の猫窝 · 配色方案 v3 ✦
+</div>
+
+</div><!-- end container -->
+</body>
+</html>

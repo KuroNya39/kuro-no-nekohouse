@@ -218,6 +218,8 @@ select {
   --accent-gothic: #8a9ab8;
   --accent-gothic-light: #a8b8d0;
   --accent-blood: #b08070;
+  --accent-secondary: #BADBF2;
+  --accent-secondary-glow: rgba(91, 168, 208, 0.15);
   --accent-miku-alt: #ED6D52;
   --accent-miku-alt-light: #f29078;
   --border-light: rgba(237, 109, 82, 0.15);
@@ -241,6 +243,8 @@ select {
   --accent-gothic: #a0b0c8;
   --accent-gothic-light: #b8c8e0;
   --accent-blood: #d89888;
+  --accent-secondary: #d0e8f8;
+  --accent-secondary-glow: rgba(112, 188, 224, 0.12);
   --accent-miku-alt: #f08068;
   --accent-miku-alt-light: #f4a090;
   --border-light: rgba(240, 128, 104, 0.12);
@@ -266,6 +270,8 @@ select {
   --accent-gothic: #6a4a8a;
   --accent-gothic-light: #8a6aa8;
   --accent-blood: #7a4060;
+  --accent-secondary: #46266E;
+  --accent-secondary-glow: rgba(70, 38, 110, 0.12);
   --accent-miku-alt: #6a4a8a;
   --accent-miku-alt-light: #8a6aa8;
   --border-light: rgba(0, 30, 68, 0.1);
@@ -292,6 +298,8 @@ select {
   --accent-gothic: #7a4ea8;
   --accent-gothic-light: #9a70c0;
   --accent-blood: #a86888;
+  --accent-secondary: #5a3888;
+  --accent-secondary-glow: rgba(90, 56, 136, 0.15);
   --accent-miku-alt: #7a4ea8;
   --accent-miku-alt-light: #9a70c0;
   --border-light: rgba(0, 30, 68, 0.2);
@@ -349,6 +357,16 @@ body::before {
 
 [data-theme="dark"] body::before {
   opacity: 0.04;
+}
+
+/* Dual-color dot pattern for schemes with secondary accent */
+[data-color-scheme="coral"] body::before,
+[data-color-scheme="night"] body::before {
+  background-image:
+    radial-gradient(circle, var(--accent-primary) 2px, transparent 2px),
+    radial-gradient(circle, var(--accent-secondary) 2px, transparent 2px);
+  background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
 }
 
 /* Skip link for accessibility */
@@ -802,6 +820,10 @@ body::before {
 .social-link:hover { transform: translateY(-3px); }
 
 /* Tag hover color fill */
+.novel-tag:nth-child(even) {
+  color: var(--accent-secondary, var(--accent-primary));
+  background: var(--accent-secondary-glow, rgba(122, 158, 138, 0.06));
+}
 .novel-tag {
   transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
