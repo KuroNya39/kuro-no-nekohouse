@@ -90,6 +90,8 @@ select {
   --accent-gothic: #7a9e8a;
   --accent-gothic-light: #a0c4b0;
   --accent-blood: #b08080;
+  --accent-secondary: #5bbfb8;
+  --accent-secondary-glow: rgba(91, 191, 184, 0.15);
   --accent-silver: #8a8a8a;
 }
 
@@ -132,6 +134,8 @@ select {
   --accent-gothic: #7a9e8a;
   --accent-gothic-light: #a0c4b0;
   --accent-blood: #b08080;
+  --accent-secondary: #5bbfb8;
+  --accent-secondary-glow: rgba(91, 191, 184, 0.15);
 }
 [data-color-scheme="miku"][data-theme="dark"] {
   --bg-primary: #0a1a1a;
@@ -151,6 +155,8 @@ select {
   --accent-gothic: #8ab8a0;
   --accent-gothic-light: #a8d4b8;
   --accent-blood: #c89898;
+  --accent-secondary: #6de0d8;
+  --accent-secondary-glow: rgba(109, 224, 216, 0.1);
   --border-light: rgba(77, 212, 204, 0.12);
   --border-hover: rgba(77, 212, 204, 0.3);
 }
@@ -174,6 +180,8 @@ select {
   --accent-gothic: #c44a78;
   --accent-gothic-light: #e07098;
   --accent-blood: #d06060;
+  --accent-secondary: #f5608e;
+  --accent-secondary-glow: rgba(245, 96, 142, 0.12);
   --border-light: rgba(242, 49, 114, 0.12);
   --border-hover: rgba(242, 49, 114, 0.3);
 }
@@ -195,6 +203,8 @@ select {
   --accent-gothic: #d05888;
   --accent-gothic-light: #e880a8;
   --accent-blood: #e07878;
+  --accent-secondary: #f870a0;
+  --accent-secondary-glow: rgba(248, 112, 160, 0.1);
   --border-light: rgba(245, 72, 136, 0.12);
   --border-hover: rgba(245, 72, 136, 0.3);
 }
@@ -343,12 +353,16 @@ body {
   position: relative;
 }
 
+/* Dual-color dot pattern for all schemes */
 body::before {
   content: '';
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
-  background-image: radial-gradient(circle, var(--accent-primary) 2px, transparent 2px);
+  background-image:
+    radial-gradient(circle, var(--accent-primary) 2px, transparent 2px),
+    radial-gradient(circle, var(--accent-secondary) 2px, transparent 2px);
   background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
   pointer-events: none;
   z-index: -1;
   opacity: 0.06;
@@ -357,16 +371,6 @@ body::before {
 
 [data-theme="dark"] body::before {
   opacity: 0.04;
-}
-
-/* Dual-color dot pattern for schemes with secondary accent */
-[data-color-scheme="coral"] body::before,
-[data-color-scheme="night"] body::before {
-  background-image:
-    radial-gradient(circle, var(--accent-primary) 2px, transparent 2px),
-    radial-gradient(circle, var(--accent-secondary) 2px, transparent 2px);
-  background-size: 24px 24px;
-  background-position: 0 0, 12px 12px;
 }
 
 /* Skip link for accessibility */
