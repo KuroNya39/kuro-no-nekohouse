@@ -3576,6 +3576,7 @@ function renderFilteredNovelList(novels) {
           <span>${novel.date}</span>
           <span>${novel.wordCount} 字</span>
           <span>约 ${readTime} 分钟</span>
+          <span>${(novel.chapters || []).length} 章</span>
         </div>
         <div class="novel-tags">${novel.tags.map(t => `<span class="novel-tag">${escapeHTML(t)}</span>`).join('')}</div>
       </div>
@@ -3623,7 +3624,7 @@ function showNovel(index, chapterIdx) {
 
   // Calculate reading time
   const readTime = Math.max(1, Math.round(novel.wordCount / 300));
-  document.getElementById('readerMeta').textContent = `${novel.date} · ${novel.wordCount} 字 · 约 ${readTime} 分钟 · ${novel.tags.join(' / ')}`;
+  document.getElementById('readerMeta').textContent = `${novel.date} · ${novel.wordCount} 字 · 约 ${readTime} 分钟 · ${(novel.chapters || []).length} 章 · ${novel.tags.join(' / ')}`;
   document.getElementById('readerAuthor').textContent = `作者：${novel.author}`;
 
   // 处理章节：向后兼容没有 chapters 字段的旧数据
