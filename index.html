@@ -87,6 +87,7 @@ select {
   --accent-miku: #39c5bb;
   --accent-miku-light: #5bbfb8;
   --accent-miku-glow: rgba(57, 197, 187, 0.15);
+  --accent-tag-bg: rgba(57, 197, 187, 0.08);
   --accent-gothic: #7a9e8a;
   --accent-gothic-light: #a0c4b0;
   --accent-blood: #b08080;
@@ -113,6 +114,7 @@ select {
   --accent-miku: #4dd4cc;
   --accent-miku-light: #6de0d8;
   --accent-miku-glow: rgba(77, 212, 204, 0.1);
+  --accent-tag-bg: rgba(57, 197, 187, 0.1);
   --border-light: rgba(57, 197, 187, 0.12);
   --border-hover: rgba(77, 212, 204, 0.3);
   --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
@@ -171,6 +173,7 @@ select {
   --accent-miku: #F23172;
   --accent-miku-light: #f5608e;
   --accent-miku-glow: rgba(242, 49, 114, 0.12);
+  --accent-tag-bg: rgba(242, 49, 114, 0.06);
   --accent-gothic: #c44a78;
   --accent-gothic-light: #e07098;
   --accent-blood: #d06060;
@@ -192,6 +195,7 @@ select {
   --accent-miku: #f54888;
   --accent-miku-light: #f870a0;
   --accent-miku-glow: rgba(245, 72, 136, 0.1);
+  --accent-tag-bg: rgba(242, 49, 114, 0.1);
   --accent-gothic: #d05888;
   --accent-gothic-light: #e880a8;
   --accent-blood: #e07878;
@@ -215,6 +219,7 @@ select {
   --accent-miku: #BADBF2;
   --accent-miku-light: #d0e8f8;
   --accent-miku-glow: rgba(186, 219, 242, 0.2);
+  --accent-tag-bg: rgba(237, 109, 82, 0.08);
   --accent-gothic: #8a9ab8;
   --accent-gothic-light: #a8b8d0;
   --accent-blood: #b08070;
@@ -240,6 +245,7 @@ select {
   --accent-miku: #c8e0f4;
   --accent-miku-light: #dceaf8;
   --accent-miku-glow: rgba(200, 224, 244, 0.12);
+  --accent-tag-bg: rgba(237, 109, 82, 0.1);
   --accent-gothic: #a0b0c8;
   --accent-gothic-light: #b8c8e0;
   --accent-blood: #d89888;
@@ -267,6 +273,7 @@ select {
   --accent-miku: #001E44;
   --accent-miku-light: #1a3a6a;
   --accent-miku-glow: rgba(0, 30, 68, 0.1);
+  --accent-tag-bg: rgba(58, 90, 154, 0.06);
   --accent-gothic: #6a4a8a;
   --accent-gothic-light: #8a6aa8;
   --accent-blood: #7a4060;
@@ -295,6 +302,7 @@ select {
   --accent-miku: #1a3a6a;
   --accent-miku-light: #2a5090;
   --accent-miku-glow: rgba(0, 30, 68, 0.15);
+  --accent-tag-bg: rgba(58, 90, 154, 0.1);
   --accent-gothic: #7a4ea8;
   --accent-gothic-light: #9a70c0;
   --accent-blood: #a86888;
@@ -1056,7 +1064,7 @@ body::before {
 .novel-author { font-size: 0.8rem; color: var(--accent-pink); margin-bottom: 4px; }
 .novel-meta { font-size: 0.75rem; color: var(--text-muted); display: flex; gap: 14px; flex-wrap: wrap; }
 .novel-tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
-.novel-tag { padding: 2px 8px; background: rgba(122, 158, 138, 0.06); font-size: 0.7rem; color: var(--accent-primary); }
+.novel-tag { padding: 2px 8px; background: var(--accent-tag-bg, rgba(122, 158, 138, 0.06)); font-size: 0.7rem; color: var(--accent-primary); }
 .novel-arrow { color: var(--text-muted); font-size: 1.1rem; transition: var(--transition); opacity: 0.3; align-self: center; }
 .novel-item:hover .novel-arrow { opacity: 1; color: var(--accent-primary); }
 
