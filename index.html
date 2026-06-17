@@ -347,6 +347,7 @@ body {
   line-height: 1.8;
   min-height: 100vh;
   overflow-x: hidden;
+  contain: paint;
   transition: background 0.4s ease, color 0.4s ease;
   position: relative;
 }
@@ -471,6 +472,7 @@ body::before {
   position: fixed; top: 16px; right: 16px; z-index: 1000;
   display: flex; gap: 8px; align-items: center;
   transition: transform 0.3s ease;
+  will-change: transform;
 }
 
 /* Color Scheme Dropdown */
@@ -1661,8 +1663,9 @@ body::before {
     margin-bottom: 0;
     gap: 0;
     justify-content: space-around;
-    box-shadow: 0 -2px 16px rgba(0,0,0,0.08);
+    box-shadow: 0 -1px 8px rgba(0,0,0,0.06);
     transition: transform 0.3s ease;
+    will-change: transform;
   }
   .nav-btn {
     padding: 6px 10px;
@@ -2829,9 +2832,9 @@ function initBackToTop() {
   window.addEventListener('scroll', () => {
     if (!ticking) {
       requestAnimationFrame(() => {
-        if (window.scrollY > 400) {
+        if (window.scrollY > 400 && !btn.classList.contains('auto-hidden')) {
           btn.classList.add('visible');
-        } else {
+        } else if (window.scrollY <= 400) {
           btn.classList.remove('visible');
         }
         ticking = false;
@@ -3845,13 +3848,13 @@ function initReaderAutoHide() {
         // Scrolling down - hide
         if (toolbar) toolbar.style.transform = 'translateY(-60px)';
         if (navBar) navBar.style.transform = 'translateY(100%)';
-        if (backToTop) backToTop.style.transform = 'translateY(100%)';
+        if (backToTop) { backToTop.classList.remove('visible'); backToTop.classList.add('auto-hidden'); }
         isHidden = true;
       } else if (diff < 0 && isHidden) {
         // Scrolling up - show
         if (toolbar) toolbar.style.transform = 'translateY(0)';
         if (navBar) navBar.style.transform = 'translateY(0)';
-        if (backToTop) backToTop.style.transform = 'translateY(0)';
+        if (backToTop) { backToTop.classList.remove('auto-hidden'); if (currentY > 400) backToTop.classList.add('visible'); }
         isHidden = false;
       }
     }
