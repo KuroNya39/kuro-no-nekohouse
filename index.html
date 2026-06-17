@@ -1203,7 +1203,7 @@ body::before {
 }
 
 /* Reader Settings */
-.reader-settings { background: var(--bg-card); border: 1px solid var(--border-light); margin-bottom: 25px; border-radius: var(--radius-sm); backdrop-filter: blur(10px); }
+.reader-settings { background: var(--bg-card); border: 1px solid var(--border-light); margin-bottom: 25px; border-radius: var(--radius-sm); backdrop-filter: blur(10px); transition: opacity 0.3s ease, max-height 0.3s ease, margin 0.3s ease; }
 .settings-header { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: var(--transition); }
 .settings-header:hover { background: rgba(122, 158, 138, 0.03); }
 .settings-title { font-size: 0.85rem; color: var(--text-muted); }
@@ -1350,7 +1350,7 @@ body::before {
 }
 
 /* Reader Nav */
-.reader-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-light); }
+.reader-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-light); transition: opacity 0.3s ease, max-height 0.3s ease, margin 0.3s ease; }
 .reader-nav-btn { padding: 10px 24px; border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-secondary); font-family: var(--font-serif); font-size: 0.85rem; cursor: pointer; transition: var(--transition); letter-spacing: 0.5px; border-radius: var(--radius-sm); }
 .reader-nav-btn:hover { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
 
@@ -2240,6 +2240,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderAboutPage();
   initNav();
   initReaderSettings();
+  initReaderAutoHide();
   initHashRouter();
   initTypewriterEffect();
   initSwipeNavigation();
@@ -3799,7 +3800,7 @@ function initReaderSettings() {
   lineSlider.addEventListener('input', () => {
     const height = lineSlider.value;
     document.getElementById('lineHeightValue').textContent = height;
-    document.getElementById('readerContent').style.lineHeight = height;
+    document.getElementById('readerContent').style.setProperty('--reader-line-height', height);
     localStorage.setItem('readerLineHeight', height);
   });
 
@@ -3810,7 +3811,7 @@ function initReaderSettings() {
   }
   if (localStorage.getItem('readerLineHeight')) {
     lineSlider.value = localStorage.getItem('readerLineHeight');
-    document.getElementById('readerContent').style.lineHeight = localStorage.getItem('readerLineHeight');
+    document.getElementById('readerContent').style.setProperty('--reader-line-height', localStorage.getItem('readerLineHeight'));
     document.getElementById('lineHeightValue').textContent = localStorage.getItem('readerLineHeight');
   }
 }
@@ -3830,9 +3831,51 @@ function setReaderStyle(style) {
   document.getElementById('fontSizeValue').textContent = p.font + 'px';
   document.getElementById('lineHeightValue').textContent = p.line;
   document.getElementById('readerContent').style.setProperty('--reader-font-size', p.font + 'px');
-  document.getElementById('readerContent').style.lineHeight = p.line;
+  document.getElementById('readerContent').style.setProperty('--reader-line-height', p.line);
   localStorage.setItem('readerFontSize', p.font);
   localStorage.setItem('readerLineHeight', p.line);
+}
+
+// ===== READER AUTO-HIDE ON SCROLL (MOBILE) =====
+function initReaderAutoHide() {
+  const readerPage = document.getElementById('page-reader');
+  if (!readerPage) return;
+  const settings = readerPage.querySelector('.reader-settings');
+  const readerNav = readerPage.querySelector('.reader-nav');
+  const backBtn = readerPage.querySelector('.back-btn');
+  let lastScrollY = 0;
+  let ticking = false;
+  let isHidden = false;
+
+  function onScroll() {
+    const currentY = window.scrollY;
+    const diff = currentY - lastScrollY;
+
+    if (Math.abs(diff) > 10) {
+      if (diff > 0 && currentY > 100 && !isHidden) {
+        // Scrolling down - hide
+        if (settings) { settings.style.opacity = '0'; settings.style.pointerEvents = 'none'; settings.style.maxHeight = '0'; settings.style.marginBottom = '0'; settings.style.overflow = 'hidden'; }
+        if (readerNav) { readerNav.style.opacity = '0'; readerNav.style.pointerEvents = 'none'; readerNav.style.maxHeight = '0'; readerNav.style.marginTop = '0'; readerNav.style.overflow = 'hidden'; }
+        if (backBtn) { backBtn.style.opacity = '0'; backBtn.style.pointerEvents = 'none'; backBtn.style.maxHeight = '0'; backBtn.style.marginBottom = '0'; backBtn.style.overflow = 'hidden'; }
+        isHidden = true;
+      } else if (diff < 0 && isHidden) {
+        // Scrolling up - show
+        if (settings) { settings.style.opacity = '1'; settings.style.pointerEvents = ''; settings.style.maxHeight = ''; settings.style.marginBottom = ''; settings.style.overflow = ''; }
+        if (readerNav) { readerNav.style.opacity = '1'; readerNav.style.pointerEvents = ''; readerNav.style.maxHeight = ''; readerNav.style.marginTop = ''; readerNav.style.overflow = ''; }
+        if (backBtn) { backBtn.style.opacity = '1'; backBtn.style.pointerEvents = ''; backBtn.style.maxHeight = ''; backBtn.style.marginBottom = ''; backBtn.style.overflow = ''; }
+        isHidden = false;
+      }
+    }
+    lastScrollY = currentY;
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(onScroll);
+      ticking = true;
+    }
+  }, { passive: true });
 }
 
 // ===== TIMELINE =====
