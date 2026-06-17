@@ -354,8 +354,8 @@ body {
 /* Dot pattern - single color by default, dual for coral & night */
 body::before {
   content: '';
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
   background-image:
     radial-gradient(circle, var(--accent-primary) 1.5px, transparent 1.5px),
     radial-gradient(circle, var(--accent-primary) 1.5px, transparent 1.5px);
@@ -3822,11 +3822,16 @@ function setReaderStyle(style) {
   localStorage.setItem('readerLineHeight', p.line);
 }
 
-// ===== AUTO-HIDE ON SCROLL (MOBILE) =====
+// ===== AUTO-HIDE ON SCROLL (MOBILE ONLY) =====
 function initReaderAutoHide() {
+  // Only apply on mobile (screen width <= 768px)
+  const mql = window.matchMedia('(max-width: 768px)');
+  if (!mql.matches) return;
+
   const toolbar = document.querySelector('.top-toolbar');
   const navBar = document.querySelector('.nav-bar');
-  if (!toolbar && !navBar) return;
+  const backToTop = document.getElementById('backToTop');
+  if (!toolbar && !navBar && !backToTop) return;
   let lastScrollY = 0;
   let ticking = false;
   let isHidden = false;
@@ -3840,11 +3845,13 @@ function initReaderAutoHide() {
         // Scrolling down - hide
         if (toolbar) toolbar.style.transform = 'translateY(-60px)';
         if (navBar) navBar.style.transform = 'translateY(100%)';
+        if (backToTop) backToTop.style.transform = 'translateY(100%)';
         isHidden = true;
       } else if (diff < 0 && isHidden) {
         // Scrolling up - show
         if (toolbar) toolbar.style.transform = 'translateY(0)';
         if (navBar) navBar.style.transform = 'translateY(0)';
+        if (backToTop) backToTop.style.transform = 'translateY(0)';
         isHidden = false;
       }
     }
