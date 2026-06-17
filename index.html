@@ -347,7 +347,6 @@ body {
   line-height: 1.8;
   min-height: 100vh;
   overflow-x: hidden;
-  contain: paint;
   transition: background 0.4s ease, color 0.4s ease;
   position: relative;
 }
@@ -472,7 +471,6 @@ body::before {
   position: fixed; top: 16px; right: 16px; z-index: 1000;
   display: flex; gap: 8px; align-items: center;
   transition: transform 0.3s ease;
-  will-change: transform;
 }
 
 /* Color Scheme Dropdown */
@@ -1191,7 +1189,7 @@ body::before {
 }
 
 /* Reader Settings */
-.reader-settings { background: var(--bg-card); border: 1px solid var(--border-light); margin-bottom: 25px; border-radius: var(--radius-sm); backdrop-filter: blur(10px); }
+.reader-settings { background: var(--bg-card); border: 1px solid var(--border-light); margin-bottom: 25px; border-radius: var(--radius-sm); }
 .settings-header { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: var(--transition); }
 .settings-header:hover { background: rgba(122, 158, 138, 0.03); }
 .settings-title { font-size: 0.85rem; color: var(--text-muted); }
@@ -1665,7 +1663,6 @@ body::before {
     justify-content: space-around;
     box-shadow: 0 -1px 8px rgba(0,0,0,0.06);
     transition: transform 0.3s ease;
-    will-change: transform;
   }
   .nav-btn {
     padding: 6px 10px;
@@ -2832,9 +2829,9 @@ function initBackToTop() {
   window.addEventListener('scroll', () => {
     if (!ticking) {
       requestAnimationFrame(() => {
-        if (window.scrollY > 400 && !btn.classList.contains('auto-hidden')) {
+        if (window.scrollY > 400) {
           btn.classList.add('visible');
-        } else if (window.scrollY <= 400) {
+        } else {
           btn.classList.remove('visible');
         }
         ticking = false;
@@ -3834,7 +3831,7 @@ function initReaderAutoHide() {
   const toolbar = document.querySelector('.top-toolbar');
   const navBar = document.querySelector('.nav-bar');
   const backToTop = document.getElementById('backToTop');
-  if (!toolbar && !navBar && !backToTop) return;
+  if (!toolbar && !navBar) return;
   let lastScrollY = 0;
   let ticking = false;
   let isHidden = false;
@@ -3848,13 +3845,12 @@ function initReaderAutoHide() {
         // Scrolling down - hide
         if (toolbar) toolbar.style.transform = 'translateY(-60px)';
         if (navBar) navBar.style.transform = 'translateY(100%)';
-        if (backToTop) { backToTop.classList.remove('visible'); backToTop.classList.add('auto-hidden'); }
+        if (backToTop) backToTop.classList.remove('visible');
         isHidden = true;
       } else if (diff < 0 && isHidden) {
         // Scrolling up - show
         if (toolbar) toolbar.style.transform = 'translateY(0)';
         if (navBar) navBar.style.transform = 'translateY(0)';
-        if (backToTop) { backToTop.classList.remove('auto-hidden'); if (currentY > 400) backToTop.classList.add('visible'); }
         isHidden = false;
       }
     }
