@@ -549,7 +549,7 @@ body::before {
   color: var(--text-secondary);
   font-size: 1rem;
   cursor: pointer;
-  transition: var(--transition);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -852,10 +852,11 @@ body::before {
 
 /* Back to top button appear animation */
 .back-to-top {
-  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0.3s ease;
 }
 .back-to-top.visible {
   opacity: 1 !important;
+  visibility: visible !important;
   transform: translateY(0) !important;
 }
 
