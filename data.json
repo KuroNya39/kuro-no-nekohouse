@@ -1,6 +1,6 @@
 {
   "_version": 2,
-  "_updatedAt": "2026-06-18T20:38:41.533Z",
+  "_updatedAt": "2026-06-18T20:39:05.312Z",
   "categories": [
     {
       "id": "miku",
@@ -221,12 +221,6 @@
       "title": "AO3",
       "desc": "Archive of Our Own",
       "url": "https://archiveofourown.org/"
-    },
-    {
-      "icon": "<span aria-hidden=\"true\">晋</span>",
-      "title": "晋江",
-      "desc": "晋江文学城",
-      "url": "https://www.jjwxc.net/"
     },
     {
       "icon": "<span aria-hidden=\"true\">Wiki</span>",
