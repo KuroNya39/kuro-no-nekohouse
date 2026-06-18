@@ -3517,6 +3517,8 @@ function initHashRouter() {
         b.classList.toggle('active', b.dataset.page === 'home');
       });
     }
+    // Force scroll to top on popstate to prevent browser scroll restoration
+    window.scrollTo(0, 0);
   });
 
   // Handle initial hash
