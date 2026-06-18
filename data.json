@@ -1,6 +1,6 @@
 {
   "_version": 2,
-  "_updatedAt": "2026-06-18T18:28:18.557Z",
+  "_updatedAt": "2026-06-18T19:34:53.246Z",
   "categories": [
     {
       "id": "miku",
@@ -211,8 +211,8 @@
     {
       "icon": "<span aria-hidden=\"true\">LOF</span>",
       "title": "LOFTER",
-      "desc": "我的 LOFTER 主页",
-      "url": "#"
+      "desc": "LOFTER 主页",
+      "url": "https://www.lofter.com/"
     },
     {
       "icon": "<span aria-hidden=\"true\">AO3</span>",
