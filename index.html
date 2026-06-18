@@ -1665,7 +1665,7 @@ body::before {
   .site-subtitle { display: block; text-align: center; width: 100%; }
   .site-divider { margin: 15px auto 0; }
   .nav-bar {
-    position: sticky;
+    position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
@@ -1677,7 +1677,7 @@ body::before {
     gap: 0;
     justify-content: space-around;
     box-shadow: 0 -1px 8px rgba(0,0,0,0.06);
-    transition: opacity 0.3s ease;
+    transition: transform 0.3s ease;
   }
   .nav-btn {
     padding: 6px 10px;
@@ -1964,6 +1964,14 @@ body::before {
     <div class="site-divider"></div>
   </header>
 
+  <nav class="nav-bar" role="navigation" aria-label="主导航">
+    <button class="nav-btn active" data-page="home">首页</button>
+    <button class="nav-btn" data-page="timeline">时间轴</button>
+    <button class="nav-btn" data-page="guestbook">留言</button>
+    <button class="nav-btn" data-page="links">友链</button>
+    <button class="nav-btn" data-page="about">关于</button>
+  </nav>
+
   <main id="main-content" tabindex="-1">
   <!-- ===== HOME PAGE ===== -->
   <section class="page active" id="page-home" aria-label="首页">
@@ -2094,14 +2102,6 @@ body::before {
     <p id="footerText">黒の猫窝 · 收藏每一个故事</p>
     <p class="footer-stars" aria-hidden="true">&#10022; &#10022; &#10022;</p>
   </footer>
-
-  <nav class="nav-bar" role="navigation" aria-label="主导航">
-    <button class="nav-btn active" data-page="home">首页</button>
-    <button class="nav-btn" data-page="timeline">时间轴</button>
-    <button class="nav-btn" data-page="guestbook">留言</button>
-    <button class="nav-btn" data-page="links">友链</button>
-    <button class="nav-btn" data-page="about">关于</button>
-  </nav>
 </div>
 
 <script>
@@ -3498,6 +3498,10 @@ function showPage(name, pushState) {
 
 // ===== HASH ROUTER =====
 function initHashRouter() {
+  // Disable browser automatic scroll restoration on popstate
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
   window.addEventListener('popstate', (e) => {
     if (e.state && e.state.page === 'category' && e.state.catId) {
       showCategory(e.state.catId, false);
