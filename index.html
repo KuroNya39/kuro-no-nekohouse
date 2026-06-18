@@ -1654,7 +1654,7 @@ body::before {
   .links-grid { grid-template-columns: 1fr; }
 
   /* Mobile bottom navigation */
-  .site-header { padding: 56px 0 15px; text-align: center; }
+  .site-header { padding: 64px 0 15px; text-align: center; }
   .site-title { display: block; text-align: center; width: 100%; }
   .site-subtitle { display: block; text-align: center; width: 100%; }
   .site-divider { margin: 15px auto 0; }
@@ -1685,9 +1685,9 @@ body::before {
   .nav-btn.active { color: var(--accent-primary); background: rgba(122, 158, 138, 0.06); border-radius: var(--radius-sm); }
 
   /* Add bottom padding for content to avoid nav overlap */
-  .app-container { padding-bottom: 80px; }
-  .site-footer { padding-bottom: 80px; }
-  .back-to-top { bottom: 100px; }
+  .app-container { padding-bottom: 60px; }
+  .site-footer { padding-bottom: 60px; }
+  .back-to-top { bottom: 80px; }
 }
 
 @media (max-width: 480px) {
@@ -2834,8 +2834,10 @@ function initScrollProgress() {
 // ===== BACK TO TOP =====
 function initBackToTop() {
   const btn = document.getElementById('backToTop');
+  const mql = window.matchMedia('(max-width: 768px)');
   let ticking = false;
-  window.addEventListener('scroll', () => {
+
+  function handleScroll() {
     if (!ticking) {
       requestAnimationFrame(() => {
         if (window.scrollY > 400) {
@@ -2847,7 +2849,19 @@ function initBackToTop() {
       });
       ticking = true;
     }
-  });
+  }
+
+  function update() {
+    if (mql.matches) {
+      window.removeEventListener('scroll', handleScroll);
+    } else {
+      window.addEventListener('scroll', handleScroll);
+    }
+  }
+
+  mql.addEventListener('change', update);
+  update();
+
   btn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
