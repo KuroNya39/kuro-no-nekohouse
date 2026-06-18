@@ -1345,7 +1345,7 @@ body::before {
 }
 
 /* Reader Nav */
-.reader-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-light); }
+.reader-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-light); page-break-inside: avoid; break-inside: avoid; }
 .reader-nav-btn { padding: 10px 24px; border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-secondary); font-family: var(--font-serif); font-size: 0.85rem; cursor: pointer; transition: var(--transition); letter-spacing: 0.5px; border-radius: var(--radius-sm); }
 .reader-nav-btn:hover { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
 
@@ -1544,6 +1544,8 @@ body::before {
   text-align: center;
   padding: 45px 20px 35px;
   color: var(--text-muted);
+  page-break-inside: avoid;
+  break-inside: avoid;
   font-size: 0.75rem;
   border-top: 1px solid var(--border-light);
   margin-top: 30px;
@@ -3525,6 +3527,9 @@ function initHashRouter() {
       });
     }
   }
+
+  // Replace initial history to prevent back-button from exiting site
+  window.history.replaceState({ page: 'home' }, '', window.location.pathname + window.location.hash);
 }
 
 // ===== CATEGORY PAGE =====
@@ -4605,7 +4610,7 @@ function initSwipeNavigation() {
     if (Math.abs(horizontalDistance) > minSwipeDistance) {
       if (pageId === 'page-category' || pageId === 'page-reader') {
         e.preventDefault();
-        showPage('home');
+        showPage('home', false);
       }
     }
   }, { passive: false });
