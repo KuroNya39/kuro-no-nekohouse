@@ -348,7 +348,8 @@ html { cursor: url('cursors/Arrow.ani') 6 0, auto; }
 a, button, [onclick], select, input[type="submit"], .nav-btn, .scheme-option, .category-card, .novel-card, .link-card, .interest-card, .back-to-top, .theme-toggle, .admin-toggle, .color-scheme-toggle { cursor: url('cursors/リンクの選択.ani') 6 0, pointer; }
 input[type="text"], input[type="password"], input[type="url"], textarea, [contenteditable="true"] { cursor: url('cursors/IBeam.ani') 6 0, text; }
 .loading-screen { cursor: url('cursors/待ち状態.ani') 6 0, wait; }
-html { scroll-behavior: smooth; overflow-x: hidden; }
+html { scroll-behavior: smooth; overflow-x: hidden; scrollbar-width: none; }
+html::-webkit-scrollbar { display: none; }
 body {
   font-family: var(--font-serif);
   background-color: var(--bg-primary);
@@ -1686,8 +1687,7 @@ body::before {
   .nav-btn.active { color: var(--accent-primary); background: rgba(122, 158, 138, 0.06); border-radius: var(--radius-sm); }
 
   /* Add bottom padding for content to avoid nav overlap */
-  .app-container { padding-bottom: 48px; }
-  .site-footer { padding-bottom: 48px; }
+  body { padding-bottom: 56px; }
   .back-to-top { bottom: 68px; }
 }
 
@@ -1695,6 +1695,12 @@ body::before {
   .site-title { font-size: 1.7rem; letter-spacing: 3px; }
   .search-container { margin-bottom: 25px; }
   .stats-row { grid-template-columns: 1fr; }
+}
+
+@media print {
+  .nav-bar, .top-toolbar, .back-to-top { display: none !important; }
+  .site-footer { padding-bottom: 0 !important; }
+  .app-container { padding-bottom: 0 !important; }
 }
 
 /* ===== ACCESSIBILITY: Reduced Motion ===== */
@@ -4606,10 +4612,12 @@ function initSwipeNavigation() {
     if (verticalDistance > maxVerticalDistance) return;
     if (swipeTime > maxSwipeTime) return;
 
-    // Left or right swipe - go back to home from category or reader page
+    // Left or right swipe - navigate back
     if (Math.abs(horizontalDistance) > minSwipeDistance) {
-      if (pageId === 'page-category' || pageId === 'page-reader') {
-        e.preventDefault();
+      e.preventDefault();
+      if (pageId === 'page-reader') {
+        backToCategory();
+      } else if (pageId === 'page-category') {
         showPage('home', false);
       }
     }
