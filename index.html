@@ -348,14 +348,16 @@ html { cursor: url('cursors/Arrow.ani') 6 0, auto; }
 a, button, [onclick], select, input[type="submit"], .nav-btn, .scheme-option, .category-card, .novel-card, .link-card, .interest-card, .back-to-top, .theme-toggle, .admin-toggle, .color-scheme-toggle { cursor: url('cursors/リンクの選択.ani') 6 0, pointer; }
 input[type="text"], input[type="password"], input[type="url"], textarea, [contenteditable="true"] { cursor: url('cursors/IBeam.ani') 6 0, text; }
 .loading-screen { cursor: url('cursors/待ち状態.ani') 6 0, wait; }
-html { scroll-behavior: smooth; overflow-x: hidden; scrollbar-width: none; }
+html { scroll-behavior: smooth; scrollbar-width: none; }
 html::-webkit-scrollbar { display: none; }
+* { box-sizing: border-box; }
 body {
   font-family: var(--font-serif);
   background-color: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.8;
   min-height: 100vh;
+  overflow-x: hidden;
   transition: background 0.4s ease, color 0.4s ease;
   position: relative;
 }
@@ -1661,7 +1663,7 @@ body::before {
   .site-subtitle { display: block; text-align: center; width: 100%; }
   .site-divider { margin: 15px auto 0; }
   .nav-bar {
-    position: fixed;
+    position: sticky;
     bottom: 0;
     left: 0;
     right: 0;
@@ -1673,7 +1675,7 @@ body::before {
     gap: 0;
     justify-content: space-around;
     box-shadow: 0 -1px 8px rgba(0,0,0,0.06);
-    transition: transform 0.3s ease;
+    transition: opacity 0.3s ease;
   }
   .nav-btn {
     padding: 6px 10px;
@@ -1686,8 +1688,6 @@ body::before {
   .nav-btn::after { display: none; }
   .nav-btn.active { color: var(--accent-primary); background: rgba(122, 158, 138, 0.06); border-radius: var(--radius-sm); }
 
-  /* Add bottom padding for content to avoid nav overlap */
-  body { padding-bottom: 56px; }
   .back-to-top { bottom: 68px; }
 }
 
@@ -1962,14 +1962,6 @@ body::before {
     <div class="site-divider"></div>
   </header>
 
-  <nav class="nav-bar" role="navigation" aria-label="主导航">
-    <button class="nav-btn active" data-page="home">首页</button>
-    <button class="nav-btn" data-page="timeline">时间轴</button>
-    <button class="nav-btn" data-page="guestbook">留言</button>
-    <button class="nav-btn" data-page="links">友链</button>
-    <button class="nav-btn" data-page="about">关于</button>
-  </nav>
-
   <main id="main-content" tabindex="-1">
   <!-- ===== HOME PAGE ===== -->
   <section class="page active" id="page-home" aria-label="首页">
@@ -2100,6 +2092,14 @@ body::before {
     <p id="footerText">黒の猫窝 · 收藏每一个故事</p>
     <p class="footer-stars" aria-hidden="true">&#10022; &#10022; &#10022;</p>
   </footer>
+
+  <nav class="nav-bar" role="navigation" aria-label="主导航">
+    <button class="nav-btn active" data-page="home">首页</button>
+    <button class="nav-btn" data-page="timeline">时间轴</button>
+    <button class="nav-btn" data-page="guestbook">留言</button>
+    <button class="nav-btn" data-page="links">友链</button>
+    <button class="nav-btn" data-page="about">关于</button>
+  </nav>
 </div>
 
 <script>
@@ -3496,6 +3496,7 @@ function showPage(name, pushState) {
 // ===== HASH ROUTER =====
 function initHashRouter() {
   window.addEventListener('popstate', (e) => {
+    // Always prevent browser from navigating away
     if (e.state && e.state.page === 'category' && e.state.catId) {
       showCategory(e.state.catId);
     } else if (e.state && e.state.page === 'reader' && e.state.catId !== undefined) {
@@ -3505,12 +3506,14 @@ function initHashRouter() {
         showNovel(e.state.novelIdx, e.state.chapterIdx);
       }
     } else {
-      const page = (e.state && e.state.page) ? e.state.page : 'home';
-      showPage(page, false);
+      // If no state or unknown state, go to home instead of leaving site
+      showPage('home', false);
       document.querySelectorAll('.nav-btn').forEach(b => {
-        b.classList.toggle('active', b.dataset.page === page);
+        b.classList.toggle('active', b.dataset.page === 'home');
       });
     }
+    // Push state back to prevent further back navigation
+    window.history.pushState({ page: 'home' }, '', window.location.pathname);
   });
 
   // Handle initial hash
@@ -3877,13 +3880,13 @@ function initReaderAutoHide() {
       if (diff > 0 && currentY > 80 && !isHidden) {
         // Scrolling down - hide
         if (toolbar) toolbar.style.transform = 'translateY(-60px)';
-        if (navBar) navBar.style.transform = 'translateY(100%)';
+        if (navBar) { navBar.style.opacity = '0'; navBar.style.pointerEvents = 'none'; }
         if (backToTop) backToTop.classList.remove('visible');
         isHidden = true;
       } else if (diff < 0 && isHidden) {
         // Scrolling up - show
         if (toolbar) toolbar.style.transform = 'translateY(0)';
-        if (navBar) navBar.style.transform = 'translateY(0)';
+        if (navBar) { navBar.style.opacity = '1'; navBar.style.pointerEvents = 'auto'; }
         if (backToTop && currentY > 400) backToTop.classList.add('visible');
         isHidden = false;
       }
