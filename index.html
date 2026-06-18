@@ -3738,13 +3738,13 @@ function initReaderAutoHide() {
       if (diff > 0 && currentY > 80 && !isHidden) {
         // Scrolling down - hide
         if (toolbar) toolbar.style.transform = 'translateY(-60px)';
-        if (navBar) { navBar.style.opacity = '0'; navBar.style.pointerEvents = 'none'; }
+        if (navBar) { navBar.style.transform = 'translateY(100%)'; navBar.style.pointerEvents = 'none'; }
         if (backToTop) backToTop.classList.remove('visible');
         isHidden = true;
       } else if (diff < 0 && isHidden) {
         // Scrolling up - show
         if (toolbar) toolbar.style.transform = 'translateY(0)';
-        if (navBar) { navBar.style.opacity = '1'; navBar.style.pointerEvents = 'auto'; }
+        if (navBar) { navBar.style.transform = 'translateY(0)'; navBar.style.pointerEvents = 'auto'; }
         if (backToTop && currentY > 400) backToTop.classList.add('visible');
         isHidden = false;
       }
