@@ -3497,12 +3497,12 @@ function showPage(name, pushState) {
 function initHashRouter() {
   window.addEventListener('popstate', (e) => {
     if (e.state && e.state.page === 'category' && e.state.catId) {
-      showCategory(e.state.catId);
+      showCategory(e.state.catId, false);
     } else if (e.state && e.state.page === 'reader' && e.state.catId !== undefined) {
       const cat = categories.find(c => c.id === e.state.catId);
       if (cat) {
         currentCategory = cat;
-        showNovel(e.state.novelIdx, e.state.chapterIdx);
+        showNovel(e.state.novelIdx, e.state.chapterIdx, false);
       }
     } else if (e.state && e.state.page) {
       showPage(e.state.page, false);
@@ -3510,12 +3510,10 @@ function initHashRouter() {
         b.classList.toggle('active', b.dataset.page === e.state.page);
       });
     } else {
-      // No state - would navigate away, go to home instead
       showPage('home', false);
       document.querySelectorAll('.nav-btn').forEach(b => {
         b.classList.toggle('active', b.dataset.page === 'home');
       });
-      window.history.pushState({ page: 'home' }, '', window.location.pathname);
     }
   });
 
@@ -3525,12 +3523,12 @@ function initHashRouter() {
     const parts = hash.slice(2).split('/');
     const page = parts[0];
     if (parts[0] === 'category' && parts[1]) {
-      showCategory(parts[1]);
+      showCategory(parts[1], false);
     } else if (parts[0] === 'reader' && parts[1] && parts[2] !== undefined) {
       const cat = categories.find(c => c.id === parts[1]);
       if (cat) {
         currentCategory = cat;
-        showNovel(parseInt(parts[2]), parseInt(parts[3]) || 0);
+        showNovel(parseInt(parts[2]), parseInt(parts[3]) || 0, false);
       }
     } else if (PAGE_TITLES[page]) {
       showPage(page, false);
@@ -3545,7 +3543,8 @@ function initHashRouter() {
 }
 
 // ===== CATEGORY PAGE =====
-function showCategory(catId) {
+function showCategory(catId, shouldPushState) {
+  if (shouldPushState === undefined) shouldPushState = true;
   currentCategory = categories.find(c => c.id === catId);
   if (!currentCategory) return;
   currentAuthorFilter = null;
@@ -3599,7 +3598,9 @@ function showCategory(catId) {
 
   renderNovelList();
   showPage('category', false);
-  window.history.replaceState({ page: 'category', catId: catId }, '', '#/category/' + catId);
+  if (shouldPushState) {
+    window.history.pushState({ page: 'category', catId: catId }, '', '#/category/' + catId);
+  }
   document.title = currentCategory.name + ' - ' + siteConfig.siteName;
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
 }
@@ -3680,7 +3681,8 @@ function renderNovelList() {
 // ===== READER =====
 let currentChapterIndex = 0; // 当前章节索引
 
-function showNovel(index, chapterIdx) {
+function showNovel(index, chapterIdx, shouldPushState) {
+  if (shouldPushState === undefined) shouldPushState = true;
   currentNovelIndex = index;
   const novel = currentCategory.novels[index];
 
@@ -3781,14 +3783,25 @@ function showNovel(index, chapterIdx) {
   }
 
   showPage('reader', false);
-  window.history.replaceState({ page: 'reader', catId: currentCategory.id, novelIdx: index, chapterIdx: chapterIdx || 0 }, '', '#/reader/' + currentCategory.id + '/' + index + '/' + (chapterIdx || 0));
+  if (shouldPushState) {
+    window.history.pushState({ page: 'reader', catId: currentCategory.id, novelIdx: index, chapterIdx: chapterIdx || 0 }, '', '#/reader/' + currentCategory.id + '/' + index + '/' + (chapterIdx || 0));
+  }
   // Set title AFTER showPage to avoid being overwritten
   document.title = novel.title + ' - ' + siteConfig.siteName;
 }
 
 function backToCategory() {
-  if (currentCategory) showCategory(currentCategory.id);
-  else showPage('home');
+  if (currentCategory) {
+    // Use history.back() to go to category page (popstate will handle it)
+    // If there's no history entry, navigate directly
+    if (window.history.state && window.history.state.page === 'reader') {
+      window.history.back();
+    } else {
+      showCategory(currentCategory.id, false);
+    }
+  } else {
+    showPage('home', false);
+  }
 }
 
 // ===== COPY SHARE LINK =====
@@ -4583,19 +4596,19 @@ function initSwipeNavigation() {
   let touchStartY = 0;
   let touchStartTime = 0;
   let isScrolling = false;
-  const minSwipeDistance = 60;
-  const maxVerticalDistance = 80;
-  const maxSwipeTime = 400;
+  const minSwipeDistance = 80;
+  const maxVerticalDistance = 75;
+  const maxSwipeTime = 350;
 
   document.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-    touchStartY = e.changedTouches[0].screenY;
+    touchStartX = e.changedTouches[0].clientX;
+    touchStartY = e.changedTouches[0].clientY;
     touchStartTime = Date.now();
     isScrolling = false;
   }, { passive: true });
 
   document.addEventListener('touchmove', (e) => {
-    const currentY = e.changedTouches[0].screenY;
+    const currentY = e.changedTouches[0].clientY;
     const verticalMove = Math.abs(currentY - touchStartY);
     if (verticalMove > 10) {
       isScrolling = true;
@@ -4603,28 +4616,35 @@ function initSwipeNavigation() {
   }, { passive: true });
 
   document.addEventListener('touchend', (e) => {
-    const touchEndX = e.changedTouches[0].screenX;
-    const touchEndY = e.changedTouches[0].screenY;
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
     const horizontalDistance = touchEndX - touchStartX;
     const verticalDistance = Math.abs(touchEndY - touchStartY);
     const swipeTime = Date.now() - touchStartTime;
+
+    // Must be a right-swipe (from left to right) to go back
+    if (horizontalDistance < minSwipeDistance) return;
+    if (horizontalDistance < 0) return; // left swipe, ignore
+    if (isScrolling) return;
+    if (verticalDistance > maxVerticalDistance) return;
+    if (swipeTime > maxSwipeTime) return;
 
     const currentPage = document.querySelector('.page.active');
     if (!currentPage) return;
     const pageId = currentPage.id;
 
-    // Only handle quick horizontal swipes that are not scrolling
-    if (isScrolling) return;
-    if (verticalDistance > maxVerticalDistance) return;
-    if (swipeTime > maxSwipeTime) return;
-
-    // Left or right swipe - navigate back
-    if (Math.abs(horizontalDistance) > minSwipeDistance) {
+    if (pageId === 'page-reader') {
       e.preventDefault();
-      if (pageId === 'page-reader') {
-        backToCategory();
-      } else if (pageId === 'page-category') {
+      backToCategory();
+    } else if (pageId === 'page-category') {
+      e.preventDefault();
+      if (window.history.state && (window.history.state.page === 'category')) {
+        window.history.back();
+      } else {
         showPage('home', false);
+        document.querySelectorAll('.nav-btn').forEach(b => {
+          b.classList.toggle('active', b.dataset.page === 'home');
+        });
       }
     }
   }, { passive: false });
