@@ -343,13 +343,14 @@ select {
 /* Global link style - GitHub blue */
 a { color: var(--accent-primary); text-decoration: none; }
 
+@media (hover: hover) and (pointer: fine) {
 /* Custom Cursor */
 html { cursor: url('cursors/Arrow.ani') 6 0, auto; }
 a, button, [onclick], select, input[type="submit"], .nav-btn, .scheme-option, .category-card, .novel-card, .link-card, .interest-card, .back-to-top, .theme-toggle, .admin-toggle, .color-scheme-toggle { cursor: url('cursors/リンクの選択.ani') 6 0, pointer; }
 input[type="text"], input[type="password"], input[type="url"], textarea, [contenteditable="true"] { cursor: url('cursors/IBeam.ani') 6 0, text; }
 .loading-screen { cursor: url('cursors/待ち状態.ani') 6 0, wait; }
-html { scroll-behavior: smooth; scrollbar-width: none; }
-html::-webkit-scrollbar { display: none; }
+}
+html { scroll-behavior: smooth; }
 * { box-sizing: border-box; }
 body {
   font-family: var(--font-serif);
@@ -545,8 +546,6 @@ body::before {
 .admin-toggle:hover { background: var(--accent-primary); color: white; transform: scale(1.1); }
 .admin-toggle.active { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
 
-/* Canvas Background - Disabled */
-#bgCanvas { display: none; }
 
 /* Back to Top Button */
 .back-to-top {
@@ -796,9 +795,6 @@ body::before {
 /* Category card tilt effect */
 .category-card { transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s ease, box-shadow 0.3s ease; }
 
-/* Page transition slide */
-.page { }
-
 /* Floating particles background */
 .bg-particles {
   position: fixed;
@@ -890,7 +886,7 @@ body::before {
 
 /* Search input focus glow */
 .search-input:focus {
-  box-shadow: 0 0 0 3px rgba(57, 197, 187, 0.1);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-primary) 15%, transparent);
 }
 
 /* ===== END NEW ANIMATIONS ===== */
@@ -908,19 +904,18 @@ body::before {
 .search-icon { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); width: 18px; height: 18px; border: 2px solid currentColor; border-radius: 50%; display: flex; align-items: center; justify-content: center; pointer-events: none; }
 .search-icon::before { content: ''; position: absolute; width: 6px; height: 2px; background: currentColor; transform: rotate(45deg); bottom: -3px; right: -4px; }
 
-.search-results { display: none; }
+.search-results { display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 100; max-height: 400px; overflow-y: auto; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 0 0 var(--radius-sm) var(--radius-sm); box-shadow: 0 8px 24px rgba(0,0,0,0.08); margin-top: 4px; }
 .search-results.active { display: block; }
 .search-result-item {
-  background: var(--bg-card); border: 1px solid var(--border-light);
-  padding: 18px 22px; margin-bottom: 12px; cursor: pointer;
-  transition: var(--transition);
-  border-radius: var(--radius-sm);
+  padding: 14px 20px; border-bottom: 1px solid var(--border-light); cursor: pointer;
+  transition: background 0.2s;
 }
-.search-result-item:hover { border-color: var(--border-hover); }
-.search-result-item h4 { font-size: 1rem; color: var(--text-primary); margin-bottom: 4px; }
+.search-result-item:last-child { border-bottom: none; }
+.search-result-item:hover { background: var(--bg-primary); }
+.search-result-item h4 { font-size: 0.9rem; margin-bottom: 2px; }
 .search-result-item p { font-size: 0.8rem; color: var(--text-muted); }
-.search-result-item .highlight { color: var(--accent-primary); background: rgba(122, 158, 138, 0.08); padding: 0 2px; }
-.search-empty { text-align: center; padding: 40px; color: var(--text-muted); }
+.search-result-item .highlight { color: var(--accent-primary); background: color-mix(in srgb, var(--accent-primary) 12%, transparent); padding: 1px 3px; border-radius: 2px; }
+.search-empty { padding: 24px; font-size: 0.85rem; }
 
 /* Hero Section */
 .hero-section { background: var(--bg-card); border: 1px solid var(--border-light); padding: 24px; margin-bottom: 32px; display: flex; gap: 24px; align-items: center; transition: var(--transition); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5); }
@@ -1663,6 +1658,7 @@ body::before {
 
 /* Mobile bottom navigation - only for small screens */
 @media (max-width: 600px) {
+  body { padding-bottom: 56px; }
   .site-header { padding: 68px 0 15px; text-align: center; }
   .site-title { display: block; text-align: center; width: 100%; }
   .site-subtitle { display: block; text-align: center; width: 100%; }
@@ -1740,7 +1736,6 @@ body::before {
   <button class="theme-toggle" id="themeToggle" title="切换主题" aria-label="切换主题">☾</button>
 </div>
 <button class="back-to-top" id="backToTop" title="返回顶部" aria-label="返回顶部">↑</button>
-<canvas id="bgCanvas"></canvas>
 
 <!-- ARIA Live Region for screen readers -->
 <div id="ariaLive" class="sr-only" aria-live="polite" aria-atomic="true"></div>
@@ -2188,7 +2183,6 @@ let currentSort = 'default';
 let sortAscending = false; // 默认降序（最新的在前）
 let currentAuthorFilter = null;
 let isAdmin = false;
-let readProgress = safeJSONParse('readProgress', {});
 let navHistory = []; // Navigation history stack
 
 // ===== ARIA Live Announcements =====
@@ -2224,7 +2218,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
   initTheme();
   initColorScheme();
-  initCanvas();
   initScrollProgress();
   initSearch();
   initSort();
@@ -2241,7 +2234,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderGuestbookIntro();
   renderStats();
   renderCategories();
-  renderContinueReading();
   renderTimeline();
   renderLinks();
   renderAboutPage();
@@ -2523,7 +2515,6 @@ function exportData() {
     siteConfig: siteConfig,
     timelineData: timelineData,
     linksData: linksData,
-    readProgress: readProgress,
     theme: localStorage.getItem('theme') || ''
   };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -2553,7 +2544,6 @@ function importData(event) {
       if (data.siteConfig) { siteConfig = data.siteConfig; safeJSONStringify('siteConfig', siteConfig); }
       if (data.timelineData) { timelineData = data.timelineData; safeJSONStringify('timelineData', timelineData); }
       if (data.linksData) { linksData = data.linksData; safeJSONStringify('linksData', linksData); }
-      if (data.readProgress) { readProgress = data.readProgress; safeJSONStringify('readProgress', readProgress); }
       if (data.theme) { localStorage.setItem('theme', data.theme); }
       saveData();
       // Re-render everything
@@ -2561,6 +2551,8 @@ function importData(event) {
       renderCategories();
       renderAboutPage();
       renderAdminEditNovelList();
+      renderTimeline();
+      renderLinks();
       // Re-apply theme
       if (data.theme === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
@@ -2681,129 +2673,9 @@ function updateBackgroundPattern() {
   // Background pattern now uses CSS variables, no JS update needed
 }
 
-// ===== CANVAS with spatial grid optimization =====
-function initCanvas() {
-  const canvas = document.getElementById('bgCanvas');
-  if (!canvas || canvas.style.display === 'none') return;
-  const ctx = canvas.getContext('2d');
-  let particles = [], mouseX = 0, mouseY = 0;
-  let animationId;
-  let isVisible = true;
-  let lastMouseX = 0, lastMouseY = 0;
-
-  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-  resize();
-  window.addEventListener('resize', resize);
-  document.addEventListener('mousemove', e => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
-
-  // Respect prefers-reduced-motion
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReducedMotion) return;
-
-  const particleCount = window.innerWidth < 768 ? 15 : 30;
-  for (let i = 0; i < particleCount; i++) {
-    particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3, size: Math.random() * 2 + 0.5, opacity: Math.random() * 0.25 + 0.05 });
-  }
-
-  // Use IntersectionObserver to pause when not visible
-  const observer = new IntersectionObserver((entries) => {
-    isVisible = entries[0].isIntersecting;
-  });
-  observer.observe(canvas);
-
-  // Spatial grid for connection optimization
-  const CELL_SIZE = 120;
-  function buildGrid() {
-    const grid = {};
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-      const cx = Math.floor(p.x / CELL_SIZE);
-      const cy = Math.floor(p.y / CELL_SIZE);
-      const key = cx + ',' + cy;
-      if (!grid[key]) grid[key] = [];
-      grid[key].push(i);
-    }
-    return grid;
-  }
-
-  function animate() {
-    if (!isVisible) {
-      animationId = requestAnimationFrame(animate);
-      return;
-    }
-
-    // Check if canvas dimensions are valid
-    if (canvas.width === 0 || canvas.height === 0) {
-      animationId = requestAnimationFrame(animate);
-      return;
-    }
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const color = isDark ? '122, 158, 138' : '122, 158, 138';
-
-    // Smooth mouse follow
-    lastMouseX += (mouseX - lastMouseX) * 0.1;
-    lastMouseY += (mouseY - lastMouseY) * 0.1;
-
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-      const dx = lastMouseX - p.x, dy = lastMouseY - p.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 120) { p.vx -= dx * 0.00008; p.vy -= dy * 0.00008; }
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${color}, ${p.opacity})`;
-      ctx.fill();
-    }
-
-    // Use spatial grid to reduce connection checks
-    const grid = buildGrid();
-    const checked = new Set();
-    for (const key in grid) {
-      const [cx, cy] = key.split(',').map(Number);
-      // Check current cell and neighboring cells
-      for (let dx = -1; dx <= 1; dx++) {
-        for (let dy = -1; dy <= 1; dy++) {
-          const nKey = (cx + dx) + ',' + (cy + dy);
-          if (!grid[nKey]) continue;
-          for (const i of grid[key]) {
-            for (const j of grid[nKey]) {
-              if (j <= i) continue;
-              const pairKey = i < j ? i * 10000 + j : j * 10000 + i;
-              if (checked.has(pairKey)) continue;
-              checked.add(pairKey);
-              const p1 = particles[i], p2 = particles[j];
-              const d = Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
-              if (d < 100) {
-                ctx.beginPath();
-                ctx.moveTo(p1.x, p1.y);
-                ctx.lineTo(p2.x, p2.y);
-                ctx.strokeStyle = `rgba(${color}, ${0.06 * (1 - d / 100)})`;
-                ctx.lineWidth = 0.5;
-                ctx.stroke();
-              }
-            }
-          }
-        }
-      }
-    }
-
-    animationId = requestAnimationFrame(animate);
-  }
-  animate();
-}
-
 // ===== TYPEWRITER EFFECT =====
 function initTypewriterEffect() {
-  const title = document.getElementById('siteTitle');
+  const title = document.getElementById('siteTitleEl');
   if (!title) return;
   const text = title.textContent;
   title.textContent = '';
@@ -2945,7 +2817,11 @@ function highlightText(text, query) {
 }
 
 function goToNovel(catId, novelId) {
-  currentCategory = categories.find(c => c.id === catId);
+  document.getElementById('searchResults').classList.remove('active');
+  document.getElementById('searchInput').value = '';
+  const cat = categories.find(c => c.id === catId);
+  if (!cat) { showToast('分类不存在'); return; }
+  currentCategory = cat;
   const novelIndex = currentCategory.novels.findIndex(n => n.id === novelId);
   showNovel(novelIndex);
 }
@@ -3378,55 +3254,6 @@ function renderCategories() {
   }
 }
 
-// ===== CONTINUE READING =====
-function renderContinueReading() {
-  const container = document.getElementById('continueReading');
-  const list = document.getElementById('continueReadingList');
-  if (!container || !list) return;
-  
-  // Find novels with reading progress
-  const items = [];
-  Object.keys(readProgress).forEach(key => {
-    const progress = readProgress[key];
-    if (progress && progress > 0 && progress < 100) {
-      // Find the novel across all categories
-      for (const cat of categories) {
-        const novel = cat.novels.find(n => n.id === key);
-        if (novel) {
-          items.push({ novel, cat, progress: progress });
-          break;
-        }
-      }
-    }
-  });
-  
-  if (items.length === 0) {
-    container.style.display = 'none';
-    return;
-  }
-  
-  container.style.display = 'block';
-  list.innerHTML = '';
-  items.forEach(item => {
-    const div = document.createElement('div');
-    div.className = 'recent-card';
-    div.setAttribute('role', 'button');
-    div.setAttribute('tabindex', '0');
-    div.onclick = () => goToNovel(item.cat.id, item.novel.id);
-    div.onkeydown = (e) => { if (e.key === 'Enter') goToNovel(item.cat.id, item.novel.id); };
-    div.innerHTML = `
-      <div class="recent-info" style="flex:1;">
-        <h4>${escapeHTML(item.novel.title)}</h4>
-        <p>已读 ${Math.round(item.progress)}% · ${escapeHTML(item.cat.name)}</p>
-        <div style="margin-top:6px;height:4px;background:var(--border-light);border-radius:2px;overflow:hidden;">
-          <div style="height:100%;width:${item.progress}%;background:var(--accent-primary);border-radius:2px;transition:width 0.3s;"></div>
-        </div>
-      </div>
-    `;
-    list.appendChild(div);
-  });
-}
-
 // ===== NAVIGATION =====
 function initNav() {
   document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -3439,13 +3266,13 @@ function initNav() {
 }
 
 const PAGE_TITLES = {
-  home: '首页 - 黒の猫窝',
-  category: '分类 - 黒の猫窝',
-  reader: '阅读中 - 黒の猫窝',
-  timeline: '时间轴 - 黒の猫窝',
-  guestbook: '留言板 - 黒の猫窝',
-  links: '友情链接 - 黒の猫窝',
-  about: '关于 - 黒の猫窝'
+  home: '首页',
+  category: '分类',
+  reader: '阅读中',
+  timeline: '时间轴',
+  guestbook: '留言板',
+  links: '友情链接',
+  about: '关于'
 };
 
 // Scroll reveal observer
@@ -3478,7 +3305,7 @@ function showPage(name, pushState) {
   }
 
   // Update page title
-  document.title = PAGE_TITLES[name] || (siteConfig.siteName || '黒の猫窝');
+  document.title = (PAGE_TITLES[name] || '首页') + ' - ' + (siteConfig.siteName || '黒の猫窝');
 
   // Focus management
   if (targetPage) {
@@ -3649,14 +3476,10 @@ function renderFilteredNovelList(novels) {
     // Calculate reading time
     const readTime = Math.max(1, Math.round(novel.wordCount / 300));
 
-    // Check read progress
-    const progress = readProgress[novel.id];
-    const progressBadge = progress > 0 ? `<span class="read-progress-badge">已读 ${progress}%</span>` : '';
-
     div.innerHTML = `
       <div class="novel-number">${String(i + 1).padStart(2, '0')}</div>
       <div class="novel-info">
-        <div class="novel-title">${escapeHTML(novel.title)}${progressBadge}</div>
+        <div class="novel-title">${escapeHTML(novel.title)}</div>
         <div class="novel-author">作者：${escapeHTML(novel.author)}</div>
         <div class="novel-meta">
           <span>${novel.date}</span>
@@ -3694,6 +3517,7 @@ function renderNovelList() {
 let currentChapterIndex = 0; // 当前章节索引
 
 function showNovel(index, chapterIdx, shouldPushState) {
+  if (!currentCategory || index < 0 || index >= currentCategory.novels.length) return;
   if (shouldPushState === undefined) shouldPushState = true;
   currentNovelIndex = index;
   const novel = currentCategory.novels[index];
@@ -3775,6 +3599,12 @@ function showNovel(index, chapterIdx, shouldPushState) {
     contentDiv.appendChild(para);
   });
 
+  // Re-apply reader settings persistence
+  const savedFontSize = localStorage.getItem('readerFontSize');
+  const savedLineHeight = localStorage.getItem('readerLineHeight');
+  if (savedFontSize) contentDiv.style.setProperty('--reader-font-size', savedFontSize + 'px');
+  if (savedLineHeight) contentDiv.style.setProperty('--reader-line-height', savedLineHeight);
+
   const prevBtn = document.getElementById('prevNovel');
   const nextBtn = document.getElementById('nextNovel');
   if (chapters.length > 1) {
@@ -3819,7 +3649,7 @@ function backToCategory() {
 // ===== COPY SHARE LINK =====
 function copyShareLink() {
   const novel = currentCategory.novels[currentNovelIndex];
-  const url = window.location.origin + window.location.pathname + '#/' + currentCategory.id + '/' + novel.id;
+  const url = window.location.origin + window.location.pathname + '#/reader/' + currentCategory.id + '/' + currentNovelIndex + '/' + currentChapterIndex;
   navigator.clipboard.writeText(url).then(() => {
     const btn = document.getElementById('shareBtn');
     const originalText = btn.innerHTML;
@@ -4013,18 +3843,18 @@ let siteConfig = safeJSONParse('siteConfig', JSON.parse(JSON.stringify(defaultSi
 function renderAboutPage() {
   const d = aboutData;
   const socialItems = [
-    { icon: '<img src="https://www.bilibili.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '哔哩哔哩', url: d.links.bili },
-    { icon: '<img src="https://github.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'GitHub', url: d.links.github },
-    { icon: '<img src="https://qzone.qq.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'QQ空间', url: d.links.qq },
-    { icon: '<img src="https://weibo.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '微博', url: d.links.weibo },
-    { icon: '<img src="https://www.xiaohongshu.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '小红书', url: d.links.xiaohongshu },
-    { icon: '<img src="https://abs.twimg.com/favicons/twitter.3.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'X', url: d.links.x }
+    { icon: '<img src="https://www.bilibili.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '哔哩哔哩', url: d.links.bili && d.links.bili.match(/^(https?:\/\/|mailto:)/) ? d.links.bili : '#' },
+    { icon: '<img src="https://github.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'GitHub', url: d.links.github && d.links.github.match(/^(https?:\/\/|mailto:)/) ? d.links.github : '#' },
+    { icon: '<img src="https://qzone.qq.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'QQ空间', url: d.links.qq && d.links.qq.match(/^(https?:\/\/|mailto:)/) ? d.links.qq : '#' },
+    { icon: '<img src="https://weibo.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '微博', url: d.links.weibo && d.links.weibo.match(/^(https?:\/\/|mailto:)/) ? d.links.weibo : '#' },
+    { icon: '<img src="https://www.xiaohongshu.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '小红书', url: d.links.xiaohongshu && d.links.xiaohongshu.match(/^(https?:\/\/|mailto:)/) ? d.links.xiaohongshu : '#' },
+    { icon: '<img src="https://abs.twimg.com/favicons/twitter.3.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'X', url: d.links.x && d.links.x.match(/^(https?:\/\/|mailto:)/) ? d.links.x : '#' }
   ];
 
   function renderInterestRows(items) {
     if (!items || !items.length) return '';
     return items.map(item => {
-      if (item.label) {
+      if (item.label && item.label !== '标签') {
         return `<div><span class="label">${escapeHTML(item.label)}</span><span class="value">${escapeHTML(item.value)}</span></div>`;
       }
       return `<div><span class="value">${escapeHTML(item.value)}</span></div>`;
@@ -4281,13 +4111,12 @@ function saveAboutData() {
       if (labelInput && valueInput) {
         const label = labelInput.value.trim();
         const value = valueInput.value.trim();
-        if (value) tags.push({ label: label || '标签', value });
+        if (value) tags.push({ label: label || '', value });
       }
     });
     return tags;
   }
   aboutData.vocaloid = collectTags('vocaloid');
-  aboutData.vocaloidTags = [];
   aboutData.ensemble = collectTags('ensemble');
   aboutData.nitro = collectTags('nitro');
   aboutData.other = document.getElementById('aboutOther').value.trim();
@@ -4364,10 +4193,10 @@ function addCategory() {
   const id = document.getElementById('newCatId').value.trim().replace(/\s+/g, '-').toLowerCase();
   const name = document.getElementById('newCatName').value.trim();
   const desc = document.getElementById('newCatDesc').value.trim();
-  const image = document.getElementById('newCatImage').value.trim();
+  const catImage = (document.getElementById('newCatImage') || {}).value || '';
   if (!id || !name) { showToast('请填写分类 ID 和名称', 'error'); return; }
   if (categories.find(c => c.id === id)) { showToast('分类 ID 已存在', 'error'); return; }
-  categories.push({ id, name, desc, image: image || id + '.jpg', novels: [] });
+  categories.push({ id, name, desc, image: catImage || id + '.jpg', novels: [] });
   saveData();
   renderAdminCategoryList();
   renderStats();
@@ -4377,7 +4206,8 @@ function addCategory() {
   document.getElementById('newCatId').value = '';
   document.getElementById('newCatName').value = '';
   document.getElementById('newCatDesc').value = '';
-  document.getElementById('newCatImage').value = '';
+  const newCatImageEl = document.getElementById('newCatImage');
+  if (newCatImageEl) newCatImageEl.value = '';
 }
 
 function editCategory(catId) {
@@ -4405,7 +4235,7 @@ function saveCategoryEdit(catId) {
   cat.desc = document.getElementById('editCat-desc').value.trim() || cat.desc;
   saveData();
   renderAdminCategoryList();
-  renderHome();
+  renderHomePage();
   renderStats();
   renderCategories();
   updateCategorySelect();
