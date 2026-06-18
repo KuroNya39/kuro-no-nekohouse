@@ -4059,7 +4059,7 @@ function renderInterestTags(section, containerId) {
     div.style.alignItems = 'center';
     div.style.gap = '6px';
     div.innerHTML = `
-      <input type="text" data-section="${section}" data-field="label" data-index="${i}" value="${item.label || ''}" placeholder="标签名" style="width:80px;flex-shrink:0;">
+      <input type="text" data-section="${section}" data-field="label" data-index="${i}" value="${(item.label && item.label !== '标签') ? item.label : ''}" placeholder="标签名" style="width:80px;flex-shrink:0;">
       <input type="text" data-section="${section}" data-field="value" data-index="${i}" value="${item.value || ''}" placeholder="内容" style="flex:1;">
       <button class="admin-btn" style="padding:4px 8px;font-size:0.75rem;flex-shrink:0;" onclick="removeInterestTag('${section}',${i})">×</button>
     `;
