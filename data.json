@@ -1,6 +1,6 @@
 {
   "_version": 2,
-  "_updatedAt": "2026-06-18T17:45:40.983Z",
+  "_updatedAt": "2026-06-18T17:45:54.006Z",
   "categories": [
     {
       "id": "miku",
@@ -155,7 +155,7 @@
         "value": "狮心/零凛"
       },
       {
-        "label": "其他",
+        "label": "标签",
         "value": "雷leo司/泉真 · 其他杂食"
       }
     ],
@@ -178,7 +178,7 @@
       "xiaohongshu": "https://xhslink.com/m/7bBjGbLWBGT",
       "x": "https://x.com/KuroNya39"
     },
-    "_lastSync": "2026-06-18T17:45:38.976Z"
+    "_lastSync": "2026-06-18T17:45:51.317Z"
   },
   "siteConfig": {
     "siteName": "黒の猫窝",
