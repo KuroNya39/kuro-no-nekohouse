@@ -1976,8 +1976,8 @@ body::before {
     <div class="search-container">
       <input type="text" class="search-input" id="searchInput" placeholder="搜索小说标题、作者或内容..." aria-label="搜索小说">
       <span class="search-icon" aria-hidden="true"></span>
+      <div class="search-results" id="searchResults"></div>
     </div>
-    <div class="search-results" id="searchResults"></div>
 
     <div class="hero-section" id="heroSection">
       <img class="hero-avatar avatar-wrapper" src="avatar.png" alt="头像">
@@ -4111,7 +4111,7 @@ function saveAboutData() {
       if (labelInput && valueInput) {
         const label = labelInput.value.trim();
         const value = valueInput.value.trim();
-        if (value) tags.push({ label: label || '', value });
+        if (value) tags.push({ label: (label && label !== '标签') ? label : '', value });
       }
     });
     return tags;
