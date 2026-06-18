@@ -366,8 +366,7 @@ body {
 body::before {
   content: '';
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top: 0; left: 0; right: 0; bottom: 0;
   background-image:
     radial-gradient(circle, var(--accent-primary) 1.5px, transparent 1.5px),
     radial-gradient(circle, var(--accent-primary) 1.5px, transparent 1.5px);
@@ -1659,7 +1658,11 @@ body::before {
   .social-link { padding: 6px 12px; font-size: 0.75rem; }
   .links-grid { grid-template-columns: 1fr; }
 
-  /* Mobile bottom navigation */
+  .back-to-top { bottom: 68px; }
+}
+
+/* Mobile bottom navigation - only for small screens */
+@media (max-width: 600px) {
   .site-header { padding: 68px 0 15px; text-align: center; }
   .site-title { display: block; text-align: center; width: 100%; }
   .site-subtitle { display: block; text-align: center; width: 100%; }
@@ -2843,7 +2846,7 @@ function initScrollProgress() {
 // ===== BACK TO TOP =====
 function initBackToTop() {
   const btn = document.getElementById('backToTop');
-  const mql = window.matchMedia('(max-width: 768px)');
+  const mql = window.matchMedia('(max-width: 600px)');
   let ticking = false;
 
   function handleScroll() {
@@ -3886,7 +3889,7 @@ function setReaderStyle(style) {
 // ===== AUTO-HIDE ON SCROLL (MOBILE ONLY) =====
 function initReaderAutoHide() {
   // Only apply on mobile (screen width <= 768px)
-  const mql = window.matchMedia('(max-width: 768px)');
+  const mql = window.matchMedia('(max-width: 600px)');
   if (!mql.matches) return;
 
   const toolbar = document.querySelector('.top-toolbar');
