@@ -1,6 +1,6 @@
 {
   "_version": 2,
-  "_updatedAt": "2026-06-18T20:35:51.775Z",
+  "_updatedAt": "2026-06-18T20:38:41.533Z",
   "categories": [
     {
       "id": "miku",
@@ -233,6 +233,12 @@
       "title": "Vocaloid Wiki",
       "desc": "Vocaloid 中文维基",
       "url": "https://w.atwiki.jp/vocaloid/"
+    },
+    {
+      "icon": "<span aria-hidden=\"true\">萌</span>",
+      "title": "萌娘百科",
+      "desc": "万物皆可萌的百科全书",
+      "url": "https://zh.moegirl.org.cn/"
     }
   ]
 }
