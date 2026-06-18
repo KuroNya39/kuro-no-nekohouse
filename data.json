@@ -1,6 +1,6 @@
 {
   "_version": 2,
-  "_updatedAt": "2026-06-18T19:34:53.246Z",
+  "_updatedAt": "2026-06-18T20:35:51.775Z",
   "categories": [
     {
       "id": "miku",
@@ -78,7 +78,9 @@
           "author": "さしみ",
           "date": "2026-06-14",
           "wordCount": 26454,
-          "tags": [],
+          "tags": [
+            "中篇"
+          ],
           "chapters": [
             {
               "title": "序章  一月",
