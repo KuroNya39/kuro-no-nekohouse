@@ -348,14 +348,13 @@ html { cursor: url('cursors/Arrow.ani') 6 0, auto; }
 a, button, [onclick], select, input[type="submit"], .nav-btn, .scheme-option, .category-card, .novel-card, .link-card, .interest-card, .back-to-top, .theme-toggle, .admin-toggle, .color-scheme-toggle { cursor: url('cursors/リンクの選択.ani') 6 0, pointer; }
 input[type="text"], input[type="password"], input[type="url"], textarea, [contenteditable="true"] { cursor: url('cursors/IBeam.ani') 6 0, text; }
 .loading-screen { cursor: url('cursors/待ち状態.ani') 6 0, wait; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 body {
   font-family: var(--font-serif);
   background-color: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.8;
   min-height: 100vh;
-  overflow-x: hidden;
   transition: background 0.4s ease, color 0.4s ease;
   position: relative;
 }
@@ -1654,7 +1653,7 @@ body::before {
   .links-grid { grid-template-columns: 1fr; }
 
   /* Mobile bottom navigation */
-  .site-header { padding: 64px 0 15px; text-align: center; }
+  .site-header { padding: 68px 0 15px; text-align: center; }
   .site-title { display: block; text-align: center; width: 100%; }
   .site-subtitle { display: block; text-align: center; width: 100%; }
   .site-divider { margin: 15px auto 0; }
@@ -1685,9 +1684,9 @@ body::before {
   .nav-btn.active { color: var(--accent-primary); background: rgba(122, 158, 138, 0.06); border-radius: var(--radius-sm); }
 
   /* Add bottom padding for content to avoid nav overlap */
-  .app-container { padding-bottom: 60px; }
-  .site-footer { padding-bottom: 60px; }
-  .back-to-top { bottom: 80px; }
+  .app-container { padding-bottom: 48px; }
+  .site-footer { padding-bottom: 48px; }
+  .back-to-top { bottom: 68px; }
 }
 
 @media (max-width: 480px) {
@@ -4606,7 +4605,7 @@ function initSwipeNavigation() {
     if (Math.abs(horizontalDistance) > minSwipeDistance) {
       if (pageId === 'page-category' || pageId === 'page-reader') {
         e.preventDefault();
-        history.back();
+        showPage('home');
       }
     }
   }, { passive: false });
