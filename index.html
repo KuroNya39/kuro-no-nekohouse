@@ -3466,7 +3466,8 @@ function showPage(name, pushState) {
   if (targetPage) targetPage.classList.add('active');
   document.getElementById('searchResults').classList.remove('active');
   document.getElementById('searchInput').value = '';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Use instant scroll when called from popstate (pushState=false), smooth otherwise
+  window.scrollTo({ top: 0, behavior: pushState ? 'smooth' : 'auto' });
 
   // Load Giscus when guestbook page is shown
   if (name === 'guestbook') {
