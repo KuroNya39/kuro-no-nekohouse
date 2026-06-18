@@ -1,6 +1,6 @@
 {
   "_version": 2,
-  "_updatedAt": "2026-06-18T20:43:28.623Z",
+  "_updatedAt": "2026-06-18T20:44:06.809Z",
   "categories": [
     {
       "id": "miku",
@@ -163,8 +163,8 @@
     ],
     "nitro": [
       {
-        "label": "主推",
-        "value": "Slow Damage · towa单推"
+        "label": "",
+        "value": "主Slow Damage，towa单推"
       },
       {
         "label": "",
@@ -180,7 +180,7 @@
       "xiaohongshu": "https://xhslink.com/m/7bBjGbLWBGT",
       "x": "https://x.com/KuroNya39"
     },
-    "_lastSync": "2026-06-18T20:43:26.620Z"
+    "_lastSync": "2026-06-18T20:44:04.798Z"
   },
   "siteConfig": {
     "siteName": "黒の猫窝",
