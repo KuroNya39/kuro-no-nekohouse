@@ -357,7 +357,7 @@ body {
   color: var(--text-primary);
   line-height: 1.8;
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: clip;
   transition: background 0.4s ease, color 0.4s ease;
   position: relative;
 }
@@ -3496,7 +3496,6 @@ function showPage(name, pushState) {
 // ===== HASH ROUTER =====
 function initHashRouter() {
   window.addEventListener('popstate', (e) => {
-    // Always prevent browser from navigating away
     if (e.state && e.state.page === 'category' && e.state.catId) {
       showCategory(e.state.catId);
     } else if (e.state && e.state.page === 'reader' && e.state.catId !== undefined) {
@@ -3505,15 +3504,19 @@ function initHashRouter() {
         currentCategory = cat;
         showNovel(e.state.novelIdx, e.state.chapterIdx);
       }
+    } else if (e.state && e.state.page) {
+      showPage(e.state.page, false);
+      document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.page === e.state.page);
+      });
     } else {
-      // If no state or unknown state, go to home instead of leaving site
+      // No state - would navigate away, go to home instead
       showPage('home', false);
       document.querySelectorAll('.nav-btn').forEach(b => {
         b.classList.toggle('active', b.dataset.page === 'home');
       });
+      window.history.pushState({ page: 'home' }, '', window.location.pathname);
     }
-    // Push state back to prevent further back navigation
-    window.history.pushState({ page: 'home' }, '', window.location.pathname);
   });
 
   // Handle initial hash
@@ -3537,8 +3540,8 @@ function initHashRouter() {
     }
   }
 
-  // Replace initial history to prevent back-button from exiting site
-  window.history.replaceState({ page: 'home' }, '', window.location.pathname + window.location.hash);
+  // Add an extra history entry so back-button stays on site
+  window.history.pushState({ page: 'home' }, '', window.location.pathname + window.location.hash);
 }
 
 // ===== CATEGORY PAGE =====
