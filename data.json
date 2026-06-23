@@ -1,6 +1,6 @@
 {
   "_version": 2,
-  "_updatedAt": "2026-06-18T20:47:51.399Z",
+  "_updatedAt": "2026-06-23T19:49:29.967Z",
   "categories": [
     {
       "id": "miku",
@@ -123,6 +123,13 @@
           "preface": "https://www.pixiv.net/novel/show.php?id=12501129\n作者：さしみ\n\n这是招募！初梦物语（前篇）『in peace』中的两人真的私奔了的故事。\n是以阅读过『in peace』为前提展开的。\n没有读过的话，请将本文理解为“寒假期间，朔间兄弟为了前往罗马尼亚的特兰西瓦尼亚参与朔间家的集会而离开日本，并就此私奔的故事”。\n故事的一半是从有名字的路人青年视角描写的。"
         }
       ]
+    },
+    {
+      "id": "rokkoota",
+      "name": "六央",
+      "desc": "六甲绫人 × 央田寻",
+      "image": "rokkoota.jpg",
+      "novels": []
     }
   ],
   "aboutData": {
