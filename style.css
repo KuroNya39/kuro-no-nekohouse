@@ -346,6 +346,17 @@ select::-moz-selection {
   background: color-mix(in srgb, var(--accent-primary) 12%, transparent);
   color: inherit;
 }
+/* Select option highlight - themed */
+select option {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+select option:hover,
+select option:checked,
+select option:active {
+  background: color-mix(in srgb, var(--accent-primary) 20%, var(--bg-card));
+  color: var(--text-primary);
+}
 
 /* Dark theme - specific element overrides */
 [data-theme="dark"] .reader-chapter-title { color: var(--text-primary); border-bottom-color: var(--border-light); }

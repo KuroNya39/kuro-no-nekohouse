@@ -993,101 +993,63 @@ function renderGuestbookIntro() {
 
 // ===== GUESTBOOK (Giscus) =====
 function getGiscusTheme() {
-  return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark_dimmed' : 'light';
+  const theme = document.documentElement.getAttribute('data-theme');
+  if (theme === 'dark') return 'dark';
+  const scheme = document.documentElement.getAttribute('data-color-scheme');
+  if (scheme === 'night') return 'dark';
+  return 'light';
 }
 
 async function loadGiscus() {
-  const wrapper = document.getElementById('giscusWrapper');
-  if (!wrapper || wrapper.children.length > 0) return;
-  
-  let repoId = '';
-  let categoryId = '';
-  let categoryName = 'General';
-  
-  // Try to load cached config from localStorage
+  const container = document.getElementById('giscusWrapper');
+  if (!container) return;
+
   try {
-    const cached = localStorage.getItem('giscusConfig');
-    if (cached) {
-      const config = JSON.parse(cached);
-      repoId = config.repoId || '';
-      categoryId = config.categoryId || '';
-      categoryName = config.categoryName || 'General';
+    // 方法1：通过 REST API 获取 repo node_id
+    const repoRes = await fetch('https://api.github.com/repos/KuroNya39/kuro-no-nekohouse');
+    if (!repoRes.ok) throw new Error('Failed to fetch repo info');
+    const repoData = await repoRes.json();
+    const repoId = repoData.node_id;
+
+    // 方法2：通过 giscus.app API 获取 category-id
+    const catRes = await fetch('https://giscus.app/api/discussions/categories?repo=KuroNya39/kuro-no-nekohouse');
+    let categoryId = '';
+    if (catRes.ok) {
+      const catData = await catRes.json();
+      const categories = catData.categories || [];
+      const general = categories.find(c => c.name === 'General' || c.name === 'Announcements');
+      if (general) categoryId = general.id;
     }
-  } catch (e) { /* ignore */ }
-  
-  // If no cached config, fetch from APIs
-  if (!repoId || !categoryId) {
-    try {
-      // Fetch repo node_id via REST API (no auth needed)
-      if (!repoId) {
-        const repoRes = await fetch('https://api.github.com/repos/KuroNya39/kuro-no-nekohouse');
-        if (repoRes.ok) {
-          const repoData = await repoRes.json();
-          repoId = repoData.node_id;
-        }
-      }
-      
-      // Fetch category list via giscus.app API (no auth needed)
-      if (!categoryId) {
-        const catRes = await fetch('https://giscus.app/api/discussions/categories?repo=KuroNya39/kuro-no-nekohouse');
-        if (catRes.ok) {
-          const catData = await catRes.json();
-          const categories = catData.categories || [];
-          // Prefer "General", fallback to "Announcements", then first available
-          const general = categories.find(c => c.name === 'General');
-          const announcements = categories.find(c => c.name === 'Announcements');
-          const fallback = categories[0];
-          const chosen = general || announcements || fallback;
-          if (chosen) {
-            categoryId = chosen.id;
-            categoryName = chosen.name;
-          }
-          // Also update repoId from this response if we didn't get it
-          if (!repoId && catData.repositoryId) {
-            repoId = catData.repositoryId;
-          }
-        }
-      }
-      
-      // Cache the config to localStorage
-      if (repoId && categoryId) {
-        try {
-          localStorage.setItem('giscusConfig', JSON.stringify({ repoId, categoryId, categoryName }));
-        } catch (e) { /* ignore */ }
-      }
-    } catch (err) {
-      console.warn('Failed to fetch Giscus config from API, using fallback:', err);
-      // Fallback to hardcoded values
-      if (!repoId) repoId = 'R_kgDOS6pURQ';
-      if (!categoryId) {
-        categoryId = 'DIC_kwDOS6pURc4C_Jv6';
-        categoryName = 'General';
-      }
+
+    // 创建 widget
+    container.innerHTML = '';
+    const widget = document.createElement('giscus-widget');
+    widget.setAttribute('repo', 'KuroNya39/kuro-no-nekohouse');
+    widget.setAttribute('repo-id', repoId);
+    widget.setAttribute('category', 'General');
+    widget.setAttribute('category-id', categoryId);
+    widget.setAttribute('mapping', 'pathname');
+    widget.setAttribute('strict', '0');
+    widget.setAttribute('reactions-enabled', '1');
+    widget.setAttribute('emit-metadata', '0');
+    widget.setAttribute('input-position', 'top');
+    widget.setAttribute('theme', getGiscusTheme());
+    widget.setAttribute('lang', 'zh-CN');
+    widget.setAttribute('loading', 'lazy');
+    container.appendChild(widget);
+
+    // 加载 client.js（只加载一次）
+    if (!document.querySelector('script[src="https://giscus.app/client.js"]')) {
+      const script = document.createElement('script');
+      script.src = 'https://giscus.app/client.js';
+      script.async = true;
+      document.body.appendChild(script);
     }
+
+  } catch (err) {
+    console.error('Giscus load error:', err);
+    container.innerHTML = '<p style="padding:20px;text-align:center;color:var(--text-muted);font-size:0.85rem;">留言功能加载失败</p><p style="padding:0 20px 20px;text-align:center;color:var(--text-muted);font-size:0.75rem;">请确保：1) 仓库已开启 Discussions 功能  2) 已在 github.com/apps/giscus 安装并授权此仓库</p>';
   }
-  
-  const theme = getGiscusTheme();
-  
-  const widget = document.createElement('giscus-widget');
-  widget.setAttribute('repo', 'KuroNya39/kuro-no-nekohouse');
-  widget.setAttribute('repo-id', repoId);
-  widget.setAttribute('category', categoryName);
-  widget.setAttribute('category-id', categoryId);
-  widget.setAttribute('mapping', 'pathname');
-  widget.setAttribute('strict', '0');
-  widget.setAttribute('reactions-enabled', '1');
-  widget.setAttribute('emit-metadata', '1');
-  widget.setAttribute('input-position', 'bottom');
-  widget.setAttribute('theme', theme);
-  widget.setAttribute('lang', 'zh-CN');
-  widget.setAttribute('loading', 'lazy');
-  wrapper.appendChild(widget);
-  
-  const script = document.createElement('script');
-  script.src = 'https://giscus.app/client.js';
-  script.async = true;
-  wrapper.appendChild(script);
-  checkGiscusLoaded();
 }
 
 function updateGiscusTheme() {
@@ -1654,7 +1616,11 @@ function showNovel(index, chapterIdx, shouldPushState) {
   if (savedFontSize) contentDiv.style.setProperty('--reader-font-size', savedFontSize + 'px');
   if (savedLineHeight) contentDiv.style.setProperty('--reader-line-height', savedLineHeight);
   const savedFont = localStorage.getItem('readerFont');
-  if (savedFont) contentDiv.style.fontFamily = savedFont;
+  if (savedFont && contentDiv) {
+    contentDiv.style.fontFamily = savedFont;
+  } else if (contentDiv) {
+    contentDiv.style.fontFamily = '';
+  }
 
   const prevBtn = document.getElementById('prevNovel');
   const nextBtn = document.getElementById('nextNovel');
@@ -1863,9 +1829,14 @@ function setReaderStyle(style) {
 function setReaderFont(font) {
   const readerContent = document.getElementById('readerContent');
   if (readerContent) {
-    readerContent.style.fontFamily = font;
+    if (font) {
+      readerContent.style.fontFamily = font;
+    } else {
+      readerContent.style.fontFamily = ''; // 清除自定义字体，回退到CSS默认
+    }
   }
   localStorage.setItem('readerFont', font);
+  if (font) showToast('字体切换中，首次加载可能较慢');
 }
 
 // ===== AUTO-HIDE ON SCROLL (MOBILE ONLY) =====
