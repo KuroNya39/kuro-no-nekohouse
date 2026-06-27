@@ -1,6 +1,6 @@
 {
   "_version": 2,
-  "_updatedAt": "2026-06-27T20:48:32.739Z",
+  "_updatedAt": "2026-06-27T20:50:59.634Z",
   "categories": [
     {
       "id": "miku",
@@ -153,6 +153,13 @@
       "name": "什三地球",
       "desc": "炼谷什三 × 山本地球",
       "image": "jyuuzoutama.jpg",
+      "novels": []
+    },
+    {
+      "id": "togomishima",
+      "name": "海岛统吾",
+      "desc": "高江统吾 × 海岛涟",
+      "image": "togomishima.jpg",
       "novels": []
     }
   ],
