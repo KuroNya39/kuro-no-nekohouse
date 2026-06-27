@@ -96,7 +96,7 @@ function showToast(message, type) {
   const toast = document.createElement('div');
   toast.className = 'toast-notification toast-' + type;
   toast.textContent = message;
-  toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:12px 24px;z-index:99999;font-size:0.85rem;font-family:var(--font-serif);border-radius:0px;animation:staggerFadeIn 0.3s ease both;pointer-events:none;';
+  toast.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);padding:12px 24px;z-index:99999;font-size:0.85rem;font-family:var(--font-serif);border-radius:0px;animation:staggerFadeIn 0.3s ease both;pointer-events:none;';
   if (type === 'success') {
     toast.style.cssText += 'background:var(--accent-primary);color:white;border:1px solid var(--accent-primary);';
   } else if (type === 'error') {
@@ -126,7 +126,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Data migration: rename old IDs
-  categories.forEach(c => { if (c.id === 'leoizumi') c.id = 'izuleo'; });
+  // Data migration: rename old IDs and update images
+  categories.forEach(c => {
+    if (c.id === 'leoizumi') c.id = 'izuleo';
+    // 什三地球 → jyuzotama
+    if (c.name === '什三地球' && c.id !== 'jyuzotama') c.id = 'jyuzotama';
+  });
+  // Update category images
+  const imageMap = {
+    '六甲央田': 'vol6.jpg',
+    '什三地球': 'vol13.jpg',
+    '统吾海岛': 'vol15.jpg'
+  };
+  categories.forEach(c => {
+    if (imageMap[c.name] && c.image !== imageMap[c.name]) c.image = imageMap[c.name];
+  });
 
   renderHomePage();
   renderGuestbookIntro();
@@ -1000,55 +1014,31 @@ function getGiscusTheme() {
   return 'light';
 }
 
-async function loadGiscus() {
+function loadGiscus() {
   const container = document.getElementById('giscusWrapper');
   if (!container) return;
 
-  try {
-    // 方法1：通过 REST API 获取 repo node_id
-    const repoRes = await fetch('https://api.github.com/repos/KuroNya39/kuro-no-nekohouse');
-    if (!repoRes.ok) throw new Error('Failed to fetch repo info');
-    const repoData = await repoRes.json();
-    const repoId = repoData.node_id;
+  container.innerHTML = '';
+  const widget = document.createElement('giscus-widget');
+  widget.setAttribute('repo', 'KuroNya39/kuro-no-nekohouse');
+  widget.setAttribute('repo-id', 'R_kgDOS6pURQ');
+  widget.setAttribute('category', 'General');
+  widget.setAttribute('category-id', 'DIC_kwDOS6pURc4C_Jv6');
+  widget.setAttribute('mapping', 'pathname');
+  widget.setAttribute('strict', '0');
+  widget.setAttribute('reactions-enabled', '1');
+  widget.setAttribute('emit-metadata', '0');
+  widget.setAttribute('input-position', 'top');
+  widget.setAttribute('theme', getGiscusTheme());
+  widget.setAttribute('lang', 'zh-CN');
+  widget.setAttribute('loading', 'lazy');
+  container.appendChild(widget);
 
-    // 方法2：通过 giscus.app API 获取 category-id
-    const catRes = await fetch('https://giscus.app/api/discussions/categories?repo=KuroNya39/kuro-no-nekohouse');
-    let categoryId = '';
-    if (catRes.ok) {
-      const catData = await catRes.json();
-      const categories = catData.categories || [];
-      const general = categories.find(c => c.name === 'General' || c.name === 'Announcements');
-      if (general) categoryId = general.id;
-    }
-
-    // 创建 widget
-    container.innerHTML = '';
-    const widget = document.createElement('giscus-widget');
-    widget.setAttribute('repo', 'KuroNya39/kuro-no-nekohouse');
-    widget.setAttribute('repo-id', repoId);
-    widget.setAttribute('category', 'General');
-    widget.setAttribute('category-id', categoryId);
-    widget.setAttribute('mapping', 'pathname');
-    widget.setAttribute('strict', '0');
-    widget.setAttribute('reactions-enabled', '1');
-    widget.setAttribute('emit-metadata', '0');
-    widget.setAttribute('input-position', 'top');
-    widget.setAttribute('theme', getGiscusTheme());
-    widget.setAttribute('lang', 'zh-CN');
-    widget.setAttribute('loading', 'lazy');
-    container.appendChild(widget);
-
-    // 加载 client.js（只加载一次）
-    if (!document.querySelector('script[src="https://giscus.app/client.js"]')) {
-      const script = document.createElement('script');
-      script.src = 'https://giscus.app/client.js';
-      script.async = true;
-      document.body.appendChild(script);
-    }
-
-  } catch (err) {
-    console.error('Giscus load error:', err);
-    container.innerHTML = '<p style="padding:20px;text-align:center;color:var(--text-muted);font-size:0.85rem;">留言功能加载失败</p><p style="padding:0 20px 20px;text-align:center;color:var(--text-muted);font-size:0.75rem;">请确保：1) 仓库已开启 Discussions 功能  2) 已在 github.com/apps/giscus 安装并授权此仓库</p>';
+  if (!document.querySelector('script[src="https://giscus.app/client.js"]')) {
+    const script = document.createElement('script');
+    script.src = 'https://giscus.app/client.js';
+    script.async = true;
+    document.body.appendChild(script);
   }
 }
 
@@ -1075,25 +1065,7 @@ window.addEventListener('message', function(event) {
   }
 });
 
-// Giscus 错误检测（通过 iframe 加载失败检测）
-function checkGiscusLoaded() {
-  const wrapper = document.getElementById('giscusWrapper');
-  if (!wrapper) return;
-  const iframe = wrapper.querySelector('iframe.giscus-frame');
-  const widget = wrapper.querySelector('giscus-widget');
-  if (!iframe && widget) {
-    // 如果 widget 存在但 iframe 没有出现，可能加载失败
-    setTimeout(() => {
-      const iframe2 = wrapper.querySelector('iframe.giscus-frame');
-      if (!iframe2) {
-        const notice = document.createElement('div');
-        notice.style.cssText = 'padding:16px;text-align:center;color:var(--text-muted);font-size:0.85rem;';
-        notice.innerHTML = '留言功能暂不可用。如需启用留言，请前往 <a href="https://github.com/apps/giscus" target="_blank" rel="noopener" style="color:var(--accent-primary);text-decoration:underline;">GitHub Giscus App</a> 安装到仓库，并确保仓库已开启 Discussions 功能。';
-        wrapper.appendChild(notice);
-      }
-    }, 10000);
-  }
-}
+
 
 function updateGuestbookLoginStatus(viewer) {
   const statusEl = document.getElementById('guestbookLoginStatus');
