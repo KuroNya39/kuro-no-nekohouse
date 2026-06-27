@@ -992,17 +992,87 @@ function renderGuestbookIntro() {
 }
 
 // ===== GUESTBOOK (Giscus) =====
-function loadGiscus() {
+function getGiscusTheme() {
+  return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark_dimmed' : 'light';
+}
+
+async function loadGiscus() {
   const wrapper = document.getElementById('giscusWrapper');
   if (!wrapper || wrapper.children.length > 0) return;
   
-  const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark_dimmed' : 'light';
+  let repoId = '';
+  let categoryId = '';
+  let categoryName = 'General';
+  
+  // Try to load cached config from localStorage
+  try {
+    const cached = localStorage.getItem('giscusConfig');
+    if (cached) {
+      const config = JSON.parse(cached);
+      repoId = config.repoId || '';
+      categoryId = config.categoryId || '';
+      categoryName = config.categoryName || 'General';
+    }
+  } catch (e) { /* ignore */ }
+  
+  // If no cached config, fetch from APIs
+  if (!repoId || !categoryId) {
+    try {
+      // Fetch repo node_id via REST API (no auth needed)
+      if (!repoId) {
+        const repoRes = await fetch('https://api.github.com/repos/KuroNya39/kuro-no-nekohouse');
+        if (repoRes.ok) {
+          const repoData = await repoRes.json();
+          repoId = repoData.node_id;
+        }
+      }
+      
+      // Fetch category list via giscus.app API (no auth needed)
+      if (!categoryId) {
+        const catRes = await fetch('https://giscus.app/api/discussions/categories?repo=KuroNya39/kuro-no-nekohouse');
+        if (catRes.ok) {
+          const catData = await catRes.json();
+          const categories = catData.categories || [];
+          // Prefer "General", fallback to "Announcements", then first available
+          const general = categories.find(c => c.name === 'General');
+          const announcements = categories.find(c => c.name === 'Announcements');
+          const fallback = categories[0];
+          const chosen = general || announcements || fallback;
+          if (chosen) {
+            categoryId = chosen.id;
+            categoryName = chosen.name;
+          }
+          // Also update repoId from this response if we didn't get it
+          if (!repoId && catData.repositoryId) {
+            repoId = catData.repositoryId;
+          }
+        }
+      }
+      
+      // Cache the config to localStorage
+      if (repoId && categoryId) {
+        try {
+          localStorage.setItem('giscusConfig', JSON.stringify({ repoId, categoryId, categoryName }));
+        } catch (e) { /* ignore */ }
+      }
+    } catch (err) {
+      console.warn('Failed to fetch Giscus config from API, using fallback:', err);
+      // Fallback to hardcoded values
+      if (!repoId) repoId = 'R_kgDOS6pURQ';
+      if (!categoryId) {
+        categoryId = 'DIC_kwDOS6pURc4C_Jv6';
+        categoryName = 'General';
+      }
+    }
+  }
+  
+  const theme = getGiscusTheme();
   
   const widget = document.createElement('giscus-widget');
   widget.setAttribute('repo', 'KuroNya39/kuro-no-nekohouse');
-  widget.setAttribute('repo-id', 'R_kgDOS6pURQ');
-  widget.setAttribute('category', 'Announcements');
-  widget.setAttribute('category-id', 'DIC_kwDOS6pURc4C_Jv5');
+  widget.setAttribute('repo-id', repoId);
+  widget.setAttribute('category', categoryName);
+  widget.setAttribute('category-id', categoryId);
   widget.setAttribute('mapping', 'pathname');
   widget.setAttribute('strict', '0');
   widget.setAttribute('reactions-enabled', '1');
@@ -1010,6 +1080,7 @@ function loadGiscus() {
   widget.setAttribute('input-position', 'bottom');
   widget.setAttribute('theme', theme);
   widget.setAttribute('lang', 'zh-CN');
+  widget.setAttribute('loading', 'lazy');
   wrapper.appendChild(widget);
   
   const script = document.createElement('script');
@@ -1020,7 +1091,7 @@ function loadGiscus() {
 }
 
 function updateGiscusTheme() {
-  const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark_dimmed' : 'light';
+  const theme = getGiscusTheme();
   const widget = document.querySelector('giscus-widget');
   if (widget) {
     widget.setAttribute('theme', theme);
