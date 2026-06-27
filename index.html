@@ -326,6 +326,12 @@ select {
   --shadow-hover: 0 8px 28px rgba(0, 0, 0, 0.45);
 }
 
+/* Text selection - themed highlight */
+::selection {
+  background: color-mix(in srgb, var(--accent-primary) 25%, transparent);
+  color: inherit;
+}
+
 /* Dark theme - specific element overrides */
 [data-theme="dark"] .reader-chapter-title { color: var(--text-primary); border-bottom-color: var(--border-light); }
 [data-theme="dark"] .reader-preface-block { color: var(--text-muted); border-bottom-color: var(--border-light); }
@@ -914,7 +920,7 @@ body::before {
 .search-result-item:hover { background: var(--bg-primary); }
 .search-result-item h4 { font-size: 0.9rem; margin-bottom: 2px; }
 .search-result-item p { font-size: 0.8rem; color: var(--text-muted); }
-.search-result-item .highlight { color: var(--accent-primary); background: color-mix(in srgb, var(--accent-primary) 12%, transparent); padding: 1px 3px; border-radius: 2px; }
+.search-result-item .highlight { color: var(--accent-primary); background: color-mix(in srgb, var(--accent-primary) 12%, transparent); padding: 1px 3px; border-radius: 0; }
 .search-empty { padding: 24px; font-size: 0.85rem; }
 
 /* Hero Section */
@@ -1541,7 +1547,7 @@ body::before {
 /* Footer with rose divider */
 .site-footer {
   text-align: center;
-  padding: 45px 20px 35px;
+  padding: 35px 20px;
   color: var(--text-muted);
   page-break-inside: avoid;
   break-inside: avoid;
@@ -1549,10 +1555,13 @@ body::before {
   border-top: 1px solid var(--border-light);
   margin-top: 30px;
   letter-spacing: 1px;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 .site-footer .footer-stars {
-  margin-top: 8px;
   font-size: 0.6rem;
   color: var(--accent-primary);
   opacity: 0.35;
@@ -2062,8 +2071,20 @@ body::before {
       <div class="reader-content" id="readerContent"></div>
       <div class="reader-nav">
         <button class="reader-nav-btn" id="prevNovel">← 上一章</button>
+        <button class="reader-nav-btn" id="readerEditBtn" style="display:none;" onclick="toggleReaderEdit()">编辑排版</button>
         <button class="reader-nav-btn" onclick="backToCategory()">返回列表</button>
         <button class="reader-nav-btn" id="nextNovel">下一章 →</button>
+      </div>
+      <div id="readerEditPanel" style="display:none;padding:16px;background:var(--bg-card);border:1px solid var(--border-light);border-radius:var(--radius-sm);margin-bottom:16px;">
+        <h4 style="margin-bottom:12px;font-family:var(--font-display);">编辑排版</h4>
+        <input type="text" id="readerEditTitle" placeholder="章节标题" style="width:100%;padding:8px;border:1px solid var(--border-light);background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-serif);margin-bottom:8px;border-radius:var(--radius-sm);">
+        <textarea id="readerEditContent" rows="8" placeholder="章节内容（支持 **粗体**、*斜体*、---分隔线）" style="width:100%;padding:8px;border:1px solid var(--border-light);background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-serif);resize:vertical;margin-bottom:8px;border-radius:var(--radius-sm);"></textarea>
+        <div style="display:flex;gap:8px;">
+          <button class="admin-small-btn" onclick="previewMarkdown()">预览Markdown</button>
+          <button class="admin-small-btn" onclick="saveReaderEdit()">保存</button>
+          <button class="admin-small-btn cancel" onclick="document.getElementById('readerEditPanel').style.display='none'">关闭</button>
+        </div>
+        <div id="readerEditPreview" style="display:none;margin-top:12px;padding:12px;background:var(--bg-primary);border:1px solid var(--border-light);border-radius:var(--radius-sm);"></div>
       </div>
     </div>
   </section>
@@ -2078,6 +2099,7 @@ body::before {
   <section class="page" id="page-guestbook" aria-label="留言板">
     <div class="guestbook-intro" id="guestbookIntroArea">
       <p id="guestbookIntroText"></p>
+      <p id="guestbookLoginStatus" style="font-size:0.8rem;color:var(--text-muted);display:none;"></p>
     </div>
     <div class="giscus-wrapper" id="giscusWrapper"></div>
   </section>
@@ -2147,7 +2169,7 @@ let categories = safeJSONParse('categories', [
     ]
   },
   {
-    id: 'leoizumi', name: '狮心', desc: '濑名泉 × 月永雷欧',
+    id: 'izuleo', name: '狮心', desc: '濑名泉 × 月永雷欧',
     image: 'izumileo.jpg',
     novels: [
       { id: 'leo-1', title: '骑士与王子', author: '蔷薇', date: '2026-06-05', wordCount: 3200, tags: ['甜文', '长篇'], content: `这是狮心分类下的示例小说。\n\n濑名泉与月永雷欧的故事将在这里展开。你可以将真实的小说内容替换这段占位文本。` }
@@ -3015,7 +3037,7 @@ function addNovel() {
   let allContent = '';
   chapterItems.forEach(item => {
     const chTitle = item.querySelector('input[type="text"]').value.trim() || '未命名章节';
-    const chContent = item.querySelector('textarea').value.trim();
+    const chContent = item.querySelector('textarea').value;
     chapters.push({ title: chTitle, content: chContent });
     allContent += chContent;
   });
@@ -3109,7 +3131,7 @@ function loadGiscus() {
   script.setAttribute('data-mapping', 'pathname');
   script.setAttribute('data-strict', '0');
   script.setAttribute('data-reactions-enabled', '1');
-  script.setAttribute('data-emit-metadata', '0');
+  script.setAttribute('data-emit-metadata', '1');
   script.setAttribute('data-input-position', 'bottom');
   script.setAttribute('data-theme', theme);
   script.setAttribute('data-lang', 'zh-CN');
@@ -3124,6 +3146,27 @@ function updateGiscusTheme() {
   const iframe = document.querySelector('iframe.giscus-frame');
   if (iframe) {
     iframe.contentWindow.postMessage({ giscus: { setConfig: { theme } } }, 'https://giscus.app');
+  }
+}
+
+// 监听 Giscus 消息，更新留言板登录状态
+window.addEventListener('message', function(event) {
+  if (event.origin !== 'https://giscus.app') return;
+  if (!(typeof event.data === 'object' && event.data.giscus)) return;
+  const giscusData = event.data.giscus;
+  if ('discussion' in giscusData && giscusData.viewer) {
+    updateGuestbookLoginStatus(giscusData.viewer);
+  }
+});
+
+function updateGuestbookLoginStatus(viewer) {
+  const statusEl = document.getElementById('guestbookLoginStatus');
+  if (!statusEl) return;
+  if (viewer && viewer.login) {
+    statusEl.textContent = '当前已登录：' + viewer.login;
+    statusEl.style.display = 'block';
+  } else {
+    statusEl.style.display = 'none';
   }
 }
 
@@ -3196,7 +3239,7 @@ function renderCategories() {
     div.className = 'category-card card-shine';
     div.setAttribute('role', 'button');
     div.setAttribute('tabindex', '0');
-    div.setAttribute('aria-label', `${cat.name}分类，${cat.novels.length}篇小说`);
+    div.setAttribute('aria-label', `${cat.name}分类，${cat.novels.length}篇文章`);
     div.onclick = () => showCategory(cat.id);
     div.onkeydown = (e) => { if (e.key === 'Enter') showCategory(cat.id); };
     const img = document.createElement('img');
@@ -3216,7 +3259,7 @@ function renderCategories() {
       <div class="category-name">${escapeHTML(cat.name)}</div>
       <div class="category-desc">${escapeHTML(cat.desc)}</div>
       <div class="category-footer">
-        <span class="category-count">${cat.novels.length} 篇小说</span>
+        <span class="category-count">${cat.novels.length} 篇文章</span>
         <span class="category-arrow">→</span>
       </div>
     `;
@@ -3519,6 +3562,13 @@ let currentChapterIndex = 0; // 当前章节索引
 function showNovel(index, chapterIdx, shouldPushState) {
   if (!currentCategory || index < 0 || index >= currentCategory.novels.length) return;
   if (shouldPushState === undefined) shouldPushState = true;
+
+  // 保存当前滚动位置，用于切换章节后恢复
+  const savedScrollY = window.scrollY;
+  // 判断是否为章节切换（当前已在阅读器页且是同一小说）
+  const readerPageActive = document.getElementById('page-reader')?.classList.contains('active');
+  const isChapterSwitch = readerPageActive && index === currentNovelIndex && typeof chapterIdx === 'number';
+
   currentNovelIndex = index;
   const novel = currentCategory.novels[index];
 
@@ -3592,10 +3642,15 @@ function showNovel(index, chapterIdx, shouldPushState) {
     contentDiv.appendChild(chapterTitle);
   }
 
-  const paragraphs = currentChapter.content.split(/\n+/).filter(p => p.trim());
+  const paragraphs = currentChapter.content.split('\n');
   paragraphs.forEach(p => {
     const para = document.createElement('p');
-    para.textContent = p.trim();
+    if (p.trim()) {
+      para.textContent = p.trim();
+    } else {
+      // 空行保留为空段落，用 <br> 确保有可见间距
+      para.innerHTML = '<br>';
+    }
     contentDiv.appendChild(para);
   });
 
@@ -3624,12 +3679,76 @@ function showNovel(index, chapterIdx, shouldPushState) {
     nextBtn.textContent = '\u4e0b\u4e00\u7bc7 \u2192';
   }
 
+  // Show/hide edit button based on admin status
+  const readerEditBtn = document.getElementById('readerEditBtn');
+  if (readerEditBtn) readerEditBtn.style.display = isAdmin ? '' : 'none';
+  // Hide edit panel when switching chapters
+  const readerEditPanel = document.getElementById('readerEditPanel');
+  if (readerEditPanel) readerEditPanel.style.display = 'none';
+
   showPage('reader', false);
+  // 章节切换后恢复滚动位置（使用 setTimeout 确保在 showPage 的 scrollTo 之后执行）
+  if (isChapterSwitch && (chapterIdx || 0) > 0) {
+    setTimeout(() => { window.scrollTo(0, savedScrollY); }, 0);
+  }
   if (shouldPushState) {
     window.history.pushState({ page: 'reader', catId: currentCategory.id, novelIdx: index, chapterIdx: chapterIdx || 0 }, '', '#/reader/' + currentCategory.id + '/' + index + '/' + (chapterIdx || 0));
   }
   // Set title AFTER showPage to avoid being overwritten
   document.title = novel.title + ' - ' + siteConfig.siteName;
+}
+
+function toggleReaderEdit() {
+  const panel = document.getElementById('readerEditPanel');
+  if (!panel) return;
+  if (panel.style.display === 'none' || !panel.style.display) {
+    const novel = currentCategory.novels[currentNovelIndex];
+    let chapters = [];
+    if (novel.chapters && novel.chapters.length > 0) {
+      chapters = novel.chapters;
+    } else {
+      chapters = [{ title: '全文', content: novel.content || '' }];
+    }
+    const chapter = chapters[currentChapterIndex];
+    document.getElementById('readerEditTitle').value = chapter.title;
+    document.getElementById('readerEditContent').value = chapter.content;
+    panel.style.display = 'block';
+    const preview = document.getElementById('readerEditPreview');
+    if (preview) preview.style.display = 'none';
+  } else {
+    panel.style.display = 'none';
+  }
+}
+
+function saveReaderEdit() {
+  const novel = currentCategory.novels[currentNovelIndex];
+  let chapters = [];
+  if (novel.chapters && novel.chapters.length > 0) {
+    chapters = novel.chapters;
+  } else {
+    chapters = [{ title: '全文', content: novel.content || '' }];
+    novel.chapters = chapters;
+  }
+  const newTitle = document.getElementById('readerEditTitle').value.trim();
+  const newContent = document.getElementById('readerEditContent').value;
+  chapters[currentChapterIndex].title = newTitle || chapters[currentChapterIndex].title;
+  chapters[currentChapterIndex].content = newContent;
+  saveData();
+  showToast('排版已保存');
+  showNovel(currentNovelIndex, currentChapterIndex, false);
+  document.getElementById('readerEditPanel').style.display = 'none';
+}
+
+function previewMarkdown() {
+  let content = document.getElementById('readerEditContent').value;
+  content = content.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  content = content.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  content = content.replace(/^---$/gm, '<hr style="border:none;border-top:1px solid var(--border-light);margin:16px 0;">');
+  const preview = document.getElementById('readerEditPreview');
+  if (preview) {
+    preview.style.display = 'block';
+    preview.innerHTML = content.split('\n').map(line => line ? `<p style="margin:8px 0;">${line}</p>` : '<p style="margin:8px 0;">&nbsp;</p>').join('');
+  }
 }
 
 function backToCategory() {
@@ -3921,8 +4040,33 @@ function switchAdminTab(btn, tabName) {
 function renderAdminEditNovelList() {
   const list = document.getElementById('adminEditNovelList');
   list.innerHTML = '';
+
+  // 添加搜索框
+  const searchInput = document.createElement('input');
+  searchInput.type = 'text';
+  searchInput.id = 'adminNovelSearch';
+  searchInput.placeholder = '搜索小说标题或作者...';
+  searchInput.style.cssText = 'width:100%;padding:8px 12px;border:1px solid var(--border-light);background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-serif);font-size:0.85rem;margin-bottom:12px;border-radius:var(--radius-sm);';
+  // 如果之前已有搜索值，恢复它
+  const oldSearch = (document.getElementById('adminNovelSearch') || {}).value || '';
+  searchInput.value = oldSearch;
+  list.appendChild(searchInput);
+
+  const query = searchInput.value.trim().toLowerCase();
+
+  // 搜索框实时过滤
+  searchInput.addEventListener('input', function() {
+    renderAdminEditNovelList();
+  });
+
+  let hasResults = false;
   categories.forEach(cat => {
     cat.novels.forEach(novel => {
+      // 搜索过滤
+      if (query && !novel.title.toLowerCase().includes(query) && !novel.author.toLowerCase().includes(query)) {
+        return;
+      }
+      hasResults = true;
       // 计算章节数量（向后兼容）
       const chapterCount = novel.chapters ? novel.chapters.length : 1;
       const chapterText = chapterCount > 1 ? chapterCount + ' 章' : '全文';
@@ -3942,8 +4086,11 @@ function renderAdminEditNovelList() {
       list.appendChild(div);
     });
   });
-  if (!list.children.length) {
-    list.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">暂无小说</p>';
+  if (!hasResults) {
+    const noResult = document.createElement('p');
+    noResult.style.cssText = 'color:var(--text-muted);font-size:0.85rem;';
+    noResult.textContent = query ? '没有匹配的小说' : '暂无小说';
+    list.appendChild(noResult);
   }
 }
 
@@ -4021,7 +4168,7 @@ function saveEditNovel(catId, novelId) {
   let allContent = '';
   chapterItems.forEach(item => {
     const chTitle = item.querySelector('.edit-chapter-title').value.trim() || '未命名章节';
-    const chContent = item.querySelector('.edit-chapter-content').value.trim();
+    const chContent = item.querySelector('.edit-chapter-content').value;
     chapters.push({ title: chTitle, content: chContent });
     allContent += chContent;
   });
@@ -4179,6 +4326,8 @@ function renderAdminCategoryList() {
           <span style="color:var(--text-muted);font-size:0.8rem;"> (${cat.id}) · ${escapeHTML(cat.desc)} · ${cat.novels.length}篇</span>
         </div>
         <div style="display:flex;gap:6px;">
+          ${i > 0 ? `<button class="admin-small-btn" onclick="moveCategory('${cat.id}',-1)" title="上移">↑</button>` : ''}
+          ${i < categories.length - 1 ? `<button class="admin-small-btn" onclick="moveCategory('${cat.id}',1)" title="下移">↓</button>` : ''}
           <button class="admin-small-btn" onclick="editCategory('${cat.id}')">编辑</button>
           <button class="admin-small-btn cancel" onclick="deleteCategory('${cat.id}')">删除</button>
         </div>
@@ -4245,7 +4394,7 @@ function saveCategoryEdit(catId) {
 function deleteCategory(catId) {
   const cat = categories.find(c => c.id === catId);
   if (!cat) return;
-  if (cat.novels.length > 0 && !confirm(`分类"${cat.name}"下有 ${cat.novels.length} 篇小说，删除后小说也会丢失，确定吗？`)) return;
+  if (cat.novels.length > 0 && !confirm(`分类"${cat.name}"下有 ${cat.novels.length} 篇文章，删除后文章也会丢失，确定吗？`)) return;
   categories = categories.filter(c => c.id !== catId);
   saveData();
   renderAdminCategoryList();
@@ -4253,6 +4402,20 @@ function deleteCategory(catId) {
   renderCategories();
   updateCategorySelect();
   showToast('分类已删除');
+}
+
+function moveCategory(catId, direction) {
+  const idx = categories.findIndex(c => c.id === catId);
+  if (idx === -1) return;
+  const newIdx = idx + direction;
+  if (newIdx < 0 || newIdx >= categories.length) return;
+  const temp = categories[idx];
+  categories[idx] = categories[newIdx];
+  categories[newIdx] = temp;
+  saveData();
+  renderCategories();
+  renderAdminCategoryList();
+  showToast('排序已更新');
 }
 
 function updateCategorySelect() {
@@ -4356,6 +4519,8 @@ function renderAdminLinksList() {
           <span style="color:var(--text-muted);font-size:0.8rem;"> ${escapeHTML(item.desc)}</span>
         </div>
         <div style="display:flex;gap:6px;">
+          ${i > 0 ? `<button class="admin-small-btn" onclick="moveLink(${i},-1)" title="上移">↑</button>` : ''}
+          ${i < linksData.length - 1 ? `<button class="admin-small-btn" onclick="moveLink(${i},1)" title="下移">↓</button>` : ''}
           <button class="admin-small-btn" onclick="editLink(${i})">编辑</button>
           <button class="admin-small-btn cancel" onclick="deleteLink(${i})">删除</button>
         </div>
@@ -4418,6 +4583,18 @@ function deleteLink(index) {
   renderAdminLinksList();
   renderLinks();
   showToast('友链已删除');
+}
+
+function moveLink(index, direction) {
+  const newIdx = index + direction;
+  if (newIdx < 0 || newIdx >= linksData.length) return;
+  const temp = linksData[index];
+  linksData[index] = linksData[newIdx];
+  linksData[newIdx] = temp;
+  saveData();
+  renderLinks();
+  renderAdminLinksList();
+  showToast('排序已更新');
 }
 
 // ===== ERROR BOUNDARY =====

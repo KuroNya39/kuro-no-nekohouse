@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- v2026.06.17 -->
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -37,7 +38,8 @@
 ::-webkit-scrollbar-track { background: var(--bg-primary); }
 ::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: var(--radius-sm); }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary-light); }
-* { scrollbar-width: thin; scrollbar-color: var(--accent-primary) var(--bg-primary); }
+* { scrollbar-width: thin; scrollbar-color: var(--accent-primary) var(--bg-primary); outline: none; }
+*:focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 2px; }
 
 /* ===== LIGHT MODE - Pixiv Style ===== */
 /* Global form element reset - consistent font and no border-radius */
@@ -59,6 +61,7 @@ select {
   --bg-primary: #fafcfc;
   --bg-secondary: #f0f5f5;
   --bg-card: rgba(255, 255, 255, 0.7);
+  --nav-bg: rgba(250, 252, 252, 0.9);
   --bg-card-hover: rgba(255, 255, 255, 0.85);
   --text-primary: #2a3a38;
   --text-secondary: #5a7a76;
@@ -85,6 +88,7 @@ select {
   --accent-miku: #39c5bb;
   --accent-miku-light: #5bbfb8;
   --accent-miku-glow: rgba(57, 197, 187, 0.15);
+  --accent-tag-bg: rgba(57, 197, 187, 0.08);
   --accent-gothic: #7a9e8a;
   --accent-gothic-light: #a0c4b0;
   --accent-blood: #b08080;
@@ -96,6 +100,7 @@ select {
   --bg-primary: #0a1a1a;
   --bg-secondary: #0e2020;
   --bg-card: rgba(20, 40, 38, 0.6);
+  --nav-bg: rgba(10, 26, 26, 0.9);
   --bg-card-hover: rgba(28, 52, 50, 0.7);
   --text-primary: #d0e8e4;
   --text-secondary: #8ab8b0;
@@ -111,6 +116,7 @@ select {
   --accent-miku: #4dd4cc;
   --accent-miku-light: #6de0d8;
   --accent-miku-glow: rgba(77, 212, 204, 0.1);
+  --accent-tag-bg: rgba(57, 197, 187, 0.1);
   --border-light: rgba(57, 197, 187, 0.12);
   --border-hover: rgba(77, 212, 204, 0.3);
   --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
@@ -135,6 +141,7 @@ select {
   --bg-primary: #0a1a1a;
   --bg-secondary: #0e2020;
   --bg-card: rgba(20, 40, 38, 0.6);
+  --nav-bg: rgba(10, 26, 26, 0.9);
   --bg-card-hover: rgba(28, 52, 50, 0.7);
   --text-primary: #d0e8e4;
   --text-secondary: #8ab8b0;
@@ -158,6 +165,7 @@ select {
   --bg-primary: #fdf8fa;
   --bg-secondary: #f8f0f3;
   --bg-card: rgba(255, 255, 255, 0.7);
+  --nav-bg: rgba(253, 248, 250, 0.9);
   --bg-card-hover: rgba(255, 255, 255, 0.85);
   --text-primary: #3a2a2e;
   --text-secondary: #7a5a62;
@@ -169,6 +177,7 @@ select {
   --accent-miku: #F23172;
   --accent-miku-light: #f5608e;
   --accent-miku-glow: rgba(242, 49, 114, 0.12);
+  --accent-tag-bg: rgba(242, 49, 114, 0.06);
   --accent-gothic: #c44a78;
   --accent-gothic-light: #e07098;
   --accent-blood: #d06060;
@@ -179,6 +188,7 @@ select {
   --bg-primary: #1a0a10;
   --bg-secondary: #200e16;
   --bg-card: rgba(40, 20, 28, 0.6);
+  --nav-bg: rgba(26, 10, 16, 0.9);
   --bg-card-hover: rgba(52, 28, 38, 0.7);
   --text-primary: #e8d0d6;
   --text-secondary: #b08a96;
@@ -190,6 +200,7 @@ select {
   --accent-miku: #f54888;
   --accent-miku-light: #f870a0;
   --accent-miku-glow: rgba(245, 72, 136, 0.1);
+  --accent-tag-bg: rgba(242, 49, 114, 0.1);
   --accent-gothic: #d05888;
   --accent-gothic-light: #e880a8;
   --accent-blood: #e07878;
@@ -202,6 +213,7 @@ select {
   --bg-primary: #fefcfa;
   --bg-secondary: #f8f4f0;
   --bg-card: rgba(255, 255, 255, 0.7);
+  --nav-bg: rgba(254, 252, 250, 0.9);
   --bg-card-hover: rgba(255, 255, 255, 0.85);
   --text-primary: #2e2a28;
   --text-secondary: #7a6a62;
@@ -213,9 +225,12 @@ select {
   --accent-miku: #BADBF2;
   --accent-miku-light: #d0e8f8;
   --accent-miku-glow: rgba(186, 219, 242, 0.2);
+  --accent-tag-bg: rgba(237, 109, 82, 0.08);
   --accent-gothic: #8a9ab8;
   --accent-gothic-light: #a8b8d0;
   --accent-blood: #b08070;
+  --accent-secondary: #5a98c8;
+  --accent-secondary-glow: rgba(90, 152, 200, 0.2);
   --accent-miku-alt: #ED6D52;
   --accent-miku-alt-light: #f29078;
   --border-light: rgba(237, 109, 82, 0.15);
@@ -225,6 +240,7 @@ select {
   --bg-primary: #1a1410;
   --bg-secondary: #201a14;
   --bg-card: rgba(40, 30, 24, 0.6);
+  --nav-bg: rgba(26, 20, 16, 0.9);
   --bg-card-hover: rgba(52, 40, 32, 0.7);
   --text-primary: #e0d8d0;
   --text-secondary: #b0a090;
@@ -236,9 +252,12 @@ select {
   --accent-miku: #c8e0f4;
   --accent-miku-light: #dceaf8;
   --accent-miku-glow: rgba(200, 224, 244, 0.12);
+  --accent-tag-bg: rgba(237, 109, 82, 0.1);
   --accent-gothic: #a0b0c8;
   --accent-gothic-light: #b8c8e0;
   --accent-blood: #d89888;
+  --accent-secondary: #78b0d8;
+  --accent-secondary-glow: rgba(120, 176, 216, 0.12);
   --accent-miku-alt: #f08068;
   --accent-miku-alt-light: #f4a090;
   --border-light: rgba(240, 128, 104, 0.12);
@@ -250,6 +269,7 @@ select {
   --bg-primary: #f5f6fa;
   --bg-secondary: #eef0f5;
   --bg-card: rgba(255, 255, 255, 0.7);
+  --nav-bg: rgba(245, 246, 250, 0.9);
   --bg-card-hover: rgba(255, 255, 255, 0.85);
   --text-primary: #1a1a2e;
   --text-secondary: #5a5a7a;
@@ -261,9 +281,12 @@ select {
   --accent-miku: #001E44;
   --accent-miku-light: #1a3a6a;
   --accent-miku-glow: rgba(0, 30, 68, 0.1);
+  --accent-tag-bg: rgba(58, 90, 154, 0.06);
   --accent-gothic: #6a4a8a;
   --accent-gothic-light: #8a6aa8;
   --accent-blood: #7a4060;
+  --accent-secondary: #46266E;
+  --accent-secondary-glow: rgba(70, 38, 110, 0.12);
   --accent-miku-alt: #6a4a8a;
   --accent-miku-alt-light: #8a6aa8;
   --border-light: rgba(0, 30, 68, 0.1);
@@ -276,6 +299,7 @@ select {
   --bg-primary: #0a0a1a;
   --bg-secondary: #0e0e22;
   --bg-card: rgba(16, 16, 36, 0.6);
+  --nav-bg: rgba(10, 10, 26, 0.9);
   --bg-card-hover: rgba(22, 22, 48, 0.7);
   --text-primary: #d0d0e8;
   --text-secondary: #a0a0c8;
@@ -287,9 +311,12 @@ select {
   --accent-miku: #1a3a6a;
   --accent-miku-light: #2a5090;
   --accent-miku-glow: rgba(0, 30, 68, 0.15);
+  --accent-tag-bg: rgba(58, 90, 154, 0.1);
   --accent-gothic: #7a4ea8;
   --accent-gothic-light: #9a70c0;
   --accent-blood: #a86888;
+  --accent-secondary: #5a3888;
+  --accent-secondary-glow: rgba(90, 56, 136, 0.15);
   --accent-miku-alt: #7a4ea8;
   --accent-miku-alt-light: #9a70c0;
   --border-light: rgba(0, 30, 68, 0.2);
@@ -316,29 +343,36 @@ select {
 /* Global link style - GitHub blue */
 a { color: var(--accent-primary); text-decoration: none; }
 
+@media (hover: hover) and (pointer: fine) {
 /* Custom Cursor */
 html { cursor: url('cursors/Arrow.ani') 6 0, auto; }
 a, button, [onclick], select, input[type="submit"], .nav-btn, .scheme-option, .category-card, .novel-card, .link-card, .interest-card, .back-to-top, .theme-toggle, .admin-toggle, .color-scheme-toggle { cursor: url('cursors/リンクの選択.ani') 6 0, pointer; }
 input[type="text"], input[type="password"], input[type="url"], textarea, [contenteditable="true"] { cursor: url('cursors/IBeam.ani') 6 0, text; }
 .loading-screen { cursor: url('cursors/待ち状態.ani') 6 0, wait; }
+}
 html { scroll-behavior: smooth; }
+* { box-sizing: border-box; }
 body {
   font-family: var(--font-serif);
   background-color: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.8;
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: clip;
   transition: background 0.4s ease, color 0.4s ease;
   position: relative;
 }
 
+/* Dot pattern - single color by default, dual for coral & night */
 body::before {
   content: '';
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background-image: radial-gradient(circle, var(--accent-primary) 2px, transparent 2px);
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image:
+    radial-gradient(circle, var(--accent-primary) 1.5px, transparent 1.5px),
+    radial-gradient(circle, var(--accent-primary) 1.5px, transparent 1.5px);
   background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
   pointer-events: none;
   z-index: -1;
   opacity: 0.06;
@@ -349,20 +383,13 @@ body::before {
   opacity: 0.04;
 }
 
-/* Skip link for accessibility */
-.skip-link {
-  position: absolute;
-  top: -40px;
-  left: 0;
-  background: var(--accent-primary);
-  color: white;
-  padding: 8px 16px;
-  z-index: 10000;
-  text-decoration: none;
-  font-size: 0.85rem;
-  transition: top 0.3s;
+/* Dual-color dot pattern for coral & night */
+[data-color-scheme="coral"] body::before,
+[data-color-scheme="night"] body::before {
+  background-image:
+    radial-gradient(circle, var(--accent-primary) 1.5px, transparent 1.5px),
+    radial-gradient(circle, var(--accent-secondary) 1.5px, transparent 1.5px);
 }
-.skip-link:focus { top: 0; }
 
 /* Screen reader only */
 .sr-only {
@@ -455,6 +482,7 @@ body::before {
 .top-toolbar {
   position: fixed; top: 16px; right: 16px; z-index: 1000;
   display: flex; gap: 8px; align-items: center;
+  transition: transform 0.3s ease;
 }
 
 /* Color Scheme Dropdown */
@@ -518,8 +546,6 @@ body::before {
 .admin-toggle:hover { background: var(--accent-primary); color: white; transform: scale(1.1); }
 .admin-toggle.active { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
 
-/* Canvas Background - Disabled */
-#bgCanvas { display: none; }
 
 /* Back to Top Button */
 .back-to-top {
@@ -533,7 +559,7 @@ body::before {
   color: var(--text-secondary);
   font-size: 1rem;
   cursor: pointer;
-  transition: var(--transition);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -623,7 +649,7 @@ body::before {
 .nav-btn.active::after { width: 80%; }
 
 /* Page Sections */
-.page { display: none; opacity: 0; transform: translateY(20px) scale(0.98); }
+.page { display: none; opacity: 0; transform: translateY(20px) scale(0.98); outline: none !important; }
 .page.active { display: block; opacity: 1; transform: translateY(0) scale(1); animation: pageFadeIn 0.4s ease; }
 @keyframes pageFadeIn {
   from { opacity: 0; transform: translateY(8px); }
@@ -769,9 +795,6 @@ body::before {
 /* Category card tilt effect */
 .category-card { transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s ease, box-shadow 0.3s ease; }
 
-/* Page transition slide */
-.page { }
-
 /* Floating particles background */
 .bg-particles {
   position: fixed;
@@ -800,6 +823,19 @@ body::before {
 .social-link:hover { transform: translateY(-3px); }
 
 /* Tag hover color fill */
+.novel-tag:nth-child(even) {
+  color: var(--accent-secondary, var(--accent-primary));
+  background: var(--accent-secondary-glow, rgba(122, 158, 138, 0.06));
+}
+/* Darken secondary color for readability on light backgrounds */
+[data-color-scheme="coral"] .novel-tag:nth-child(even) {
+  color: #7aadd0;
+  background: rgba(186, 219, 242, 0.15);
+}
+[data-color-scheme="night"] .novel-tag:nth-child(even) {
+  color: #6a4a8a;
+  background: rgba(70, 38, 110, 0.08);
+}
 .novel-tag {
   transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
@@ -823,10 +859,11 @@ body::before {
 
 /* Back to top button appear animation */
 .back-to-top {
-  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0.3s ease;
 }
 .back-to-top.visible {
   opacity: 1 !important;
+  visibility: visible !important;
   transform: translateY(0) !important;
 }
 
@@ -849,7 +886,7 @@ body::before {
 
 /* Search input focus glow */
 .search-input:focus {
-  box-shadow: 0 0 0 3px rgba(57, 197, 187, 0.1);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-primary) 15%, transparent);
 }
 
 /* ===== END NEW ANIMATIONS ===== */
@@ -862,27 +899,26 @@ body::before {
   font-size: 0.95rem; transition: var(--transition);
   border-radius: var(--radius-sm);
 }
-.search-input:focus { outline: none; border-color: var(--accent-primary); }
+.search-input:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 2px 12px var(--accent-miku-glow); }
 .search-input::placeholder { color: var(--text-muted); }
 .search-icon { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); width: 18px; height: 18px; border: 2px solid currentColor; border-radius: 50%; display: flex; align-items: center; justify-content: center; pointer-events: none; }
 .search-icon::before { content: ''; position: absolute; width: 6px; height: 2px; background: currentColor; transform: rotate(45deg); bottom: -3px; right: -4px; }
 
-.search-results { display: none; }
+.search-results { display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 100; max-height: 400px; overflow-y: auto; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 0 0 var(--radius-sm) var(--radius-sm); box-shadow: 0 8px 24px rgba(0,0,0,0.08); margin-top: 4px; }
 .search-results.active { display: block; }
 .search-result-item {
-  background: var(--bg-card); border: 1px solid var(--border-light);
-  padding: 18px 22px; margin-bottom: 12px; cursor: pointer;
-  transition: var(--transition);
-  border-radius: var(--radius-sm);
+  padding: 14px 20px; border-bottom: 1px solid var(--border-light); cursor: pointer;
+  transition: background 0.2s;
 }
-.search-result-item:hover { border-color: var(--border-hover); }
-.search-result-item h4 { font-size: 1rem; color: var(--text-primary); margin-bottom: 4px; }
+.search-result-item:last-child { border-bottom: none; }
+.search-result-item:hover { background: var(--bg-primary); }
+.search-result-item h4 { font-size: 0.9rem; margin-bottom: 2px; }
 .search-result-item p { font-size: 0.8rem; color: var(--text-muted); }
-.search-result-item .highlight { color: var(--accent-primary); background: rgba(122, 158, 138, 0.08); padding: 0 2px; }
-.search-empty { text-align: center; padding: 40px; color: var(--text-muted); }
+.search-result-item .highlight { color: var(--accent-primary); background: color-mix(in srgb, var(--accent-primary) 12%, transparent); padding: 1px 3px; border-radius: 2px; }
+.search-empty { padding: 24px; font-size: 0.85rem; }
 
 /* Hero Section */
-.hero-section { background: var(--bg-card); border: 1px solid var(--border-light); padding: 24px; margin-bottom: 32px; display: flex; gap: 24px; align-items: center; transition: var(--transition); backdrop-filter: blur(10px); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5); }
+.hero-section { background: var(--bg-card); border: 1px solid var(--border-light); padding: 24px; margin-bottom: 32px; display: flex; gap: 24px; align-items: center; transition: var(--transition); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5); }
 .hero-section:hover { border-color: var(--border-hover); }
 .hero-avatar { width: 100px; height: 100px; flex-shrink: 0; object-fit: cover; transition: transform 0.4s ease; border: 2px solid var(--border-light); border-radius: var(--radius-sm); display: block; }
 .hero-section:hover .hero-avatar { transform: scale(1.05); }
@@ -895,7 +931,7 @@ body::before {
 
 /* Stats Row */
 .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 35px; }
-.stat-item { background: var(--bg-card); border: 1px solid var(--border-light); padding: 20px; text-align: center; transition: var(--transition); border-radius: var(--radius-sm); backdrop-filter: blur(10px); }
+.stat-item { background: var(--bg-card); border: 1px solid var(--border-light); padding: 20px; text-align: center; transition: var(--transition); border-radius: var(--radius-sm); }
 .stat-item:hover { border-color: var(--border-hover); }
 .stat-number { font-family: var(--font-display); font-size: 1.8rem; color: var(--accent-miku); font-weight: 700; }
 .stat-label { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 1px; }
@@ -922,7 +958,7 @@ body::before {
   cursor: pointer; transition: var(--transition);
   overflow: hidden; position: relative;
   border-radius: var(--radius-sm);
-  backdrop-filter: blur(10px); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5);
 }
 .category-card:hover {
   transform: translateY(-2px);
@@ -974,9 +1010,9 @@ body::before {
 .sidebar-widget .widget-count { float: right; font-size: 0.75rem; color: var(--text-muted); }
 
 /* Author Filter */
-.author-filter { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; align-items: center; }
+.author-filter { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-light); }
 .author-chip {
-  padding: 6px 14px; border: 1px solid var(--border-light); background: var(--bg-card);
+  padding: 5px 14px; border: 1px solid var(--border-light); background: transparent;
   color: var(--text-muted); font-size: 0.8rem; cursor: pointer; transition: var(--transition);
   border-radius: var(--radius-sm);
 }
@@ -989,10 +1025,12 @@ body::before {
 .page-header p { color: var(--text-muted); font-size: 0.85rem; }
 
 /* Sort Bar */
-.sort-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 12px 0; border-bottom: 1px solid var(--border-light); flex-wrap: wrap; gap: 10px; }
-.sort-label { font-size: 0.8rem; color: var(--text-muted); }
-.sort-btn { padding: 5px 14px; border: 1px solid var(--border-light); background: transparent; color: var(--text-muted); font-size: 0.8rem; cursor: pointer; transition: var(--transition); margin-left: 8px; border-radius: var(--radius-sm); }
+.sort-bar { display: flex; align-items: center; margin-bottom: 20px; padding: 12px 0; border-bottom: 1px solid var(--border-light); flex-wrap: wrap; gap: 8px; }
+.sort-label { font-size: 0.8rem; color: var(--text-muted); margin-right: 4px; }
+.sort-btn { padding: 5px 14px; border: 1px solid var(--border-light); background: transparent; color: var(--text-muted); font-size: 0.8rem; cursor: pointer; transition: var(--transition); border-radius: var(--radius-sm); }
 .sort-btn:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
+.sort-order-btn { margin-left: auto; font-size: 0.75rem; opacity: 0.7; }
+.sort-order-btn:hover { opacity: 1; }
 .sort-btn.active { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
 
 /* Novel List */
@@ -1019,7 +1057,7 @@ body::before {
 .novel-author { font-size: 0.8rem; color: var(--accent-pink); margin-bottom: 4px; }
 .novel-meta { font-size: 0.75rem; color: var(--text-muted); display: flex; gap: 14px; flex-wrap: wrap; }
 .novel-tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
-.novel-tag { padding: 2px 8px; background: rgba(122, 158, 138, 0.06); font-size: 0.7rem; color: var(--accent-primary); }
+.novel-tag { padding: 2px 8px; background: var(--accent-tag-bg, rgba(122, 158, 138, 0.06)); font-size: 0.7rem; color: var(--accent-primary); }
 .novel-arrow { color: var(--text-muted); font-size: 1.1rem; transition: var(--transition); opacity: 0.3; align-self: center; }
 .novel-item:hover .novel-arrow { opacity: 1; color: var(--accent-primary); }
 
@@ -1149,14 +1187,16 @@ body::before {
   margin-bottom: 24px;
   padding: 16px 0;
   border-bottom: 1px dashed var(--border-light);
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  font-style: italic;
-  line-height: 1.8;
+  font-size: var(--reader-font-size);
+  color: var(--text-secondary);
+  line-height: var(--reader-line-height, 1.9);
+  text-align: justify;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 /* Reader Settings */
-.reader-settings { background: var(--bg-card); border: 1px solid var(--border-light); margin-bottom: 25px; border-radius: var(--radius-sm); backdrop-filter: blur(10px); }
+.reader-settings { background: var(--bg-card); border: 1px solid var(--border-light); margin-bottom: 25px; border-radius: var(--radius-sm); }
 .settings-header { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: var(--transition); }
 .settings-header:hover { background: rgba(122, 158, 138, 0.03); }
 .settings-title { font-size: 0.85rem; color: var(--text-muted); }
@@ -1303,19 +1343,20 @@ body::before {
 }
 
 /* Reader Nav */
-.reader-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-light); }
+.reader-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-light); page-break-inside: avoid; break-inside: avoid; }
 .reader-nav-btn { padding: 10px 24px; border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-secondary); font-family: var(--font-serif); font-size: 0.85rem; cursor: pointer; transition: var(--transition); letter-spacing: 0.5px; border-radius: var(--radius-sm); }
 .reader-nav-btn:hover { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
 
 /* ===== Admin Panel - Floating Drawer Style ===== */
 .admin-drawer {
-  position: fixed; top: 0; right: -620px; width: 600px; height: 100%;
+  position: fixed; top: 0; right: -820px; width: 800px; height: 100%;
   background: var(--bg-primary); border-left: 1px solid var(--border-light);
-  z-index: 1500; transition: right 0.4s ease;
+  z-index: 1500; transition: right 0.4s ease, visibility 0.4s ease;
   overflow-y: auto;
   box-shadow: -8px 0 32px rgba(0,0,0,0.1);
+  visibility: hidden;
 }
-.admin-drawer.active { right: 0; }
+.admin-drawer.active { right: 0; visibility: visible; }
 .admin-drawer-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(0,0,0,0.3); z-index: 1400; display: none;
@@ -1409,7 +1450,7 @@ body::before {
 .timeline-desc { font-size: 0.85rem; color: var(--text-muted); }
 
 /* ===== Guestbook Page ===== */
-.guestbook-intro { border: 1px solid var(--border-light); border-bottom: none; padding: 20px 28px; margin-bottom: 0; background: var(--bg-card); backdrop-filter: blur(10px); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5); }
+.guestbook-intro { border: 1px solid var(--border-light); border-bottom: none; padding: 20px 28px; margin-bottom: 0; background: var(--bg-card); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5); }
 .guestbook-intro p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
 .giscus-wrapper {
   border: 1px solid var(--border-light);
@@ -1470,7 +1511,6 @@ body::before {
   background: var(--bg-primary); color: var(--text-secondary);
   font-size: 0.8rem; text-decoration: none; transition: var(--transition);
   border-radius: var(--radius-sm);
-  backdrop-filter: blur(10px);
 }
 .social-link:hover { border-color: var(--accent-primary); color: var(--accent-primary); transform: translateY(-2px); }
 .social-link .social-icon { font-size: 1rem; }
@@ -1503,6 +1543,8 @@ body::before {
   text-align: center;
   padding: 45px 20px 35px;
   color: var(--text-muted);
+  page-break-inside: avoid;
+  break-inside: avoid;
   font-size: 0.75rem;
   border-top: 1px solid var(--border-light);
   margin-top: 30px;
@@ -1523,7 +1565,7 @@ body::before {
   background: var(--bg-primary); z-index: 9999; 
   display: flex; align-items: center; justify-content: center; 
   flex-direction: column; gap: 16px;
-  transition: opacity 0.8s ease, visibility 0.8s ease; 
+  transition: opacity 0.4s ease, visibility 0.4s ease; 
 }
 .loading-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
@@ -1601,7 +1643,7 @@ body::before {
   .category-grid { grid-template-columns: 1fr; gap: 18px; }
   .content-with-sidebar { flex-direction: column; }
   .sidebar { width: 100%; }
-  .sort-bar { flex-direction: column; align-items: flex-start; }
+  .sort-bar { flex-wrap: wrap; gap: 6px; }
   .novel-item { padding: 16px 18px; }
   .reader-content { padding: 24px 20px; font-size: var(--reader-font-size); }
   .reader-nav { flex-direction: column; gap: 10px; }
@@ -1611,8 +1653,13 @@ body::before {
   .social-link { padding: 6px 12px; font-size: 0.75rem; }
   .links-grid { grid-template-columns: 1fr; }
 
-  /* Mobile bottom navigation */
-  .site-header { padding: 30px 0 15px; text-align: center; }
+  .back-to-top { bottom: 68px; }
+}
+
+/* Mobile bottom navigation - only for small screens */
+@media (max-width: 600px) {
+  body { padding-bottom: 56px; }
+  .site-header { padding: 68px 0 15px; text-align: center; }
   .site-title { display: block; text-align: center; width: 100%; }
   .site-subtitle { display: block; text-align: center; width: 100%; }
   .site-divider { margin: 15px auto 0; }
@@ -1622,13 +1669,14 @@ body::before {
     left: 0;
     right: 0;
     z-index: 1000;
-    background: var(--bg-card);
+    background: var(--nav-bg, var(--bg-primary));
     border-top: 1px solid var(--border-light);
     padding: 8px 0;
     margin-bottom: 0;
     gap: 0;
     justify-content: space-around;
-    box-shadow: 0 -2px 16px rgba(0,0,0,0.08);
+    box-shadow: 0 -1px 8px rgba(0,0,0,0.06);
+    transition: transform 0.3s ease;
   }
   .nav-btn {
     padding: 6px 10px;
@@ -1641,16 +1689,19 @@ body::before {
   .nav-btn::after { display: none; }
   .nav-btn.active { color: var(--accent-primary); background: rgba(122, 158, 138, 0.06); border-radius: var(--radius-sm); }
 
-  /* Add bottom padding for content to avoid nav overlap */
-  .app-container { padding-bottom: 80px; }
-  .site-footer { padding-bottom: 80px; }
-  .back-to-top { bottom: 100px; }
+  .back-to-top { bottom: 68px; }
 }
 
 @media (max-width: 480px) {
   .site-title { font-size: 1.7rem; letter-spacing: 3px; }
   .search-container { margin-bottom: 25px; }
   .stats-row { grid-template-columns: 1fr; }
+}
+
+@media print {
+  .nav-bar, .top-toolbar, .back-to-top { display: none !important; }
+  .site-footer { padding-bottom: 0 !important; }
+  .app-container { padding-bottom: 0 !important; }
 }
 
 /* ===== ACCESSIBILITY: Reduced Motion ===== */
@@ -1665,7 +1716,6 @@ body::before {
 </style>
 </head>
 <body>
-<a href="#main-content" class="skip-link">跳转到主内容</a>
 <div class="loading-overlay" id="loadingOverlay">
   <div class="loading-ring"></div>
 </div>
@@ -1686,7 +1736,6 @@ body::before {
   <button class="theme-toggle" id="themeToggle" title="切换主题" aria-label="切换主题">☾</button>
 </div>
 <button class="back-to-top" id="backToTop" title="返回顶部" aria-label="返回顶部">↑</button>
-<canvas id="bgCanvas"></canvas>
 
 <!-- ARIA Live Region for screen readers -->
 <div id="ariaLive" class="sr-only" aria-live="polite" aria-atomic="true"></div>
@@ -1789,10 +1838,6 @@ body::before {
         <div class="admin-about-section">
           <label>分类描述</label>
           <input type="text" id="newCatDesc" placeholder="VOCALOID 相关创作">
-        </div>
-        <div class="admin-about-section">
-          <label>封面图片文件名 <span style="color:var(--text-muted);font-size:0.7rem;">如 miku.jpg</span></label>
-          <input type="text" id="newCatImage" placeholder="图片文件名(如miku.jpg)或图片URL">
         </div>
         <button class="admin-btn" onclick="addCategory()">添加分类</button>
       </div>
@@ -1931,8 +1976,8 @@ body::before {
     <div class="search-container">
       <input type="text" class="search-input" id="searchInput" placeholder="搜索小说标题、作者或内容..." aria-label="搜索小说">
       <span class="search-icon" aria-hidden="true"></span>
+      <div class="search-results" id="searchResults"></div>
     </div>
-    <div class="search-results" id="searchResults"></div>
 
     <div class="hero-section" id="heroSection">
       <img class="hero-avatar avatar-wrapper" src="avatar.png" alt="头像">
@@ -1966,6 +2011,7 @@ body::before {
           <button class="sort-btn active" data-sort="default">默认</button>
           <button class="sort-btn" data-sort="date">按时间</button>
           <button class="sort-btn" data-sort="words">按字数</button>
+          <button class="sort-btn sort-order-btn" id="sortOrderBtn" title="切换升序/降序">↓ 降序</button>
         </div>
         <div class="novel-list" id="novelList"></div>
       </div>
@@ -1994,7 +2040,7 @@ body::before {
         <div class="settings-panel" id="settingsPanel">
           <div class="settings-row" id="chapterSelectRow" style="display:none;">
             <span class="settings-label">章节</span>
-            <select id="chapterSelect" class="settings-select" onchange="showNovel(currentNovelIndex, this.value)"></select>
+            <select id="chapterSelect" class="settings-select" onchange="showNovel(currentNovelIndex, parseInt(this.value))"></select>
           </div>
           <div class="settings-row">
             <span class="settings-label">字号</span>
@@ -2059,6 +2105,15 @@ body::before {
 <script>
 // ===== DATA =====
 const DATA_VERSION = 1;
+
+// GitHub config (must be declared early, before any sync functions reference it)
+const GITHUB_CONFIG = {
+  owner: 'KuroNya39',
+  repo: 'kuro-no-nekohouse',
+  dataFile: 'data.json',
+  guestbookFile: 'guestbook.json',
+  branch: 'main'
+};
 
 function safeJSONParse(key, defaultValue) {
   try {
@@ -2125,9 +2180,9 @@ let linksData = safeJSONParse('linksData', [
 let currentCategory = null;
 let currentNovelIndex = 0;
 let currentSort = 'default';
+let sortAscending = false; // 默认降序（最新的在前）
 let currentAuthorFilter = null;
 let isAdmin = false;
-let readProgress = safeJSONParse('readProgress', {});
 let navHistory = []; // Navigation history stack
 
 // ===== ARIA Live Announcements =====
@@ -2160,9 +2215,9 @@ function showToast(message, type) {
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
+  try {
   initTheme();
   initColorScheme();
-  initCanvas();
   initScrollProgress();
   initSearch();
   initSort();
@@ -2179,17 +2234,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderGuestbookIntro();
   renderStats();
   renderCategories();
-  renderContinueReading();
   renderTimeline();
   renderLinks();
   renderAboutPage();
   initNav();
   initReaderSettings();
+  initReaderAutoHide();
   initHashRouter();
   initTypewriterEffect();
   initSwipeNavigation();
   updateSyncUI();
   hideLoading();
+  } catch(err) {
+    console.error('[Init] Error during initialization:', err);
+    hideLoading();
+  }
 });
 function hideLoading() {
   document.getElementById('loadingOverlay').classList.add('hidden');
@@ -2214,14 +2273,6 @@ function debouncedSyncToGitHub() {
     syncToGitHub();
   }, 2000);
 }
-
-const GITHUB_CONFIG = {
-  owner: 'KuroNya39',
-  repo: 'kuro-no-nekohouse',
-  dataFile: 'data.json',
-  guestbookFile: 'guestbook.json',
-  branch: 'main'
-};
 
 // Token is stored in localStorage (set once by admin, never in source code)
 function getGitHubToken() {
@@ -2339,8 +2390,41 @@ async function syncToGitHub() {
     } else {
       const err = await res.json();
       console.error('[Sync] GitHub sync error:', err);
-      githubSyncStatus = 'error';
-      if (err.message) console.error('[Sync] Error message:', err.message);
+      // If SHA mismatch (409), refresh SHA and retry once
+      if (res.status === 409 || (err.message && err.message.includes('SHA'))) {
+        console.log('[Sync] SHA mismatch, refreshing and retrying...');
+        githubSha = null;
+        const retryUrl = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.dataFile}`;
+        const shaRes = await fetch(retryUrl, {
+          headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+        });
+        if (shaRes.ok) {
+          const shaFile = await shaRes.json();
+          githubSha = shaFile.sha;
+          // Retry the PUT with correct SHA
+          body.sha = githubSha;
+          const retryRes = await fetch(url, {
+            method: 'PUT',
+            headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' },
+            body: JSON.stringify(body)
+          });
+          if (retryRes.ok) {
+            const retryResult = await retryRes.json();
+            githubSha = retryResult.content.sha;
+            githubSyncStatus = 'synced';
+            console.log('[Sync] Retry succeeded.');
+          } else {
+            const retryErr = await retryRes.json();
+            console.error('[Sync] Retry also failed:', retryErr);
+            githubSyncStatus = 'error';
+          }
+        } else {
+          githubSyncStatus = 'error';
+        }
+      } else {
+        githubSyncStatus = 'error';
+        if (err.message) console.error('[Sync] Error message:', err.message);
+      }
     }
   } catch (e) {
     console.error('[Sync] GitHub sync failed:', e);
@@ -2431,7 +2515,6 @@ function exportData() {
     siteConfig: siteConfig,
     timelineData: timelineData,
     linksData: linksData,
-    readProgress: readProgress,
     theme: localStorage.getItem('theme') || ''
   };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -2461,7 +2544,6 @@ function importData(event) {
       if (data.siteConfig) { siteConfig = data.siteConfig; safeJSONStringify('siteConfig', siteConfig); }
       if (data.timelineData) { timelineData = data.timelineData; safeJSONStringify('timelineData', timelineData); }
       if (data.linksData) { linksData = data.linksData; safeJSONStringify('linksData', linksData); }
-      if (data.readProgress) { readProgress = data.readProgress; safeJSONStringify('readProgress', readProgress); }
       if (data.theme) { localStorage.setItem('theme', data.theme); }
       saveData();
       // Re-render everything
@@ -2469,6 +2551,8 @@ function importData(event) {
       renderCategories();
       renderAboutPage();
       renderAdminEditNovelList();
+      renderTimeline();
+      renderLinks();
       // Re-apply theme
       if (data.theme === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
@@ -2589,129 +2673,9 @@ function updateBackgroundPattern() {
   // Background pattern now uses CSS variables, no JS update needed
 }
 
-// ===== CANVAS with spatial grid optimization =====
-function initCanvas() {
-  const canvas = document.getElementById('bgCanvas');
-  if (!canvas || canvas.style.display === 'none') return;
-  const ctx = canvas.getContext('2d');
-  let particles = [], mouseX = 0, mouseY = 0;
-  let animationId;
-  let isVisible = true;
-  let lastMouseX = 0, lastMouseY = 0;
-
-  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-  resize();
-  window.addEventListener('resize', resize);
-  document.addEventListener('mousemove', e => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
-
-  // Respect prefers-reduced-motion
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReducedMotion) return;
-
-  const particleCount = window.innerWidth < 768 ? 15 : 30;
-  for (let i = 0; i < particleCount; i++) {
-    particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3, size: Math.random() * 2 + 0.5, opacity: Math.random() * 0.25 + 0.05 });
-  }
-
-  // Use IntersectionObserver to pause when not visible
-  const observer = new IntersectionObserver((entries) => {
-    isVisible = entries[0].isIntersecting;
-  });
-  observer.observe(canvas);
-
-  // Spatial grid for connection optimization
-  const CELL_SIZE = 120;
-  function buildGrid() {
-    const grid = {};
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-      const cx = Math.floor(p.x / CELL_SIZE);
-      const cy = Math.floor(p.y / CELL_SIZE);
-      const key = cx + ',' + cy;
-      if (!grid[key]) grid[key] = [];
-      grid[key].push(i);
-    }
-    return grid;
-  }
-
-  function animate() {
-    if (!isVisible) {
-      animationId = requestAnimationFrame(animate);
-      return;
-    }
-
-    // Check if canvas dimensions are valid
-    if (canvas.width === 0 || canvas.height === 0) {
-      animationId = requestAnimationFrame(animate);
-      return;
-    }
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const color = isDark ? '122, 158, 138' : '122, 158, 138';
-
-    // Smooth mouse follow
-    lastMouseX += (mouseX - lastMouseX) * 0.1;
-    lastMouseY += (mouseY - lastMouseY) * 0.1;
-
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-      const dx = lastMouseX - p.x, dy = lastMouseY - p.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 120) { p.vx -= dx * 0.00008; p.vy -= dy * 0.00008; }
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${color}, ${p.opacity})`;
-      ctx.fill();
-    }
-
-    // Use spatial grid to reduce connection checks
-    const grid = buildGrid();
-    const checked = new Set();
-    for (const key in grid) {
-      const [cx, cy] = key.split(',').map(Number);
-      // Check current cell and neighboring cells
-      for (let dx = -1; dx <= 1; dx++) {
-        for (let dy = -1; dy <= 1; dy++) {
-          const nKey = (cx + dx) + ',' + (cy + dy);
-          if (!grid[nKey]) continue;
-          for (const i of grid[key]) {
-            for (const j of grid[nKey]) {
-              if (j <= i) continue;
-              const pairKey = i < j ? i * 10000 + j : j * 10000 + i;
-              if (checked.has(pairKey)) continue;
-              checked.add(pairKey);
-              const p1 = particles[i], p2 = particles[j];
-              const d = Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
-              if (d < 100) {
-                ctx.beginPath();
-                ctx.moveTo(p1.x, p1.y);
-                ctx.lineTo(p2.x, p2.y);
-                ctx.strokeStyle = `rgba(${color}, ${0.06 * (1 - d / 100)})`;
-                ctx.lineWidth = 0.5;
-                ctx.stroke();
-              }
-            }
-          }
-        }
-      }
-    }
-
-    animationId = requestAnimationFrame(animate);
-  }
-  animate();
-}
-
 // ===== TYPEWRITER EFFECT =====
 function initTypewriterEffect() {
-  const title = document.getElementById('siteTitle');
+  const title = document.getElementById('siteTitleEl');
   if (!title) return;
   const text = title.textContent;
   title.textContent = '';
@@ -2754,8 +2718,10 @@ function initScrollProgress() {
 // ===== BACK TO TOP =====
 function initBackToTop() {
   const btn = document.getElementById('backToTop');
+  const mql = window.matchMedia('(max-width: 600px)');
   let ticking = false;
-  window.addEventListener('scroll', () => {
+
+  function handleScroll() {
     if (!ticking) {
       requestAnimationFrame(() => {
         if (window.scrollY > 400) {
@@ -2767,7 +2733,19 @@ function initBackToTop() {
       });
       ticking = true;
     }
-  });
+  }
+
+  function update() {
+    if (mql.matches) {
+      window.removeEventListener('scroll', handleScroll);
+    } else {
+      window.addEventListener('scroll', handleScroll);
+    }
+  }
+
+  mql.addEventListener('change', update);
+  update();
+
   btn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
@@ -2839,7 +2817,11 @@ function highlightText(text, query) {
 }
 
 function goToNovel(catId, novelId) {
-  currentCategory = categories.find(c => c.id === catId);
+  document.getElementById('searchResults').classList.remove('active');
+  document.getElementById('searchInput').value = '';
+  const cat = categories.find(c => c.id === catId);
+  if (!cat) { showToast('分类不存在'); return; }
+  currentCategory = cat;
   const novelIndex = currentCategory.novels.findIndex(n => n.id === novelId);
   showNovel(novelIndex);
 }
@@ -2848,6 +2830,12 @@ function goToNovel(catId, novelId) {
 function initSort() {
   document.querySelectorAll('.sort-btn').forEach(btn => {
     btn.addEventListener('click', () => {
+      if (btn.id === 'sortOrderBtn') {
+        sortAscending = !sortAscending;
+        btn.textContent = sortAscending ? '↑ 升序' : '↓ 降序';
+        if (currentCategory) renderNovelList();
+        return;
+      }
       document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       currentSort = btn.dataset.sort;
@@ -3266,55 +3254,6 @@ function renderCategories() {
   }
 }
 
-// ===== CONTINUE READING =====
-function renderContinueReading() {
-  const container = document.getElementById('continueReading');
-  const list = document.getElementById('continueReadingList');
-  if (!container || !list) return;
-  
-  // Find novels with reading progress
-  const items = [];
-  Object.keys(readProgress).forEach(key => {
-    const progress = readProgress[key];
-    if (progress && progress > 0 && progress < 100) {
-      // Find the novel across all categories
-      for (const cat of categories) {
-        const novel = cat.novels.find(n => n.id === key);
-        if (novel) {
-          items.push({ novel, cat, progress: progress });
-          break;
-        }
-      }
-    }
-  });
-  
-  if (items.length === 0) {
-    container.style.display = 'none';
-    return;
-  }
-  
-  container.style.display = 'block';
-  list.innerHTML = '';
-  items.forEach(item => {
-    const div = document.createElement('div');
-    div.className = 'recent-card';
-    div.setAttribute('role', 'button');
-    div.setAttribute('tabindex', '0');
-    div.onclick = () => goToNovel(item.cat.id, item.novel.id);
-    div.onkeydown = (e) => { if (e.key === 'Enter') goToNovel(item.cat.id, item.novel.id); };
-    div.innerHTML = `
-      <div class="recent-info" style="flex:1;">
-        <h4>${escapeHTML(item.novel.title)}</h4>
-        <p>已读 ${Math.round(item.progress)}% · ${escapeHTML(item.cat.name)}</p>
-        <div style="margin-top:6px;height:4px;background:var(--border-light);border-radius:2px;overflow:hidden;">
-          <div style="height:100%;width:${item.progress}%;background:var(--accent-primary);border-radius:2px;transition:width 0.3s;"></div>
-        </div>
-      </div>
-    `;
-    list.appendChild(div);
-  });
-}
-
 // ===== NAVIGATION =====
 function initNav() {
   document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -3327,13 +3266,13 @@ function initNav() {
 }
 
 const PAGE_TITLES = {
-  home: '首页 - 黒の猫窝',
-  category: '分类 - 黒の猫窝',
-  reader: '阅读中 - 黒の猫窝',
-  timeline: '时间轴 - 黒の猫窝',
-  guestbook: '留言板 - 黒の猫窝',
-  links: '友情链接 - 黒の猫窝',
-  about: '关于 - 黒の猫窝'
+  home: '首页',
+  category: '分类',
+  reader: '阅读中',
+  timeline: '时间轴',
+  guestbook: '留言板',
+  links: '友情链接',
+  about: '关于'
 };
 
 // Scroll reveal observer
@@ -3357,7 +3296,8 @@ function showPage(name, pushState) {
   if (targetPage) targetPage.classList.add('active');
   document.getElementById('searchResults').classList.remove('active');
   document.getElementById('searchInput').value = '';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Use instant scroll when called from popstate (pushState=false), smooth otherwise
+  window.scrollTo({ top: 0, behavior: pushState ? 'smooth' : 'auto' });
 
   // Load Giscus when guestbook page is shown
   if (name === 'guestbook') {
@@ -3365,7 +3305,7 @@ function showPage(name, pushState) {
   }
 
   // Update page title
-  document.title = PAGE_TITLES[name] || (siteConfig.siteName || '黒の猫窝');
+  document.title = (PAGE_TITLES[name] || '首页') + ' - ' + (siteConfig.siteName || '黒の猫窝');
 
   // Focus management
   if (targetPage) {
@@ -3388,29 +3328,62 @@ function showPage(name, pushState) {
 
 // ===== HASH ROUTER =====
 function initHashRouter() {
+  // Disable browser automatic scroll restoration on popstate
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
   window.addEventListener('popstate', (e) => {
-    const page = (e.state && e.state.page) ? e.state.page : 'home';
-    showPage(page, false);
-    document.querySelectorAll('.nav-btn').forEach(b => {
-      b.classList.toggle('active', b.dataset.page === page);
-    });
+    if (e.state && e.state.page === 'category' && e.state.catId) {
+      showCategory(e.state.catId, false);
+    } else if (e.state && e.state.page === 'reader' && e.state.catId !== undefined) {
+      const cat = categories.find(c => c.id === e.state.catId);
+      if (cat) {
+        currentCategory = cat;
+        showNovel(e.state.novelIdx, e.state.chapterIdx, false);
+      }
+    } else if (e.state && e.state.page) {
+      showPage(e.state.page, false);
+      document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.page === e.state.page);
+      });
+    } else {
+      showPage('home', false);
+      document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.page === 'home');
+      });
+    }
+    // Force scroll to top on popstate to prevent browser scroll restoration
+    window.scrollTo(0, 0);
   });
 
   // Handle initial hash
   const hash = window.location.hash;
   if (hash && hash.startsWith('#/')) {
-    const page = hash.slice(2);
-    if (PAGE_TITLES[page]) {
+    const parts = hash.slice(2).split('/');
+    const page = parts[0];
+    if (parts[0] === 'category' && parts[1]) {
+      showCategory(parts[1], false);
+    } else if (parts[0] === 'reader' && parts[1] && parts[2] !== undefined) {
+      const cat = categories.find(c => c.id === parts[1]);
+      if (cat) {
+        currentCategory = cat;
+        showNovel(parseInt(parts[2]), parseInt(parts[3]) || 0, false);
+      }
+    } else if (PAGE_TITLES[page]) {
       showPage(page, false);
       document.querySelectorAll('.nav-btn').forEach(b => {
         b.classList.toggle('active', b.dataset.page === page);
       });
     }
   }
+
+  // Add an extra history entry so back-button stays on site
+  window.history.pushState({ page: 'home' }, '', window.location.pathname + window.location.hash);
 }
 
 // ===== CATEGORY PAGE =====
-function showCategory(catId) {
+function showCategory(catId, shouldPushState) {
+  if (shouldPushState === undefined) shouldPushState = true;
   currentCategory = categories.find(c => c.id === catId);
   if (!currentCategory) return;
   currentAuthorFilter = null;
@@ -3424,8 +3397,8 @@ function showCategory(catId) {
   const filterContainer = document.getElementById('authorFilter');
   filterContainer.innerHTML = '';
   const label = document.createElement('span');
-  label.style.cssText = 'font-size:0.8rem;color:var(--text-muted);margin-right:8px;';
-  label.textContent = '作者筛选：';
+  label.className = 'sort-label';
+  label.textContent = '作者：';
   filterContainer.appendChild(label);
 
   const allChip = document.createElement('span');
@@ -3463,7 +3436,10 @@ function showCategory(catId) {
   sidebar.appendChild(authorWidget);
 
   renderNovelList();
-  showPage('category');
+  showPage('category', false);
+  if (shouldPushState) {
+    window.history.pushState({ page: 'category', catId: catId }, '', '#/category/' + catId);
+  }
   document.title = currentCategory.name + ' - ' + siteConfig.siteName;
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
 }
@@ -3500,19 +3476,16 @@ function renderFilteredNovelList(novels) {
     // Calculate reading time
     const readTime = Math.max(1, Math.round(novel.wordCount / 300));
 
-    // Check read progress
-    const progress = readProgress[novel.id];
-    const progressBadge = progress > 0 ? `<span class="read-progress-badge">已读 ${progress}%</span>` : '';
-
     div.innerHTML = `
       <div class="novel-number">${String(i + 1).padStart(2, '0')}</div>
       <div class="novel-info">
-        <div class="novel-title">${escapeHTML(novel.title)}${progressBadge}</div>
+        <div class="novel-title">${escapeHTML(novel.title)}</div>
         <div class="novel-author">作者：${escapeHTML(novel.author)}</div>
         <div class="novel-meta">
           <span>${novel.date}</span>
           <span>${novel.wordCount} 字</span>
           <span>约 ${readTime} 分钟</span>
+          <span>${Math.max(1, (novel.chapters || []).length)} 章</span>
         </div>
         <div class="novel-tags">${novel.tags.map(t => `<span class="novel-tag">${escapeHTML(t)}</span>`).join('')}</div>
       </div>
@@ -3535,15 +3508,17 @@ function renderFilteredNovelList(novels) {
 function renderNovelList() {
   let novels = [...currentCategory.novels];
   if (currentAuthorFilter) novels = novels.filter(n => n.author === currentAuthorFilter);
-  if (currentSort === 'date') novels.sort((a, b) => new Date(b.date) - new Date(a.date));
-  if (currentSort === 'words') novels.sort((a, b) => b.wordCount - a.wordCount);
+  if (currentSort === 'date') novels.sort((a, b) => sortAscending ? new Date(a.date) - new Date(b.date) : new Date(b.date) - new Date(a.date));
+  if (currentSort === 'words') novels.sort((a, b) => sortAscending ? a.wordCount - b.wordCount : b.wordCount - a.wordCount);
   renderFilteredNovelList(novels);
 }
 
 // ===== READER =====
 let currentChapterIndex = 0; // 当前章节索引
 
-function showNovel(index, chapterIdx) {
+function showNovel(index, chapterIdx, shouldPushState) {
+  if (!currentCategory || index < 0 || index >= currentCategory.novels.length) return;
+  if (shouldPushState === undefined) shouldPushState = true;
   currentNovelIndex = index;
   const novel = currentCategory.novels[index];
 
@@ -3560,7 +3535,7 @@ function showNovel(index, chapterIdx) {
 
   // Calculate reading time
   const readTime = Math.max(1, Math.round(novel.wordCount / 300));
-  document.getElementById('readerMeta').textContent = `${novel.date} · ${novel.wordCount} 字 · 约 ${readTime} 分钟 · ${novel.tags.join(' / ')}`;
+  document.getElementById('readerMeta').textContent = `${novel.date} · ${novel.wordCount} 字 · 约 ${readTime} 分钟 · ${Math.max(1, (novel.chapters || []).length)} 章 · ${novel.tags.join(' / ')}`;
   document.getElementById('readerAuthor').textContent = `作者：${novel.author}`;
 
   // 处理章节：向后兼容没有 chapters 字段的旧数据
@@ -3601,6 +3576,14 @@ function showNovel(index, chapterIdx) {
   // 渲染当前章节内容
   contentDiv.innerHTML = '';
 
+  // 前言（仅在第一章/全文时显示，放在章节标题上面）
+  if (novel.preface && currentChapterIndex === 0) {
+    const prefaceBlock = document.createElement('div');
+    prefaceBlock.className = 'reader-preface-block';
+    prefaceBlock.textContent = novel.preface;
+    contentDiv.appendChild(prefaceBlock);
+  }
+
   // 多章节时显示章节标题
   if (chapters.length > 1) {
     const chapterTitle = document.createElement('div');
@@ -3609,20 +3592,18 @@ function showNovel(index, chapterIdx) {
     contentDiv.appendChild(chapterTitle);
   }
 
-  // 前言（仅在第一章/全文时显示）
-  if (novel.preface && currentChapterIndex === 0) {
-    const prefaceBlock = document.createElement('div');
-    prefaceBlock.className = 'reader-preface-block';
-    prefaceBlock.textContent = novel.preface;
-    contentDiv.appendChild(prefaceBlock);
-  }
-
   const paragraphs = currentChapter.content.split(/\n+/).filter(p => p.trim());
   paragraphs.forEach(p => {
     const para = document.createElement('p');
     para.textContent = p.trim();
     contentDiv.appendChild(para);
   });
+
+  // Re-apply reader settings persistence
+  const savedFontSize = localStorage.getItem('readerFontSize');
+  const savedLineHeight = localStorage.getItem('readerLineHeight');
+  if (savedFontSize) contentDiv.style.setProperty('--reader-font-size', savedFontSize + 'px');
+  if (savedLineHeight) contentDiv.style.setProperty('--reader-line-height', savedLineHeight);
 
   const prevBtn = document.getElementById('prevNovel');
   const nextBtn = document.getElementById('nextNovel');
@@ -3643,20 +3624,32 @@ function showNovel(index, chapterIdx) {
     nextBtn.textContent = '\u4e0b\u4e00\u7bc7 \u2192';
   }
 
-  showPage('reader', true);
+  showPage('reader', false);
+  if (shouldPushState) {
+    window.history.pushState({ page: 'reader', catId: currentCategory.id, novelIdx: index, chapterIdx: chapterIdx || 0 }, '', '#/reader/' + currentCategory.id + '/' + index + '/' + (chapterIdx || 0));
+  }
   // Set title AFTER showPage to avoid being overwritten
   document.title = novel.title + ' - ' + siteConfig.siteName;
 }
 
 function backToCategory() {
-  if (currentCategory) showCategory(currentCategory.id);
-  else showPage('home');
+  if (currentCategory) {
+    // Use history.back() to go to category page (popstate will handle it)
+    // If there's no history entry, navigate directly
+    if (window.history.state && window.history.state.page === 'reader') {
+      window.history.back();
+    } else {
+      showCategory(currentCategory.id, false);
+    }
+  } else {
+    showPage('home', false);
+  }
 }
 
 // ===== COPY SHARE LINK =====
 function copyShareLink() {
   const novel = currentCategory.novels[currentNovelIndex];
-  const url = window.location.origin + window.location.pathname + '#/' + currentCategory.id + '/' + novel.id;
+  const url = window.location.origin + window.location.pathname + '#/reader/' + currentCategory.id + '/' + currentNovelIndex + '/' + currentChapterIndex;
   navigator.clipboard.writeText(url).then(() => {
     const btn = document.getElementById('shareBtn');
     const originalText = btn.innerHTML;
@@ -3687,7 +3680,7 @@ function initReaderSettings() {
   lineSlider.addEventListener('input', () => {
     const height = lineSlider.value;
     document.getElementById('lineHeightValue').textContent = height;
-    document.getElementById('readerContent').style.lineHeight = height;
+    document.getElementById('readerContent').style.setProperty('--reader-line-height', height);
     localStorage.setItem('readerLineHeight', height);
   });
 
@@ -3698,7 +3691,7 @@ function initReaderSettings() {
   }
   if (localStorage.getItem('readerLineHeight')) {
     lineSlider.value = localStorage.getItem('readerLineHeight');
-    document.getElementById('readerContent').style.lineHeight = localStorage.getItem('readerLineHeight');
+    document.getElementById('readerContent').style.setProperty('--reader-line-height', localStorage.getItem('readerLineHeight'));
     document.getElementById('lineHeightValue').textContent = localStorage.getItem('readerLineHeight');
   }
 }
@@ -3718,9 +3711,54 @@ function setReaderStyle(style) {
   document.getElementById('fontSizeValue').textContent = p.font + 'px';
   document.getElementById('lineHeightValue').textContent = p.line;
   document.getElementById('readerContent').style.setProperty('--reader-font-size', p.font + 'px');
-  document.getElementById('readerContent').style.lineHeight = p.line;
+  document.getElementById('readerContent').style.setProperty('--reader-line-height', p.line);
   localStorage.setItem('readerFontSize', p.font);
   localStorage.setItem('readerLineHeight', p.line);
+}
+
+// ===== AUTO-HIDE ON SCROLL (MOBILE ONLY) =====
+function initReaderAutoHide() {
+  // Only apply on mobile (screen width <= 768px)
+  const mql = window.matchMedia('(max-width: 600px)');
+  if (!mql.matches) return;
+
+  const toolbar = document.querySelector('.top-toolbar');
+  const navBar = document.querySelector('.nav-bar');
+  const backToTop = document.getElementById('backToTop');
+  if (!toolbar && !navBar) return;
+  let lastScrollY = 0;
+  let ticking = false;
+  let isHidden = false;
+
+  function onScroll() {
+    const currentY = window.scrollY;
+    const diff = currentY - lastScrollY;
+
+    if (Math.abs(diff) > 10) {
+      if (diff > 0 && currentY > 80 && !isHidden) {
+        // Scrolling down - hide
+        if (toolbar) toolbar.style.transform = 'translateY(-60px)';
+        if (navBar) { navBar.style.transform = 'translateY(100%)'; navBar.style.pointerEvents = 'none'; }
+        if (backToTop) backToTop.classList.remove('visible');
+        isHidden = true;
+      } else if (diff < 0 && isHidden) {
+        // Scrolling up - show
+        if (toolbar) toolbar.style.transform = 'translateY(0)';
+        if (navBar) { navBar.style.transform = 'translateY(0)'; navBar.style.pointerEvents = 'auto'; }
+        if (backToTop && currentY > 400) backToTop.classList.add('visible');
+        isHidden = false;
+      }
+    }
+    lastScrollY = currentY;
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(onScroll);
+      ticking = true;
+    }
+  }, { passive: true });
 }
 
 // ===== TIMELINE =====
@@ -3805,18 +3843,18 @@ let siteConfig = safeJSONParse('siteConfig', JSON.parse(JSON.stringify(defaultSi
 function renderAboutPage() {
   const d = aboutData;
   const socialItems = [
-    { icon: '<img src="https://www.bilibili.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '哔哩哔哩', url: d.links.bili },
-    { icon: '<img src="https://github.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'GitHub', url: d.links.github },
-    { icon: '<img src="https://qzone.qq.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'QQ空间', url: d.links.qq },
-    { icon: '<img src="https://weibo.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '微博', url: d.links.weibo },
-    { icon: '<img src="https://www.xiaohongshu.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '小红书', url: d.links.xiaohongshu },
-    { icon: '<img src="https://abs.twimg.com/favicons/twitter.3.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'X', url: d.links.x }
+    { icon: '<img src="https://www.bilibili.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '哔哩哔哩', url: d.links.bili && d.links.bili.match(/^(https?:\/\/|mailto:)/) ? d.links.bili : '#' },
+    { icon: '<img src="https://github.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'GitHub', url: d.links.github && d.links.github.match(/^(https?:\/\/|mailto:)/) ? d.links.github : '#' },
+    { icon: '<img src="https://qzone.qq.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'QQ空间', url: d.links.qq && d.links.qq.match(/^(https?:\/\/|mailto:)/) ? d.links.qq : '#' },
+    { icon: '<img src="https://weibo.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '微博', url: d.links.weibo && d.links.weibo.match(/^(https?:\/\/|mailto:)/) ? d.links.weibo : '#' },
+    { icon: '<img src="https://www.xiaohongshu.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: '小红书', url: d.links.xiaohongshu && d.links.xiaohongshu.match(/^(https?:\/\/|mailto:)/) ? d.links.xiaohongshu : '#' },
+    { icon: '<img src="https://abs.twimg.com/favicons/twitter.3.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display=\'none\'">', name: 'X', url: d.links.x && d.links.x.match(/^(https?:\/\/|mailto:)/) ? d.links.x : '#' }
   ];
 
   function renderInterestRows(items) {
     if (!items || !items.length) return '';
     return items.map(item => {
-      if (item.label) {
+      if (item.label && item.label !== '标签') {
         return `<div><span class="label">${escapeHTML(item.label)}</span><span class="value">${escapeHTML(item.value)}</span></div>`;
       }
       return `<div><span class="value">${escapeHTML(item.value)}</span></div>`;
@@ -3959,6 +3997,7 @@ function startEditNovel(catId, novelId) {
       <div id="editChapterList-${novelId}">
         ${chaptersHTML}
       </div>
+      <button class="chapter-add-btn" style="width:auto;margin-top:8px;" onclick="addEditChapter('${novelId}')">+ 添加章节</button>
     </div>
     <div style="display:flex;gap:8px;margin-top:8px;">
       <button class="admin-small-btn" onclick="saveEditNovel('${catId}','${novelId}')">保存</button>
@@ -4020,7 +4059,7 @@ function renderInterestTags(section, containerId) {
     div.style.alignItems = 'center';
     div.style.gap = '6px';
     div.innerHTML = `
-      <input type="text" data-section="${section}" data-field="label" data-index="${i}" value="${item.label || ''}" placeholder="标签名" style="width:80px;flex-shrink:0;">
+      <input type="text" data-section="${section}" data-field="label" data-index="${i}" value="${(item.label && item.label !== '标签') ? item.label : ''}" placeholder="标签名" style="width:80px;flex-shrink:0;">
       <input type="text" data-section="${section}" data-field="value" data-index="${i}" value="${item.value || ''}" placeholder="内容" style="flex:1;">
       <button class="admin-btn" style="padding:4px 8px;font-size:0.75rem;flex-shrink:0;" onclick="removeInterestTag('${section}',${i})">×</button>
     `;
@@ -4072,13 +4111,12 @@ function saveAboutData() {
       if (labelInput && valueInput) {
         const label = labelInput.value.trim();
         const value = valueInput.value.trim();
-        if (value) tags.push({ label: label || '标签', value });
+        if (value) tags.push({ label: (label && label !== '标签') ? label : '', value });
       }
     });
     return tags;
   }
   aboutData.vocaloid = collectTags('vocaloid');
-  aboutData.vocaloidTags = [];
   aboutData.ensemble = collectTags('ensemble');
   aboutData.nitro = collectTags('nitro');
   aboutData.other = document.getElementById('aboutOther').value.trim();
@@ -4140,7 +4178,10 @@ function renderAdminCategoryList() {
           <strong>${escapeHTML(cat.name)}</strong>
           <span style="color:var(--text-muted);font-size:0.8rem;"> (${cat.id}) · ${escapeHTML(cat.desc)} · ${cat.novels.length}篇</span>
         </div>
-        <button class="admin-small-btn cancel" onclick="deleteCategory('${cat.id}')">删除</button>
+        <div style="display:flex;gap:6px;">
+          <button class="admin-small-btn" onclick="editCategory('${cat.id}')">编辑</button>
+          <button class="admin-small-btn cancel" onclick="deleteCategory('${cat.id}')">删除</button>
+        </div>
       </div>
     `;
     list.appendChild(div);
@@ -4152,10 +4193,10 @@ function addCategory() {
   const id = document.getElementById('newCatId').value.trim().replace(/\s+/g, '-').toLowerCase();
   const name = document.getElementById('newCatName').value.trim();
   const desc = document.getElementById('newCatDesc').value.trim();
-  const image = document.getElementById('newCatImage').value.trim();
+  const catImage = (document.getElementById('newCatImage') || {}).value || '';
   if (!id || !name) { showToast('请填写分类 ID 和名称', 'error'); return; }
   if (categories.find(c => c.id === id)) { showToast('分类 ID 已存在', 'error'); return; }
-  categories.push({ id, name, desc, image: image || id + '.jpg', novels: [] });
+  categories.push({ id, name, desc, image: catImage || id + '.jpg', novels: [] });
   saveData();
   renderAdminCategoryList();
   renderStats();
@@ -4165,7 +4206,40 @@ function addCategory() {
   document.getElementById('newCatId').value = '';
   document.getElementById('newCatName').value = '';
   document.getElementById('newCatDesc').value = '';
-  document.getElementById('newCatImage').value = '';
+  const newCatImageEl = document.getElementById('newCatImage');
+  if (newCatImageEl) newCatImageEl.value = '';
+}
+
+function editCategory(catId) {
+  const cat = categories.find(c => c.id === catId);
+  if (!cat) return;
+  const list = document.getElementById('adminCategoryList');
+  const index = categories.indexOf(cat);
+  const div = list.children[index];
+  if (!div) return;
+  div.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:6px;padding:8px;background:var(--bg-secondary);border-radius:var(--radius-sm);">
+      <input type="text" id="editCat-id" value="${escapeHTML(cat.id)}" disabled placeholder="分类ID（不可修改）" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-muted);font-family:var(--font-serif);opacity:0.6;">
+      <input type="text" id="editCat-name" value="${escapeHTML(cat.name)}" placeholder="分类名称" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);">
+      <input type="text" id="editCat-desc" value="${escapeHTML(cat.desc)}" placeholder="分类描述" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);">
+      <div style="display:flex;gap:6px;">
+        <button class="admin-small-btn" onclick="saveCategoryEdit('${cat.id}')">保存</button>
+        <button class="admin-small-btn cancel" onclick="renderAdminCategoryList()">取消</button>
+      </div>
+    </div>`;
+}
+function saveCategoryEdit(catId) {
+  const cat = categories.find(c => c.id === catId);
+  if (!cat) return;
+  cat.name = document.getElementById('editCat-name').value.trim() || cat.name;
+  cat.desc = document.getElementById('editCat-desc').value.trim() || cat.desc;
+  saveData();
+  renderAdminCategoryList();
+  renderHomePage();
+  renderStats();
+  renderCategories();
+  updateCategorySelect();
+  showToast('分类已更新');
 }
 
 function deleteCategory(catId) {
@@ -4205,7 +4279,10 @@ function renderAdminTimelineList() {
           <strong>${escapeHTML(item.title)}</strong>
           <span style="color:var(--text-muted);font-size:0.8rem;"> ${item.date} - ${escapeHTML(item.desc)}</span>
         </div>
-        <button class="admin-small-btn cancel" onclick="deleteTimelineEvent(${i})">删除</button>
+        <div style="display:flex;gap:6px;">
+          <button class="admin-small-btn" onclick="editTimelineEvent(${i})">编辑</button>
+          <button class="admin-small-btn cancel" onclick="deleteTimelineEvent(${i})">删除</button>
+        </div>
       </div>
     `;
     list.appendChild(div);
@@ -4226,6 +4303,35 @@ function addTimelineEvent() {
   document.getElementById('newTlDate').value = '';
   document.getElementById('newTlTitle').value = '';
   document.getElementById('newTlDesc').value = '';
+}
+
+function editTimelineEvent(index) {
+  const item = timelineData[index];
+  if (!item) return;
+  const list = document.getElementById('adminTimelineList');
+  const div = list.children[index];
+  if (!div) return;
+  div.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:6px;padding:8px;background:var(--bg-secondary);border-radius:var(--radius-sm);">
+      <input type="text" id="editTL-title" value="${escapeHTML(item.title)}" placeholder="事件标题" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);">
+      <input type="text" id="editTL-date" value="${escapeHTML(item.date)}" placeholder="日期" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);">
+      <textarea id="editTL-desc" placeholder="描述" rows="2" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);resize:vertical;">${escapeHTML(item.desc)}</textarea>
+      <div style="display:flex;gap:6px;">
+        <button class="admin-small-btn" onclick="saveTimelineEdit(${index})">保存</button>
+        <button class="admin-small-btn cancel" onclick="renderAdminTimelineList()">取消</button>
+      </div>
+    </div>`;
+}
+function saveTimelineEdit(index) {
+  const item = timelineData[index];
+  if (!item) return;
+  item.title = document.getElementById('editTL-title').value.trim() || item.title;
+  item.date = document.getElementById('editTL-date').value.trim() || item.date;
+  item.desc = document.getElementById('editTL-desc').value.trim() || item.desc;
+  saveData();
+  renderAdminTimelineList();
+  renderTimeline();
+  showToast('事件已更新');
 }
 
 function deleteTimelineEvent(index) {
@@ -4249,7 +4355,10 @@ function renderAdminLinksList() {
           <strong>${escapeHTML(item.title)}</strong>
           <span style="color:var(--text-muted);font-size:0.8rem;"> ${escapeHTML(item.desc)}</span>
         </div>
-        <button class="admin-small-btn cancel" onclick="deleteLink(${i})">删除</button>
+        <div style="display:flex;gap:6px;">
+          <button class="admin-small-btn" onclick="editLink(${i})">编辑</button>
+          <button class="admin-small-btn cancel" onclick="deleteLink(${i})">删除</button>
+        </div>
       </div>
     `;
     list.appendChild(div);
@@ -4272,6 +4381,35 @@ function addLink() {
   document.getElementById('newLinkIcon').value = '';
   document.getElementById('newLinkDesc').value = '';
   document.getElementById('newLinkUrl').value = '';
+}
+
+function editLink(index) {
+  const item = linksData[index];
+  if (!item) return;
+  const list = document.getElementById('adminLinksList');
+  const div = list.children[index];
+  if (!div) return;
+  div.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:6px;padding:8px;background:var(--bg-secondary);border-radius:var(--radius-sm);">
+      <input type="text" id="editLK-title" value="${escapeHTML(item.title)}" placeholder="友链名称" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);">
+      <input type="text" id="editLK-url" value="${escapeHTML(item.url)}" placeholder="链接地址" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);">
+      <input type="text" id="editLK-desc" value="${escapeHTML(item.desc)}" placeholder="描述" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);">
+      <div style="display:flex;gap:6px;">
+        <button class="admin-small-btn" onclick="saveLinkEdit(${index})">保存</button>
+        <button class="admin-small-btn cancel" onclick="renderAdminLinksList()">取消</button>
+      </div>
+    </div>`;
+}
+function saveLinkEdit(index) {
+  const item = linksData[index];
+  if (!item) return;
+  item.title = document.getElementById('editLK-title').value.trim() || item.title;
+  item.url = document.getElementById('editLK-url').value.trim() || item.url;
+  item.desc = document.getElementById('editLK-desc').value.trim() || item.desc;
+  saveData();
+  renderAdminLinksList();
+  renderLinks();
+  showToast('友链已更新');
 }
 
 function deleteLink(index) {
@@ -4300,19 +4438,19 @@ function initSwipeNavigation() {
   let touchStartY = 0;
   let touchStartTime = 0;
   let isScrolling = false;
-  const minSwipeDistance = 60;
-  const maxVerticalDistance = 80;
-  const maxSwipeTime = 400;
+  const minSwipeDistance = 80;
+  const maxVerticalDistance = 75;
+  const maxSwipeTime = 350;
 
   document.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-    touchStartY = e.changedTouches[0].screenY;
+    touchStartX = e.changedTouches[0].clientX;
+    touchStartY = e.changedTouches[0].clientY;
     touchStartTime = Date.now();
     isScrolling = false;
   }, { passive: true });
 
   document.addEventListener('touchmove', (e) => {
-    const currentY = e.changedTouches[0].screenY;
+    const currentY = e.changedTouches[0].clientY;
     const verticalMove = Math.abs(currentY - touchStartY);
     if (verticalMove > 10) {
       isScrolling = true;
@@ -4320,26 +4458,35 @@ function initSwipeNavigation() {
   }, { passive: true });
 
   document.addEventListener('touchend', (e) => {
-    const touchEndX = e.changedTouches[0].screenX;
-    const touchEndY = e.changedTouches[0].screenY;
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
     const horizontalDistance = touchEndX - touchStartX;
     const verticalDistance = Math.abs(touchEndY - touchStartY);
     const swipeTime = Date.now() - touchStartTime;
+
+    // Must be a right-swipe (from left to right) to go back
+    if (horizontalDistance < minSwipeDistance) return;
+    if (horizontalDistance < 0) return; // left swipe, ignore
+    if (isScrolling) return;
+    if (verticalDistance > maxVerticalDistance) return;
+    if (swipeTime > maxSwipeTime) return;
 
     const currentPage = document.querySelector('.page.active');
     if (!currentPage) return;
     const pageId = currentPage.id;
 
-    // Only handle quick horizontal swipes that are not scrolling
-    if (isScrolling) return;
-    if (verticalDistance > maxVerticalDistance) return;
-    if (swipeTime > maxSwipeTime) return;
-
-    // Left or right swipe - go back to home from category or reader page
-    if (Math.abs(horizontalDistance) > minSwipeDistance) {
-      if (pageId === 'page-category' || pageId === 'page-reader') {
-        e.preventDefault();
-        history.back();
+    if (pageId === 'page-reader') {
+      e.preventDefault();
+      backToCategory();
+    } else if (pageId === 'page-category') {
+      e.preventDefault();
+      if (window.history.state && (window.history.state.page === 'category')) {
+        window.history.back();
+      } else {
+        showPage('home', false);
+        document.querySelectorAll('.nav-btn').forEach(b => {
+          b.classList.toggle('active', b.dataset.page === 'home');
+        });
       }
     }
   }, { passive: false });
