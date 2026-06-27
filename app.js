@@ -136,8 +136,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const imageMap = {
     '六甲央田': 'vol6.jpg',
     '什三地球': 'vol13.jpg',
-    '统吾海岛': 'vol15.jpg'
-  };
+    '海岛统吾': 'vol15.jpg'
+};
   categories.forEach(c => {
     if (imageMap[c.name] && c.image !== imageMap[c.name]) c.image = imageMap[c.name];
   });
