@@ -1019,36 +1019,30 @@ function loadGiscus() {
   if (!container) return;
 
   container.innerHTML = '';
-  const widget = document.createElement('giscus-widget');
-  widget.setAttribute('repo', 'KuroNya39/kuro-no-nekohouse');
-  widget.setAttribute('repo-id', 'R_kgDOS6pURQ');
-  widget.setAttribute('category', 'General');
-  widget.setAttribute('category-id', 'DIC_kwDOS6pURc4C_Jv6');
-  widget.setAttribute('mapping', 'pathname');
-  widget.setAttribute('strict', '0');
-  widget.setAttribute('reactions-enabled', '1');
-  widget.setAttribute('emit-metadata', '0');
-  widget.setAttribute('input-position', 'top');
-  widget.setAttribute('theme', getGiscusTheme());
-  widget.setAttribute('lang', 'zh-CN');
-  widget.setAttribute('loading', 'lazy');
-  container.appendChild(widget);
 
-  if (!document.querySelector('script[src="https://giscus.app/client.js"]')) {
-    const script = document.createElement('script');
-    script.src = 'https://giscus.app/client.js';
-    script.async = true;
-    document.body.appendChild(script);
-  }
+  const theme = getGiscusTheme();
+
+  const scriptEl = document.createElement('script');
+  scriptEl.src = 'https://giscus.app/client.js';
+  scriptEl.async = true;
+  scriptEl.setAttribute('data-repo', 'KuroNya39/kuro-no-nekohouse');
+  scriptEl.setAttribute('data-repo-id', 'R_kgDOS6pURQ');
+  scriptEl.setAttribute('data-category', 'General');
+  scriptEl.setAttribute('data-category-id', 'DIC_kwDOS6pURc4C_Jv6');
+  scriptEl.setAttribute('data-mapping', 'pathname');
+  scriptEl.setAttribute('data-strict', '0');
+  scriptEl.setAttribute('data-reactions-enabled', '1');
+  scriptEl.setAttribute('data-emit-metadata', '0');
+  scriptEl.setAttribute('data-input-position', 'top');
+  scriptEl.setAttribute('data-theme', theme);
+  scriptEl.setAttribute('data-lang', 'zh-CN');
+  scriptEl.setAttribute('data-loading', 'lazy');
+  scriptEl.crossOrigin = 'anonymous';
+  container.appendChild(scriptEl);
 }
 
 function updateGiscusTheme() {
   const theme = getGiscusTheme();
-  const widget = document.querySelector('giscus-widget');
-  if (widget) {
-    widget.setAttribute('theme', theme);
-  }
-  // 兼容旧版本 iframe
   const iframe = document.querySelector('iframe.giscus-frame');
   if (iframe) {
     iframe.contentWindow.postMessage({ giscus: { setConfig: { theme } } }, 'https://giscus.app');

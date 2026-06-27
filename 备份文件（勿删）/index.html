@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<!-- v2026.06.17 -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/jpeg" href="favicon.jpg">
+<meta property="og:title" content="黒の猫窝 - 同人小说收藏站">
+<meta property="og:image" content="https://kuronya39.github.io/kuro-no-nekohouse/avatar.png">
+<link rel="canonical" href="https://kuronya39.github.io/kuro-no-nekohouse/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;700&family=LXGW+WenKai&display=swap" rel="stylesheet">
+<noscript>
+<style>
+  .loading-overlay { display: none !important; }
+  .page { display: block !important; }
+  .app-container { opacity: 1 !important; }
+  body::after {
+    content: '本站需要启用 JavaScript 才能正常运行。请在浏览器设置中开启 JavaScript 后刷新页面。';
+    display: block; padding: 40px 20px; text-align: center;
+    color: var(--accent-primary); font-size: 1rem; font-family: serif;
+    background: #ffffff; position: fixed; inset: 0; z-index: 99999;
+  }
+</style>
+</noscript>
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-ring"></div>
+</div>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="top-toolbar">
+  <div class="color-scheme-dropdown" id="colorSchemeDropdown">
+    <button class="color-scheme-toggle" id="colorSchemeToggle" title="切换配色" aria-label="切换配色">
+      <span class="scheme-current-dot" id="schemeCurrentDot" style="background:#39c5bb"></span>
+    </button>
+    <div class="color-scheme-menu" id="colorSchemeMenu">
+      <button class="scheme-option active" data-scheme="miku" onclick="setColorScheme('miku')"><span class="scheme-dot" style="background:#39c5bb"></span>Miku 青</button>
+      <button class="scheme-option" data-scheme="rose" onclick="setColorScheme('rose')"><span class="scheme-dot" style="background:#F23172"></span>蔷薇粉</button>
+      <button class="scheme-option" data-scheme="coral" onclick="setColorScheme('coral')"><span class="scheme-dot" style="background:linear-gradient(135deg,#ED6D52 60%,#BADBF2 60%)"></span>珊瑚橘</button>
+      <button class="scheme-option" data-scheme="night" onclick="setColorScheme('night')"><span class="scheme-dot" style="background:linear-gradient(135deg,#001E44 60%,#46266E 60%)"></span>深夜蓝</button>
+    </div>
+  </div>
+  <button class="admin-toggle" id="adminToggle" title="管理" aria-label="管理面板">⚙</button>
+  <button class="theme-toggle" id="themeToggle" title="切换主题" aria-label="切换主题">☾</button>
+</div>
+<button class="back-to-top" id="backToTop" title="返回顶部" aria-label="返回顶部">↑</button>
+
+<!-- ARIA Live Region for screen readers -->
+<div id="ariaLive" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+<!-- Login Modal -->
+<div class="login-modal" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+  <div class="login-box">
+    <h3 id="loginTitle">管理员验证</h3>
+    <input type="password" id="adminPassword" placeholder="输入密码" aria-label="管理员密码">
+    <button class="admin-btn" style="width:100%;margin:0;" onclick="doLogin()">进入管理</button>
+    <p style="margin-top:12px;font-size:0.75rem;color:var(--text-muted);">请输入管理员密码</p>
+  </div>
+</div>
+
+<!-- Admin Drawer -->
+<div class="admin-drawer-overlay" id="adminOverlay" onclick="closeAdmin()"></div>
+<div class="admin-drawer" id="adminDrawer" role="dialog" aria-modal="true" aria-labelledby="adminDrawerTitle">
+  <div class="admin-drawer-header">
+    <h3 id="adminDrawerTitle"><span class="admin-star" aria-hidden="true"></span> 管理面板</h3>
+    <button class="admin-drawer-close" onclick="closeAdmin()" aria-label="关闭管理面板"><span class="close-x" aria-hidden="true"></span></button>
+  </div>
+  <div class="admin-drawer-body">
+    <div class="admin-tabs" style="flex-wrap:wrap;">
+      <button class="admin-tab active" onclick="switchAdminTab(this, 'site')">站点设置</button>
+      <button class="admin-tab" onclick="switchAdminTab(this, 'categories')">分类管理</button>
+      <button class="admin-tab" onclick="switchAdminTab(this, 'add')">添加小说</button>
+      <button class="admin-tab" onclick="switchAdminTab(this, 'edit')">编辑小说</button>
+      <button class="admin-tab" onclick="switchAdminTab(this, 'about')">关于页</button>
+      <button class="admin-tab" onclick="switchAdminTab(this, 'timeline')">时间轴</button>
+      <button class="admin-tab" onclick="switchAdminTab(this, 'links')">友链</button>
+    </div>
+    <div class="admin-io-bar">
+      <span id="githubSyncStatus" style="font-size:0.75rem;color:var(--text-muted);">○ 未同步</span>
+      <button class="admin-btn small" onclick="exportData()">导出数据</button>
+      <button class="admin-btn small secondary" onclick="document.getElementById('importFile').click()">导入数据</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+    </div>
+    <div class="admin-token-bar">
+      <label style="font-size:0.7rem;color:var(--text-muted);white-space:nowrap;">GitHub 令牌</label>
+      <input type="password" id="githubTokenInput" placeholder="ghp_..." style="flex:1;padding:4px 8px;font-size:0.75rem;border:1px solid var(--border-light);background:var(--bg-primary);color:var(--text-primary);font-family:monospace;">
+      <button class="admin-btn small" onclick="saveGitHubToken()">保存令牌</button>
+    </div>
+
+    <!-- Tab: 站点设置 -->
+    <div class="admin-tab-content active" id="adminTabSite">
+      <div class="admin-section-group">
+        <div class="admin-section-title">基本信息</div>
+        <div class="admin-about-section">
+          <label>站点名称</label>
+          <input type="text" id="cfgSiteName" placeholder="站点名称">
+        </div>
+        <div class="admin-about-section">
+          <label>站点副标题</label>
+          <input type="text" id="cfgSiteSubtitle" placeholder="站点副标题">
+        </div>
+        <div class="admin-about-section">
+          <label>首页标题</label>
+          <input type="text" id="cfgHeroTitle" placeholder="欢迎来到...">
+        </div>
+        <div class="admin-about-section">
+          <label>首页介绍</label>
+          <textarea id="cfgHeroDesc" placeholder="首页介绍文字" style="min-height:60px;resize:vertical;"></textarea>
+        </div>
+        <div class="admin-about-section">
+          <label>首页标签 <span style="color:var(--text-muted);font-size:0.7rem;">用逗号分隔</span></label>
+          <input type="text" id="cfgHeroTags" placeholder="VOCALOID,偶像梦幻祭,ES">
+        </div>
+        <div class="admin-about-section">
+          <label>页脚文字</label>
+          <input type="text" id="cfgFooterText" placeholder="页脚文字">
+        </div>
+      </div>
+      <div class="admin-section-group">
+        <div class="admin-section-title">留言板</div>
+        <div class="admin-about-section">
+          <label>留言板介绍</label>
+          <textarea id="cfgGbIntro" placeholder="留言板介绍文字" style="min-height:40px;resize:vertical;"></textarea>
+        </div>
+        <div class="admin-about-section">
+          <label>留言板提示</label>
+          <input type="text" id="cfgGbHint" placeholder="提示文字">
+        </div>
+      </div>
+      <button class="admin-btn" onclick="saveSiteConfig()">保存站点设置</button>
+    </div>
+
+    <!-- Tab: 分类管理 -->
+    <div class="admin-tab-content" id="adminTabCategories">
+      <div id="adminCategoryList"></div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-light);">
+        <div class="admin-section-title" style="margin-bottom:12px;">添加新分类</div>
+        <div class="admin-about-section">
+          <label>分类 ID <span style="color:var(--text-muted);font-size:0.7rem;">英文，如 miku</span></label>
+          <input type="text" id="newCatId" placeholder="miku">
+        </div>
+        <div class="admin-about-section">
+          <label>分类名称</label>
+          <input type="text" id="newCatName" placeholder="初音未来">
+        </div>
+        <div class="admin-about-section">
+          <label>分类描述</label>
+          <input type="text" id="newCatDesc" placeholder="VOCALOID 相关创作">
+        </div>
+        <button class="admin-btn" onclick="addCategory()">添加分类</button>
+      </div>
+    </div>
+
+    <!-- Tab: 添加小说 -->
+    <div class="admin-tab-content" id="adminTabAdd">
+      <div class="admin-form-row">
+        <label>小说标题 <span style="color:var(--accent-rose);font-size:0.7rem;">*必填</span></label>
+        <input type="text" id="adminTitle" placeholder="输入小说的标题">
+      </div>
+      <div class="admin-form-row">
+        <label>作者名字 <span style="color:var(--accent-rose);font-size:0.7rem;">*必填</span></label>
+        <input type="text" id="adminAuthor" placeholder="输入作者的名字">
+      </div>
+      <div class="admin-form-row">
+        <label>所属分类 <span style="color:var(--text-muted);font-size:0.7rem;">选择小说属于哪个圈子</span></label>
+        <select id="adminCategory"></select>
+      </div>
+      <div class="admin-form-row">
+        <label>标签 <span style="color:var(--text-muted);font-size:0.7rem;">用逗号分隔多个标签，如：甜文,短篇,HE</span></label>
+        <input type="text" id="adminTags" placeholder="甜文,短篇">
+      </div>
+      <div class="admin-form-row">
+        <label>前言/备注 <span style="color:var(--text-muted);font-size:0.7rem;">可选，会在正文前显示</span></label>
+        <textarea id="adminPreface" class="admin-textarea" placeholder="输入前言或备注（可选）" rows="3"></textarea>
+      </div>
+      <div class="admin-form-row">
+        <label>字数 <span id="wordCountHint" style="color:var(--accent-primary);font-size:0.7rem;">已自动计算：0 字</span></label>
+        <input type="number" id="adminWords" placeholder="留空则自动计算" readonly style="background:var(--bg-secondary);color:var(--text-muted);">
+      </div>
+      <!-- 章节管理区域 -->
+      <div class="admin-form-row">
+        <label>章节管理 <span style="color:var(--text-muted);font-size:0.7rem;">管理小说的章节内容</span></label>
+        <div class="chapter-manager" id="addChapterManager">
+          <div class="chapter-manager-title">
+            <span>章节列表</span>
+            <button class="chapter-add-btn" style="width:auto;" onclick="addChapterField('add')">+ 添加章节</button>
+          </div>
+          <div id="addChapterList"></div>
+        </div>
+      </div>
+      <button class="admin-btn" onclick="addNovel()">添加小说</button>
+      <button class="admin-btn secondary" onclick="clearAdminForm()">清空</button>
+    </div>
+
+    <!-- Tab: 编辑小说 -->
+    <div class="admin-tab-content" id="adminTabEdit">
+      <div id="adminEditNovelList"></div>
+    </div>
+
+    <!-- Tab: 关于页 -->
+    <div class="admin-tab-content" id="adminTabAbout">
+      <div class="admin-about-section">
+        <label>圈名</label>
+        <input type="text" id="aboutCircleName" placeholder="例如：黒 / 黑喵子">
+      </div>
+      <div class="admin-about-section">
+        <label>个人简介</label>
+        <input type="text" id="aboutBio" placeholder="例如：@kuro_nekoko · 同人小说收藏">
+      </div>
+      <div class="admin-section-group">
+        <div class="admin-section-title">VOCALOID</div>
+        <div id="adminVocaloidTags"></div>
+        <button class="admin-btn" style="margin-top:8px;padding:6px 14px;font-size:0.8rem;" onclick="addInterestTag('vocaloid')">+ 添加标签</button>
+      </div>
+      <div class="admin-section-group">
+        <div class="admin-section-title">偶像梦幻祭</div>
+        <div id="adminEnsembleTags"></div>
+        <button class="admin-btn" style="margin-top:8px;padding:6px 14px;font-size:0.8rem;" onclick="addInterestTag('ensemble')">+ 添加标签</button>
+      </div>
+      <div class="admin-section-group">
+        <div class="admin-section-title">NITRO+CHiRAL</div>
+        <div id="adminNitroTags"></div>
+        <button class="admin-btn" style="margin-top:8px;padding:6px 14px;font-size:0.8rem;" onclick="addInterestTag('nitro')">+ 添加标签</button>
+      </div>
+      <div class="admin-about-section"><label>其他兴趣</label><input type="text" id="aboutOther"></div>
+      <div class="admin-section-group">
+        <div class="admin-section-title">社交链接</div>
+        <div class="admin-about-section"><label>QQ</label><input type="text" id="aboutLinkQQ"></div>
+        <div class="admin-about-section"><label>哔哩哔哩</label><input type="text" id="aboutLinkBili"></div>
+        <div class="admin-about-section"><label>GitHub</label><input type="text" id="aboutLinkGithub"></div>
+        <div class="admin-about-section"><label>微博</label><input type="text" id="aboutLinkWeibo"></div>
+        <div class="admin-about-section"><label>小红书</label><input type="text" id="aboutLinkXiaohongshu"></div>
+        <div class="admin-about-section"><label>X</label><input type="text" id="aboutLinkX"></div>
+      </div>
+      <button class="admin-btn" onclick="saveAboutData()">保存关于页</button>
+    </div>
+
+    <!-- Tab: 时间轴 -->
+    <div class="admin-tab-content" id="adminTabTimeline">
+      <div id="adminTimelineList"></div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-light);">
+        <div class="admin-section-title" style="margin-bottom:12px;">添加新事件</div>
+        <div class="admin-about-section"><label>日期</label><input type="date" id="newTlDate"></div>
+        <div class="admin-about-section"><label>标题</label><input type="text" id="newTlTitle" placeholder="事件标题"></div>
+        <div class="admin-about-section"><label>描述</label><input type="text" id="newTlDesc" placeholder="事件描述"></div>
+        <button class="admin-btn" onclick="addTimelineEvent()">添加事件</button>
+      </div>
+    </div>
+
+    <!-- Tab: 友链 -->
+    <div class="admin-tab-content" id="adminTabLinks">
+      <div id="adminLinksList"></div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-light);">
+        <div class="admin-section-title" style="margin-bottom:12px;">添加新友链</div>
+        <div class="admin-about-section"><label>名称</label><input type="text" id="newLinkTitle" placeholder="站点名称"></div>
+        <div class="admin-about-section"><label>图标文字 <span style="color:var(--text-muted);font-size:0.7rem;">2-3个字</span></label><input type="text" id="newLinkIcon" placeholder="LOF"></div>
+        <div class="admin-about-section"><label>描述</label><input type="text" id="newLinkDesc" placeholder="站点描述"></div>
+        <div class="admin-about-section"><label>链接</label><input type="text" id="newLinkUrl" placeholder="https://..."></div>
+        <button class="admin-btn" onclick="addLink()">添加友链</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="app-container">
+  <header class="site-header">
+    <h1 class="site-title" id="siteTitleEl">✦黒の猫窝✦</h1>
+    <p class="site-subtitle" id="siteSubtitleEl">同人小说收藏站</p>
+    <div class="site-divider"></div>
+  </header>
+
+  <nav class="nav-bar" role="navigation" aria-label="主导航">
+    <button class="nav-btn active" data-page="home">首页</button>
+    <button class="nav-btn" data-page="timeline">时间轴</button>
+    <button class="nav-btn" data-page="guestbook">留言</button>
+    <button class="nav-btn" data-page="links">友链</button>
+    <button class="nav-btn" data-page="about">关于</button>
+  </nav>
+
+  <main id="main-content" tabindex="-1">
+  <!-- ===== HOME PAGE ===== -->
+  <section class="page active" id="page-home" aria-label="首页">
+    <div class="search-container">
+      <input type="text" class="search-input" id="searchInput" placeholder="搜索小说标题、作者或内容..." aria-label="搜索小说">
+      <span class="search-icon" aria-hidden="true"></span>
+      <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <div class="hero-section" id="heroSection">
+      <img class="hero-avatar avatar-wrapper" src="avatar.png" alt="头像">
+      <div class="hero-content">
+        <h2 id="heroTitle"></h2>
+        <p id="heroDesc"></p>
+        <div class="hero-tags" id="heroTags"></div>
+      </div>
+    </div>
+
+    <div class="stats-row" id="statsRow"></div>
+
+    <div class="section-title">分类</div>
+    <div class="category-grid" id="categoryGrid"></div>
+  </section>
+
+  <!-- ===== CATEGORY PAGE ===== -->
+  <section class="page" id="page-category" aria-label="分类页面">
+    <button class="back-btn" onclick="showPage('home')">← 返回</button>
+    <div id="categoryHeroContainer"></div>
+    <div class="page-header">
+      <h2 id="categoryTitle"></h2>
+      <p id="categoryDesc"></p>
+    </div>
+
+    <div class="content-with-sidebar">
+      <div class="main-content">
+        <div class="author-filter" id="authorFilter"></div>
+        <div class="sort-bar">
+          <span class="sort-label">排序：</span>
+          <button class="sort-btn active" data-sort="default">默认</button>
+          <button class="sort-btn" data-sort="date">按时间</button>
+          <button class="sort-btn" data-sort="words">按字数</button>
+          <button class="sort-btn sort-order-btn" id="sortOrderBtn" title="切换升序/降序">↓ 降序</button>
+        </div>
+        <div class="novel-list" id="novelList"></div>
+      </div>
+      <aside class="sidebar" id="categorySidebar"></aside>
+    </div>
+  </section>
+
+  <!-- ===== READER PAGE ===== -->
+  <section class="page" id="page-reader" aria-label="阅读页面">
+    <button class="back-btn" onclick="backToCategory()">← 返回</button>
+    <div class="reader-container">
+      <div class="reader-header">
+        <span class="reader-category-tag" id="readerCategory"></span>
+        <h2 class="reader-title" id="readerTitle"></h2>
+        <p class="reader-meta" id="readerMeta"></p>
+        <p class="reader-author" id="readerAuthor"></p>
+        <div class="reader-actions">
+      <button class="reader-action-btn" id="shareBtn" onclick="copyShareLink()">复制链接</button>
+        </div>
+      </div>
+      <div class="reader-settings">
+        <div class="settings-header" onclick="toggleSettings()">
+          <span class="settings-title">阅读设置</span>
+          <span class="settings-toggle" id="settingsToggle">▼</span>
+        </div>
+        <div class="settings-panel" id="settingsPanel">
+          <div class="settings-row" id="chapterSelectRow" style="display:none;">
+            <span class="settings-label">章节</span>
+            <select id="chapterSelect" class="settings-select" onchange="scrollBehavior='keep';showNovel(currentNovelIndex, parseInt(this.value))"></select>
+          </div>
+          <div class="settings-row">
+            <span class="settings-label">字体</span>
+            <select id="fontFamilySelect" class="settings-select" onchange="setReaderFont(this.value)" style="flex:1;">
+              <option value="">默认</option>
+              <option value="'LXGWWenKai', cursive">霞鹜文楷</option>
+              <option value="'MiSans', sans-serif">MiSans</option>
+              <option value="'SourceHanSansCN', sans-serif">思源黑体</option>
+              <option value="'ZhuqueFangsong', serif">朱雀仿宋</option>
+            </select>
+          </div>
+          <div class="settings-row">
+            <span class="settings-label">字号</span>
+            <input type="range" class="settings-slider" id="fontSizeSlider" min="13" max="22" value="16" aria-label="调整字号">
+            <span class="settings-value" id="fontSizeValue">16px</span>
+          </div>
+          <div class="settings-row">
+            <span class="settings-label">行距</span>
+            <input type="range" class="settings-slider" id="lineHeightSlider" min="1.5" max="2.5" step="0.1" value="1.9" aria-label="调整行距">
+            <span class="settings-value" id="lineHeightValue">1.9</span>
+          </div>
+          <div class="settings-btns">
+            <button class="settings-btn" onclick="setReaderStyle('default')">默认</button>
+            <button class="settings-btn" onclick="setReaderStyle('compact')">紧凑</button>
+            <button class="settings-btn" onclick="setReaderStyle('relaxed')">宽松</button>
+          </div>
+        </div>
+      </div>
+      <div class="reader-content" id="readerContent"></div>
+      <div class="reader-nav">
+        <button class="reader-nav-btn" id="prevNovel">← 上一章</button>
+        <button class="reader-nav-btn" id="readerEditBtn" style="display:none;" onclick="toggleReaderEdit()">编辑排版</button>
+        <button class="reader-nav-btn" onclick="backToCategory()">返回列表</button>
+        <button class="reader-nav-btn" id="nextNovel">下一章 →</button>
+      </div>
+      <div id="readerEditPanel" style="display:none;padding:16px;background:var(--bg-card);border:1px solid var(--border-light);border-radius:var(--radius-sm);margin-top:16px;margin-bottom:16px;">
+        <h4 style="margin-bottom:12px;font-family:var(--font-display);">编辑排版</h4>
+        <input type="text" id="readerEditTitle" placeholder="章节标题" style="width:100%;padding:8px;border:1px solid var(--border-light);background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-serif);margin-bottom:8px;border-radius:var(--radius-sm);">
+        <div style="display:flex;gap:6px;margin-bottom:8px;align-items:center;">
+          <button class="admin-small-btn" onclick="insertEditAlign('left')" title="左对齐">≡左</button>
+          <button class="admin-small-btn" onclick="insertEditAlign('center')" title="居中">≡中</button>
+          <button class="admin-small-btn" onclick="insertEditAlign('right')" title="右对齐">≡右</button>
+        </div>
+        <textarea id="readerEditContent" rows="8" placeholder="章节内容（支持 **粗体**、*斜体*、---分隔线、<<<居中>>>、[[[右对齐]]]）" style="width:100%;padding:8px;border:1px solid var(--border-light);background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-serif);resize:vertical;margin-bottom:8px;border-radius:var(--radius-sm);"></textarea>
+        <div style="display:flex;gap:8px;">
+          <button class="admin-small-btn" onclick="previewMarkdown()">预览Markdown</button>
+          <button class="admin-small-btn" onclick="saveReaderEdit()">保存</button>
+          <button class="admin-small-btn cancel" onclick="document.getElementById('readerEditPanel').style.display='none'">关闭</button>
+        </div>
+        <div id="readerEditPreview" style="display:none;margin-top:12px;padding:12px;background:var(--bg-primary);border:1px solid var(--border-light);border-radius:var(--radius-sm);"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TIMELINE PAGE ===== -->
+  <section class="page" id="page-timeline" aria-label="时间轴">
+    <div class="section-title">时间轴</div>
+    <div class="timeline" id="timelineList"></div>
+  </section>
+
+  <!-- ===== GUESTBOOK PAGE ===== -->
+  <section class="page" id="page-guestbook" aria-label="留言板">
+    <div class="guestbook-intro" id="guestbookIntroArea">
+      <p id="guestbookIntroText"></p>
+      <p id="guestbookLoginStatus" style="font-size:0.8rem;color:var(--text-muted);display:none;"></p>
+    </div>
+    <div class="giscus-wrapper" id="giscusWrapper"></div>
+  </section>
+
+  <!-- ===== LINKS PAGE ===== -->
+  <section class="page" id="page-links" aria-label="友情链接">
+    <div class="section-title">友情链接</div>
+    <div class="links-grid" id="linksGrid"></div>
+  </section>
+
+  <!-- ===== ABOUT PAGE - New Profile Style ===== -->
+  <section class="page" id="page-about" aria-label="关于页面">
+    <div class="about-profile" id="aboutProfile">
+      <!-- Rendered by JS from aboutData -->
+    </div>
+  </section>
+  </main>
+
+  <footer class="site-footer">
+    <p id="footerText">黒の猫窝 · 收藏每一个故事</p>
+    <p class="footer-stars" aria-hidden="true">&#10022; &#10022; &#10022;</p>
+  </footer>
+</div>
+
+
+<script src="app.js"></script>
+</body>
+</html>
