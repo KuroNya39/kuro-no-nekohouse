@@ -1029,7 +1029,7 @@ function loadGiscus() {
   scriptEl.setAttribute('data-repo-id', 'R_kgDOS6pURQ');
   scriptEl.setAttribute('data-category', 'General');
   scriptEl.setAttribute('data-category-id', 'DIC_kwDOS6pURc4C_Jv6');
-  scriptEl.setAttribute('data-mapping', 'pathname');
+  scriptEl.setAttribute('data-mapping', 'url');
   scriptEl.setAttribute('data-strict', '0');
   scriptEl.setAttribute('data-reactions-enabled', '1');
   scriptEl.setAttribute('data-emit-metadata', '0');
