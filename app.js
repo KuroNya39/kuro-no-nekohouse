@@ -1016,6 +1016,7 @@ function loadGiscus() {
   script.src = 'https://giscus.app/client.js';
   script.async = true;
   wrapper.appendChild(script);
+  checkGiscusLoaded();
 }
 
 function updateGiscusTheme() {
@@ -1040,6 +1041,26 @@ window.addEventListener('message', function(event) {
     updateGuestbookLoginStatus(giscusData.viewer);
   }
 });
+
+// Giscus 错误检测（通过 iframe 加载失败检测）
+function checkGiscusLoaded() {
+  const wrapper = document.getElementById('giscusWrapper');
+  if (!wrapper) return;
+  const iframe = wrapper.querySelector('iframe.giscus-frame');
+  const widget = wrapper.querySelector('giscus-widget');
+  if (!iframe && widget) {
+    // 如果 widget 存在但 iframe 没有出现，可能加载失败
+    setTimeout(() => {
+      const iframe2 = wrapper.querySelector('iframe.giscus-frame');
+      if (!iframe2) {
+        const notice = document.createElement('div');
+        notice.style.cssText = 'padding:16px;text-align:center;color:var(--text-muted);font-size:0.85rem;';
+        notice.innerHTML = '留言功能暂不可用。如需启用留言，请前往 <a href="https://github.com/apps/giscus" target="_blank" rel="noopener" style="color:var(--accent-primary);text-decoration:underline;">GitHub Giscus App</a> 安装到仓库，并确保仓库已开启 Discussions 功能。';
+        wrapper.appendChild(notice);
+      }
+    }, 10000);
+  }
+}
 
 function updateGuestbookLoginStatus(viewer) {
   const statusEl = document.getElementById('guestbookLoginStatus');
@@ -1665,23 +1686,23 @@ function previewMarkdown() {
 
 function insertEditAlign(direction) {
   const textarea = document.getElementById('readerEditContent');
+  if (!textarea) return;
   const start = textarea.selectionStart;
   const end = textarea.selectionEnd;
   const selected = textarea.value.substring(start, end);
   const text = selected || '居中文字';
-  let wrapped = '';
   let prefix = '', suffix = '';
   if (direction === 'center') { prefix = '<<<'; suffix = '>>>'; }
   else if (direction === 'right') { prefix = '[[['; suffix = ']]]'; }
   else return; // 左对齐不需要标记
   
-  wrapped = prefix + text + suffix;
+  const scrollTop = textarea.scrollTop; // 保存滚动位置
+  const wrapped = prefix + text + suffix;
   textarea.value = textarea.value.substring(0, start) + wrapped + textarea.value.substring(end);
-  
-  // 恢复光标到选中的文本位置
   textarea.focus();
   const cursorPos = start + prefix.length;
   textarea.setSelectionRange(cursorPos, cursorPos + text.length);
+  textarea.scrollTop = scrollTop; // 恢复滚动位置
 }
 
 function backToCategory() {
@@ -2313,6 +2334,7 @@ function renderAdminCategoryList() {
 }
 
 let dragCatIdx = null;
+let dragCatTargetIdx = null;
 function handleCatDragStart(e) {
   dragCatIdx = parseInt(this.dataset.index);
   this.style.opacity = '0.4';
@@ -2320,33 +2342,40 @@ function handleCatDragStart(e) {
 }
 function handleCatDragOver(e) {
   e.preventDefault();
-  const targetIdx = parseInt(this.dataset.index);
-  if (dragCatIdx === null || dragCatIdx === targetIdx) return;
-  
-  // 实时交换数据
-  const item = categories.splice(dragCatIdx, 1)[0];
-  categories.splice(targetIdx, 0, item);
-  dragCatIdx = targetIdx;
-  
-  // 重新渲染列表（实时更新位置）
-  renderAdminCategoryList();
-  saveData();
-  renderCategories();
+  e.dataTransfer.dropEffect = 'move';
+  dragCatTargetIdx = parseInt(this.dataset.index);
+  // 简单视觉反馈：给目标添加轻微背景色
+  document.querySelectorAll('.admin-category-item').forEach(el => {
+    el.style.background = '';
+  });
+  if (dragCatIdx !== dragCatTargetIdx) {
+    this.style.background = 'color-mix(in srgb, var(--accent-primary) 8%, transparent)';
+  }
 }
 function handleCatDrop(e) {
   e.preventDefault();
-  dragCatIdx = null;
-  document.querySelectorAll('.admin-category-item').forEach(el => {
-    el.style.opacity = '';
-    el.style.borderTop = '';
-  });
+  if (dragCatIdx === null || dragCatTargetIdx === null || dragCatIdx === dragCatTargetIdx) {
+    cleanupCatDrag();
+    return;
+  }
+  // 只在 drop 时才交换
+  const item = categories.splice(dragCatIdx, 1)[0];
+  categories.splice(dragCatTargetIdx, 0, item);
+  saveData();
+  renderAdminCategoryList();
+  renderCategories();
+  showToast('排序已更新');
+  cleanupCatDrag();
 }
-function handleCatDragEnd(e) {
-  this.style.opacity = '1';
+function handleCatDragEnd() {
+  cleanupCatDrag();
+}
+function cleanupCatDrag() {
   dragCatIdx = null;
+  dragCatTargetIdx = null;
   document.querySelectorAll('.admin-category-item').forEach(el => {
     el.style.opacity = '';
-    el.style.borderTop = '';
+    el.style.background = '';
   });
 }
 
@@ -2379,15 +2408,17 @@ function editCategory(catId) {
   const div = list.children[index];
   if (!div) return;
   div.innerHTML = `
-    <div style="display:flex;flex-direction:column;gap:6px;padding:8px;background:var(--bg-secondary);border-radius:var(--radius-sm);">
-      <input type="text" id="editCat-id" value="${escapeHTML(cat.id)}" disabled placeholder="分类ID（不可修改）" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-muted);font-family:var(--font-serif);opacity:0.6;">
-      <input type="text" id="editCat-name" value="${escapeHTML(cat.name)}" placeholder="分类名称" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);">
-      <input type="text" id="editCat-desc" value="${escapeHTML(cat.desc)}" placeholder="分类描述" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);">
+    <div style="display:flex;flex-direction:column;gap:6px;padding:8px;background:var(--bg-secondary);border-radius:var(--radius-sm);width:100%;">
+      <input type="text" id="editCat-id" value="${escapeHTML(cat.id)}" disabled placeholder="分类ID（不可修改）" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-muted);font-family:var(--font-serif);opacity:0.6;width:100%;box-sizing:border-box;">
+      <input type="text" id="editCat-name" value="${escapeHTML(cat.name)}" placeholder="分类名称" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);width:100%;box-sizing:border-box;">
+      <input type="text" id="editCat-desc" value="${escapeHTML(cat.desc)}" placeholder="分类描述" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);width:100%;box-sizing:border-box;">
       <div style="display:flex;gap:6px;">
         <button class="admin-small-btn" onclick="saveCategoryEdit('${cat.id}')">保存</button>
-        <button class="admin-small-btn cancel" onclick="renderAdminCategoryList()">取消</button>
+        <button class="admin-small-btn cancel" onclick="renderAdminCategoryList();enableCategoryDrag()">取消</button>
       </div>
     </div>`;
+  // 禁用拖拽
+  document.querySelectorAll('.admin-category-item').forEach(el => el.draggable = false);
 }
 function saveCategoryEdit(catId) {
   const cat = categories.find(c => c.id === catId);
@@ -2401,6 +2432,10 @@ function saveCategoryEdit(catId) {
   renderCategories();
   updateCategorySelect();
   showToast('分类已更新');
+  enableCategoryDrag();
+}
+function enableCategoryDrag() {
+  document.querySelectorAll('.admin-category-item').forEach(el => el.draggable = true);
 }
 
 function deleteCategory(catId) {
@@ -2536,6 +2571,7 @@ function renderAdminLinksList() {
 }
 
 let dragLinkIdx = null;
+let dragLinkTargetIdx = null;
 function handleLinkDragStart(e) {
   dragLinkIdx = parseInt(this.dataset.index);
   this.style.opacity = '0.4';
@@ -2543,33 +2579,40 @@ function handleLinkDragStart(e) {
 }
 function handleLinkDragOver(e) {
   e.preventDefault();
-  const targetIdx = parseInt(this.dataset.index);
-  if (dragLinkIdx === null || dragLinkIdx === targetIdx) return;
-  
-  // 实时交换数据
-  const item = linksData.splice(dragLinkIdx, 1)[0];
-  linksData.splice(targetIdx, 0, item);
-  dragLinkIdx = targetIdx;
-  
-  // 重新渲染列表（实时更新位置）
-  renderAdminLinksList();
-  saveData();
-  renderLinks();
+  e.dataTransfer.dropEffect = 'move';
+  dragLinkTargetIdx = parseInt(this.dataset.index);
+  // 简单视觉反馈：给目标添加轻微背景色
+  document.querySelectorAll('.admin-link-item').forEach(el => {
+    el.style.background = '';
+  });
+  if (dragLinkIdx !== dragLinkTargetIdx) {
+    this.style.background = 'color-mix(in srgb, var(--accent-primary) 8%, transparent)';
+  }
 }
 function handleLinkDrop(e) {
   e.preventDefault();
-  dragLinkIdx = null;
-  document.querySelectorAll('.admin-link-item').forEach(el => {
-    el.style.opacity = '';
-    el.style.borderTop = '';
-  });
+  if (dragLinkIdx === null || dragLinkTargetIdx === null || dragLinkIdx === dragLinkTargetIdx) {
+    cleanupLinkDrag();
+    return;
+  }
+  // 只在 drop 时才交换
+  const item = linksData.splice(dragLinkIdx, 1)[0];
+  linksData.splice(dragLinkTargetIdx, 0, item);
+  saveData();
+  renderAdminLinksList();
+  renderLinks();
+  showToast('排序已更新');
+  cleanupLinkDrag();
 }
-function handleLinkDragEnd(e) {
-  this.style.opacity = '1';
+function handleLinkDragEnd() {
+  cleanupLinkDrag();
+}
+function cleanupLinkDrag() {
   dragLinkIdx = null;
+  dragLinkTargetIdx = null;
   document.querySelectorAll('.admin-link-item').forEach(el => {
     el.style.opacity = '';
-    el.style.borderTop = '';
+    el.style.background = '';
   });
 }
 

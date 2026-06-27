@@ -5,17 +5,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/jpeg" href="favicon.jpg">
-<meta name="description" content="黒の猫窝 - 个人同人小说收藏站，收录VOCALOID、偶像梦幻祭等优秀同人创作">
-<meta name="keywords" content="同人小说,VOCALOID,偶像梦幻祭,狮心,零凛,初音未来">
 <meta property="og:title" content="黒の猫窝 - 同人小说收藏站">
-<meta property="og:description" content="个人同人小说收藏站，收录VOCALOID、偶像梦幻祭等优秀同人创作">
-<meta property="og:type" content="website">
-<link rel="canonical" href="https://kuronya39.github.io/kuro-no-nekohouse/">
-<meta property="og:url" content="https://kuronya39.github.io/kuro-no-nekohouse/">
 <meta property="og:image" content="https://kuronya39.github.io/kuro-no-nekohouse/avatar.png">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="黒の猫窝 - 同人小说收藏站">
-<meta name="twitter:description" content="个人同人小说收藏站，收录VOCALOID、偶像梦幻祭等优秀同人创作">
+<link rel="canonical" href="https://kuronya39.github.io/kuro-no-nekohouse/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;700&family=LXGW+WenKai&display=swap" rel="stylesheet">
@@ -367,10 +359,10 @@
             <select id="fontFamilySelect" class="settings-select" onchange="setReaderFont(this.value)" style="flex:1;">
               <option value="'Noto Serif SC', serif">思源宋体</option>
               <option value="'Noto Sans SC', sans-serif">思源黑体</option>
-              <option value="'LXGW WenKai', serif">霞鹜文楷</option>
-              <option value="'Noto Serif SC', 'Source Han Serif SC', 'STSong', serif">宋体</option>
-              <option value="'Noto Sans SC', 'Source Han Sans SC', 'Microsoft YaHei', sans-serif">微软雅黑</option>
-              <option value="'KaiTi', 'STKaiti', 'AR PL UKai CN', serif">楷体</option>
+              <option value="'LXGW WenKai', cursive">霞鹜文楷</option>
+              <option value="'Source Han Serif SC', 'Noto Serif SC', 'STSongti-SC', serif">宋体</option>
+              <option value="'Source Han Sans SC', 'Noto Sans SC', 'PingFang SC', sans-serif">苹方</option>
+              <option value="'KaiTi', 'STKaiti', cursive">楷体</option>
               <option value="'FangSong', 'STFangsong', serif">仿宋</option>
             </select>
           </div>
@@ -398,7 +390,7 @@
         <button class="reader-nav-btn" onclick="backToCategory()">返回列表</button>
         <button class="reader-nav-btn" id="nextNovel">下一章 →</button>
       </div>
-      <div id="readerEditPanel" style="display:none;padding:16px;background:var(--bg-card);border:1px solid var(--border-light);border-radius:var(--radius-sm);margin-bottom:16px;">
+      <div id="readerEditPanel" style="display:none;padding:16px;background:var(--bg-card);border:1px solid var(--border-light);border-radius:var(--radius-sm);margin-top:16px;margin-bottom:16px;">
         <h4 style="margin-bottom:12px;font-family:var(--font-display);">编辑排版</h4>
         <input type="text" id="readerEditTitle" placeholder="章节标题" style="width:100%;padding:8px;border:1px solid var(--border-light);background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-serif);margin-bottom:8px;border-radius:var(--radius-sm);">
         <div style="display:flex;gap:6px;margin-bottom:8px;align-items:center;">
