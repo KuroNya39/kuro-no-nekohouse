@@ -363,6 +363,18 @@
             <select id="chapterSelect" class="settings-select" onchange="scrollBehavior='keep';showNovel(currentNovelIndex, parseInt(this.value))"></select>
           </div>
           <div class="settings-row">
+            <span class="settings-label">字体</span>
+            <select id="fontFamilySelect" class="settings-select" onchange="setReaderFont(this.value)" style="flex:1;">
+              <option value="'Noto Serif SC', serif">思源宋体</option>
+              <option value="'Noto Sans SC', sans-serif">思源黑体</option>
+              <option value="'LXGW WenKai', serif">霞鹜文楷</option>
+              <option value="'Noto Serif SC', 'Source Han Serif SC', 'STSong', serif">宋体</option>
+              <option value="'Noto Sans SC', 'Source Han Sans SC', 'Microsoft YaHei', sans-serif">微软雅黑</option>
+              <option value="'KaiTi', 'STKaiti', 'AR PL UKai CN', serif">楷体</option>
+              <option value="'FangSong', 'STFangsong', serif">仿宋</option>
+            </select>
+          </div>
+          <div class="settings-row">
             <span class="settings-label">字号</span>
             <input type="range" class="settings-slider" id="fontSizeSlider" min="13" max="22" value="16" aria-label="调整字号">
             <span class="settings-value" id="fontSizeValue">16px</span>
@@ -371,16 +383,6 @@
             <span class="settings-label">行距</span>
             <input type="range" class="settings-slider" id="lineHeightSlider" min="1.5" max="2.5" step="0.1" value="1.9" aria-label="调整行距">
             <span class="settings-value" id="lineHeightValue">1.9</span>
-          </div>
-          <div class="settings-row">
-            <span class="settings-label">字体</span>
-            <select id="fontFamilySelect" class="settings-select" onchange="setReaderFont(this.value)" style="flex:1;">
-              <option value="'Noto Serif SC', serif">思源宋体（衬线）</option>
-              <option value="'Noto Sans SC', sans-serif">思源黑体（无衬线）</option>
-              <option value="'LXGW WenKai', serif">霞鹜文楷</option>
-              <option value="serif">系统衬线</option>
-              <option value="sans-serif">系统无衬线</option>
-            </select>
           </div>
           <div class="settings-btns">
             <button class="settings-btn" onclick="setReaderStyle('default')">默认</button>
