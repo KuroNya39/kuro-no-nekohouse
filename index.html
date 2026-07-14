@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/jpeg" href="favicon.jpg">
-<meta property="og:title" content="黒の猫窝 - 同人小说收藏站">
+<meta property="og:title" content="黒の猫窝 - 同人文章收藏站">
 <meta property="og:image" content="https://kuronya39.github.io/kuro-no-nekohouse/avatar.png">
 <link rel="canonical" href="https://kuronya39.github.io/kuro-no-nekohouse/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -73,8 +73,8 @@
     <div class="admin-tabs" style="flex-wrap:wrap;">
       <button class="admin-tab active" onclick="switchAdminTab(this, 'site')">站点设置</button>
       <button class="admin-tab" onclick="switchAdminTab(this, 'categories')">分类管理</button>
-      <button class="admin-tab" onclick="switchAdminTab(this, 'add')">添加小说</button>
-      <button class="admin-tab" onclick="switchAdminTab(this, 'edit')">编辑小说</button>
+      <button class="admin-tab" onclick="switchAdminTab(this, 'add')">添加文章</button>
+      <button class="admin-tab" onclick="switchAdminTab(this, 'edit')">编辑文章</button>
       <button class="admin-tab" onclick="switchAdminTab(this, 'about')">关于页</button>
       <button class="admin-tab" onclick="switchAdminTab(this, 'timeline')">时间轴</button>
       <button class="admin-tab" onclick="switchAdminTab(this, 'links')">友链</button>
@@ -155,18 +155,18 @@
       </div>
     </div>
 
-    <!-- Tab: 添加小说 -->
+    <!-- Tab: 添加文章 -->
     <div class="admin-tab-content" id="adminTabAdd">
       <div class="admin-form-row">
-        <label>小说标题 <span style="color:var(--accent-rose);font-size:0.7rem;">*必填</span></label>
-        <input type="text" id="adminTitle" placeholder="输入小说的标题">
+        <label>文章标题 <span style="color:var(--accent-rose);font-size:0.7rem;">*必填</span></label>
+        <input type="text" id="adminTitle" placeholder="输入文章的标题">
       </div>
       <div class="admin-form-row">
         <label>作者名字 <span style="color:var(--accent-rose);font-size:0.7rem;">*必填</span></label>
         <input type="text" id="adminAuthor" placeholder="输入作者的名字">
       </div>
       <div class="admin-form-row">
-        <label>所属分类 <span style="color:var(--text-muted);font-size:0.7rem;">选择小说属于哪个圈子</span></label>
+        <label>所属分类 <span style="color:var(--text-muted);font-size:0.7rem;">选择文章属于哪个圈子</span></label>
         <select id="adminCategory"></select>
       </div>
       <div class="admin-form-row">
@@ -183,7 +183,7 @@
       </div>
       <!-- 章节管理区域 -->
       <div class="admin-form-row">
-        <label>章节管理 <span style="color:var(--text-muted);font-size:0.7rem;">管理小说的章节内容</span></label>
+        <label>章节管理 <span style="color:var(--text-muted);font-size:0.7rem;">管理文章的章节内容</span></label>
         <div class="chapter-manager" id="addChapterManager">
           <div class="chapter-manager-title">
             <span>章节列表</span>
@@ -192,11 +192,11 @@
           <div id="addChapterList"></div>
         </div>
       </div>
-      <button class="admin-btn" onclick="addNovel()">添加小说</button>
+      <button class="admin-btn" onclick="addNovel()">添加文章</button>
       <button class="admin-btn secondary" onclick="clearAdminForm()">清空</button>
     </div>
 
-    <!-- Tab: 编辑小说 -->
+    <!-- Tab: 编辑文章 -->
     <div class="admin-tab-content" id="adminTabEdit">
       <div id="adminEditNovelList"></div>
     </div>
@@ -209,7 +209,7 @@
       </div>
       <div class="admin-about-section">
         <label>个人简介</label>
-        <input type="text" id="aboutBio" placeholder="例如：@kuro_nekoko · 同人小说收藏">
+        <input type="text" id="aboutBio" placeholder="例如：@kuro_nekoko · 同人文章收藏">
       </div>
       <div class="admin-section-group">
         <div class="admin-section-title">VOCALOID</div>
@@ -270,7 +270,7 @@
 <div class="app-container">
   <header class="site-header">
     <h1 class="site-title" id="siteTitleEl">✦黒の猫窝✦</h1>
-    <p class="site-subtitle" id="siteSubtitleEl">同人小说收藏站</p>
+    <p class="site-subtitle" id="siteSubtitleEl">同人文章收藏站</p>
     <div class="site-divider"></div>
   </header>
 
@@ -286,7 +286,7 @@
   <!-- ===== HOME PAGE ===== -->
   <section class="page active" id="page-home" aria-label="首页">
     <div class="search-container">
-      <input type="text" class="search-input" id="searchInput" placeholder="搜索小说标题、作者或内容..." aria-label="搜索小说">
+      <input type="text" class="search-input" id="searchInput" placeholder="搜索文章标题、作者或内容..." aria-label="搜索文章">
       <span class="search-icon" aria-hidden="true"></span>
       <div class="search-results" id="searchResults"></div>
     </div>
@@ -320,7 +320,7 @@
         <div class="author-filter" id="authorFilter"></div>
         <div class="sort-bar">
           <span class="sort-label">排序：</span>
-          <button class="sort-btn active" data-sort="default">默认</button>
+          <button class="sort-btn active" data-sort="default">按首字母</button>
           <button class="sort-btn" data-sort="date">按时间</button>
           <button class="sort-btn" data-sort="words">按字数</button>
           <button class="sort-btn sort-order-btn" id="sortOrderBtn" title="切换升序/降序">↓ 降序</button>

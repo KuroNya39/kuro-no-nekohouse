@@ -1,33 +1,4 @@
-/* ===== LOCAL FONTS ===== */
-@font-face {
-  font-family: 'MiSans';
-  src: url('字体/MiSans/woff2/MiSans-Regular.woff2') format('woff2'),
-       url('字体/MiSans/otf/MiSans-Regular.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'SourceHanSansCN';
-  src: url('字体/思源黑体/SourceHanSansCN-Regular#1.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'ZhuqueFangsong';
-  src: url('字体/朱雀仿宋/ZhuqueFangsong-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'LXGWWenKai';
-  src: url('字体/霞鹜文楷/LXGWWenKai-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
+/* ===== LOCAL FONTS (按需加载，见 app.js loadFontFace) ===== */
 
 /* ===== GOTHIC SCROLLBAR ===== */
 ::-webkit-scrollbar { width: 6px; }

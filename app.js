@@ -37,31 +37,31 @@ let categories = safeJSONParse('categories', [
     id: 'miku', name: '初音未来', desc: 'VOCALOID 相关创作',
     image: 'miku.jpg',
     novels: [
-      { id: 'miku-1', title: '星之声', author: '星夜', date: '2026-06-10', wordCount: 2800, tags: ['甜文', '短篇'], content: `这是初音未来分类下的示例小说内容。\n\n在这个示例中，你可以看到小说的排版效果。正文使用首字下沉的设计，段落之间有舒适的间距。\n\n当你提供真实的小说内容后，只需替换这里的文本即可。每一段会自动首行缩进，营造传统书籍的阅读体验。` },
-      { id: 'miku-2', title: '虚拟歌姬的梦境', author: '月见', date: '2026-06-08', wordCount: 1500, tags: ['幻想', '中篇'], content: `这是另一篇示例小说。\n\n你可以为每个分类添加任意数量的小说。每篇小说都有独立的阅读页面，支持上一篇/下一篇导航。` }
+      { id: 'miku-1', title: '星之声', author: '星夜', date: '2026-06-10', wordCount: 2800, tags: ['甜文', '短篇'], content: `这是初音未来分类下的示例文章内容。\n\n在这个示例中，你可以看到文章的排版效果。正文使用首字下沉的设计，段落之间有舒适的间距。\n\n当你提供真实的文章内容后，只需替换这里的文本即可。每一段会自动首行缩进，营造传统书籍的阅读体验。` },
+      { id: 'miku-2', title: '虚拟歌姬的梦境', author: '月见', date: '2026-06-08', wordCount: 1500, tags: ['幻想', '中篇'], content: `这是另一篇示例文章。\n\n你可以为每个分类添加任意数量的文章。每篇文章都有独立的阅读页面，支持上一篇/下一篇导航。` }
     ]
   },
   {
     id: 'izuleo', name: '狮心', desc: '濑名泉 × 月永雷欧',
     image: 'izumileo.jpg',
     novels: [
-      { id: 'leo-1', title: '骑士与王子', author: '蔷薇', date: '2026-06-05', wordCount: 3200, tags: ['甜文', '长篇'], content: `这是狮心分类下的示例小说。\n\n濑名泉与月永雷欧的故事将在这里展开。你可以将真实的小说内容替换这段占位文本。` }
+      { id: 'leo-1', title: '骑士与王子', author: '蔷薇', date: '2026-06-05', wordCount: 3200, tags: ['甜文', '长篇'], content: `这是狮心分类下的示例文章。\n\n濑名泉与月永雷欧的故事将在这里展开。你可以将真实的文章内容替换这段占位文本。` }
     ]
   },
   {
     id: 'reiritsu', name: '零凛', desc: '朔间零 × 朔间凛月',
     image: 'reiritsu.jpg',
     novels: [
-      { id: 'rei-1', title: '月夜下的兄弟', author: '黑羽', date: '2026-06-01', wordCount: 4100, tags: ['虐文', '中篇'], content: `这是零凛分类下的示例小说。\n\n朔间兄弟的故事在这里等待被阅读。提供你的小说文本后，这里将展示真实的内容。` }
+      { id: 'rei-1', title: '月夜下的兄弟', author: '黑羽', date: '2026-06-01', wordCount: 4100, tags: ['虐文', '中篇'], content: `这是零凛分类下的示例文章。\n\n朔间兄弟的故事在这里等待被阅读。提供你的文章文本后，这里将展示真实的内容。` }
     ]
   }
 ]);
 
 let timelineData = safeJSONParse('timelineData', [
-  { date: '2026-06-10', title: '网站上线', desc: '黒の猫窝正式对外开放，收录第一批小说。' },
+  { date: '2026-06-10', title: '网站上线', desc: '黒の猫窝正式对外开放，收录第一批文章。' },
   { date: '2026-06-08', title: '新增初音未来分类', desc: '收录了两篇 VOCALOID 相关创作。' },
   { date: '2026-06-05', title: '新增狮心分类', desc: '开始收录濑名泉×月永雷欧相关作品。' },
-  { date: '2026-06-01', title: '建站构想', desc: '决定建立一个个人同人小说收藏站。' }
+  { date: '2026-06-01', title: '建站构想', desc: '决定建立一个个人同人文章收藏站。' }
 ]);
 
 let linksData = safeJSONParse('linksData', [
@@ -450,7 +450,7 @@ function importData(event) {
         alert('文件格式不正确，缺少 categories 数据');
         return;
       }
-      if (!confirm('导入将覆盖当前所有数据（小说、关于页等），确定继续吗？')) return;
+      if (!confirm('导入将覆盖当前所有数据（文章、关于页等），确定继续吗？')) return;
       categories = data.categories;
       if (data.aboutData) { aboutData = data.aboutData; safeJSONStringify('aboutData', aboutData); }
       if (data.siteConfig) { siteConfig = data.siteConfig; safeJSONStringify('siteConfig', siteConfig); }
@@ -949,20 +949,20 @@ function addNovel() {
   renderAdminEditNovelList();
   renderStats();
   renderCategories();
-  announceToScreenReader('小说添加成功');
-  showToast('小说添加成功');
+  announceToScreenReader('文章添加成功');
+  showToast('文章添加成功');
 }
 
 function deleteNovel(catId, novelId) {
-  if (!confirm('确定删除这篇小说吗？')) return;
+  if (!confirm('确定删除这篇文章吗？')) return;
   const cat = categories.find(c => c.id === catId);
   cat.novels = cat.novels.filter(n => n.id !== novelId);
   saveData();
   renderAdminEditNovelList();
   renderStats();
   renderCategories();
-  announceToScreenReader('小说已删除');
-  showToast('小说已删除');
+  announceToScreenReader('文章已删除');
+  showToast('文章已删除');
 }
 
 function clearAdminForm() {
@@ -1233,42 +1233,68 @@ function observeScrollReveal() {
   document.querySelectorAll('.scroll-reveal').forEach(el => scrollRevealObserver.observe(el));
 }
 
-function showPage(name, pushState) {
+function showPage(name, pushState, animate) {
   if (pushState === undefined) pushState = true;
+  if (animate === undefined) animate = true;
   
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const oldPage = document.querySelector('.page.active');
   const targetPage = document.getElementById('page-' + name);
-  if (targetPage) targetPage.classList.add('active');
-  document.getElementById('searchResults').classList.remove('active');
-  document.getElementById('searchInput').value = '';
-  // Use instant scroll when called from popstate (pushState=false), smooth otherwise
-  window.scrollTo({ top: 0, behavior: pushState ? 'smooth' : 'auto' });
 
-  // Load Giscus when guestbook page is shown
-  if (name === 'guestbook') {
-    loadGiscus();
-  }
+  const doSwitch = () => {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    if (targetPage) targetPage.classList.add('active');
+    document.getElementById('searchResults').classList.remove('active');
+    document.getElementById('searchInput').value = '';
+    // Use instant scroll when called from popstate (pushState=false), smooth otherwise
+    window.scrollTo({ top: 0, behavior: pushState ? 'smooth' : 'auto' });
 
-  // Update page title
-  document.title = (PAGE_TITLES[name] || '首页') + ' - ' + (siteConfig.siteName || '黒の猫窝');
-
-  // Focus management
-  if (targetPage) {
-    targetPage.setAttribute('tabindex', '-1');
-    targetPage.focus({ preventScroll: true });
-  }
-
-  // Update URL hash
-  if (pushState) {
-    if (name !== 'home') {
-      window.history.pushState({ page: name }, '', '#/' + name);
-    } else {
-      window.history.pushState({ page: 'home' }, '', window.location.pathname);
+    // Load Giscus when guestbook page is shown
+    if (name === 'guestbook') {
+      loadGiscus();
     }
-  }
 
-  // Scroll reveal
-  observeScrollReveal();
+    // Update page title
+    document.title = (PAGE_TITLES[name] || '首页') + ' - ' + (siteConfig.siteName || '黒の猫窝');
+
+    // Focus management
+    if (targetPage) {
+      targetPage.setAttribute('tabindex', '-1');
+      targetPage.focus({ preventScroll: true });
+    }
+
+    // Update URL hash
+    if (pushState) {
+      if (name !== 'home') {
+        window.history.pushState({ page: name }, '', '#/' + name);
+      } else {
+        window.history.pushState({ page: 'home' }, '', window.location.pathname);
+      }
+    }
+
+    // Scroll reveal
+    observeScrollReveal();
+  };
+
+  if (animate && oldPage && targetPage && oldPage !== targetPage) {
+    oldPage.style.transition = 'opacity 0.2s ease';
+    oldPage.style.opacity = '0';
+    setTimeout(() => {
+      doSwitch();
+      targetPage.style.opacity = '0';
+      targetPage.style.transition = 'opacity 0.2s ease';
+      // Force reflow so the browser picks up opacity:0 before animating
+      void targetPage.offsetWidth;
+      targetPage.style.opacity = '1';
+      setTimeout(() => {
+        oldPage.style.transition = '';
+        oldPage.style.opacity = '';
+        targetPage.style.transition = '';
+        targetPage.style.opacity = '';
+      }, 200);
+    }, 200);
+  } else {
+    doSwitch();
+  }
 }
 
 // ===== HASH ROUTER =====
@@ -1407,7 +1433,7 @@ function renderFilteredNovelList(novels) {
   const list = document.getElementById('novelList');
   list.innerHTML = '';
   if (novels.length === 0) {
-    list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);">暂无符合条件的小说</div>';
+    list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);">暂无符合条件的文章</div>';
     return;
   }
   novels.forEach((novel, i) => {
@@ -1710,13 +1736,7 @@ function insertEditAlign(direction) {
 
 function backToCategory() {
   if (currentCategory) {
-    // Use history.back() to go to category page (popstate will handle it)
-    // If there's no history entry, navigate directly
-    if (window.history.state && window.history.state.page === 'reader') {
-      window.history.back();
-    } else {
-      showCategory(currentCategory.id, false);
-    }
+    showCategory(currentCategory.id, false);
   } else {
     showPage('home', false);
   }
@@ -1792,17 +1812,48 @@ function setReaderStyle(style) {
   localStorage.setItem('readerLineHeight', p.line);
 }
 
-function setReaderFont(font) {
-  const readerContent = document.getElementById('readerContent');
-  if (readerContent) {
-    if (font) {
-      readerContent.style.fontFamily = font;
-    } else {
-      readerContent.style.fontFamily = ''; // 清除自定义字体，回退到CSS默认
-    }
+const loadedFonts = {};
+
+async function loadFontFace(name, url) {
+  if (loadedFonts[name]) return;
+  try {
+    const font = new FontFace(name, `url(${url})`, {
+      style: 'normal', weight: '400', display: 'swap'
+    });
+    await font.load();
+    document.fonts.add(font);
+    loadedFonts[name] = true;
+  } catch (err) {
+    console.warn('Font load failed:', name, err);
   }
+}
+
+async function setReaderFont(font) {
+  const readerContent = document.getElementById('readerContent');
+  if (!readerContent) return;
+
+  if (!font) {
+    readerContent.style.fontFamily = '';
+    localStorage.setItem('readerFont', '');
+    return;
+  }
+
+  // 按需加载字体文件
+  const fontMap = {
+    "'LXGWWenKai', cursive": { name: 'LXGWWenKai', url: '字体/霞鹜文楷/LXGWWenKai-Regular.ttf' },
+    "'MiSans', sans-serif": { name: 'MiSans', url: '字体/MiSans/woff2/MiSans-Regular.woff2' },
+    "'SourceHanSansCN', sans-serif": { name: 'SourceHanSansCN', url: '字体/思源黑体/SourceHanSansCN-Regular%231.otf' },
+    "'ZhuqueFangsong', serif": { name: 'ZhuqueFangsong', url: '字体/朱雀仿宋/ZhuqueFangsong-Regular.ttf' }
+  };
+
+  const fontInfo = fontMap[font];
+  if (fontInfo) {
+    showToast('字体加载中...');
+    await loadFontFace(fontInfo.name, fontInfo.url);
+  }
+
+  readerContent.style.fontFamily = font;
   localStorage.setItem('readerFont', font);
-  if (font) showToast('字体切换中，首次加载可能较慢');
 }
 
 // ===== AUTO-HIDE ON SCROLL (MOBILE ONLY) =====
@@ -1890,7 +1941,7 @@ function renderLinks() {
 // ===== ABOUT DATA =====
 const defaultAboutData = {
   circleName: '黒 / 黑喵子',
-  bio: '@kuro_nekoko · 同人小说收藏',
+  bio: '@kuro_nekoko · 同人文章收藏',
   vocaloid: [
     { label: '声库', value: 'miku > > > 音街ウナ > Rana' },
     { label: 'P主', value: 'Mitchie M / Giga' },
@@ -1917,10 +1968,10 @@ let aboutData = safeJSONParse('aboutData', JSON.parse(JSON.stringify(defaultAbou
 
 const defaultSiteConfig = {
   siteName: '黒の猫窝',
-  siteSubtitle: '同人小说收藏站',
+  siteSubtitle: '同人文章收藏站',
   heroTitle: '欢迎来到黒の猫窝',
-  heroDesc: '这里是我收藏的同人小说集，主要收录 VOCALOID、偶像梦幻祭等作品的优秀创作。每一篇都是精心挑选，希望能给你带来美好的阅读体验。',
-  heroTags: ['VOCALOID', '偶像梦幻祭', 'ES', '同人小说', '狮心', '零凛'],
+  heroDesc: '这里是我收藏的同人文章集，主要收录 VOCALOID、偶像梦幻祭等作品的优秀创作。每一篇都是精心挑选，希望能给你带来美好的阅读体验。',
+  heroTags: ['VOCALOID', '偶像梦幻祭', 'ES', '同人文章', '狮心', '零凛'],
   footerText: '黒の猫窝 · 收藏每一个故事',
   guestbookIntro: '欢迎留下你的想法和建议！评论通过 GitHub Discussions 存储，所有人都能看到。',
   guestbookHint: '首次留言需要登录 GitHub 账号授权。',
@@ -2020,7 +2071,7 @@ function renderAdminEditNovelList() {
   const searchInput = document.createElement('input');
   searchInput.type = 'text';
   searchInput.id = 'adminNovelSearch';
-  searchInput.placeholder = '搜索小说标题或作者...';
+  searchInput.placeholder = '搜索文章标题或作者...';
   searchInput.style.cssText = 'width:100%;padding:8px 12px;border:1px solid var(--border-light);background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-serif);font-size:0.85rem;margin-bottom:12px;border-radius:var(--radius-sm);';
   searchInput.value = oldSearch;
   searchInput.setAttribute('oninput', 'filterAdminNovels()');
@@ -2053,7 +2104,7 @@ function renderAdminEditNovelList() {
   if (!hasResults) {
     const noResult = document.createElement('p');
     noResult.style.cssText = 'color:var(--text-muted);font-size:0.85rem;';
-    noResult.textContent = '暂无小说';
+    noResult.textContent = '暂无文章';
     list.appendChild(noResult);
   }
 
@@ -2085,8 +2136,8 @@ function filterAdminNovels() {
   const noResultEl = list.querySelector('p:last-child');
   if (noResultEl && !noResultEl.classList.contains('admin-novel-item')) {
     noResultEl.style.display = (items.length > 0 && !hasVisible && query) ? '' : 'none';
-    if (query && !hasVisible) noResultEl.textContent = '没有匹配的小说';
-    else if (!query && items.length === 0) noResultEl.textContent = '暂无小说';
+    if (query && !hasVisible) noResultEl.textContent = '没有匹配的文章';
+    else if (!query && items.length === 0) noResultEl.textContent = '暂无文章';
     else noResultEl.style.display = 'none';
   }
 }
@@ -2187,8 +2238,8 @@ function saveEditNovel(catId, novelId) {
   renderAdminEditNovelList();
   renderStats();
   renderCategories();
-  announceToScreenReader('小说保存成功');
-  showToast('小说保存成功');
+  announceToScreenReader('文章保存成功');
+  showToast('文章保存成功');
 }
 
 // ===== ADMIN EDIT ABOUT =====
