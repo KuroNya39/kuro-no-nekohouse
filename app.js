@@ -96,7 +96,7 @@ function showToast(message, type) {
   const toast = document.createElement('div');
   toast.className = 'toast-notification toast-' + type;
   toast.textContent = message;
-  toast.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);padding:12px 24px;z-index:99999;font-size:0.85rem;font-family:var(--font-serif);border-radius:0px;animation:staggerFadeIn 0.3s ease both;pointer-events:none;';
+  toast.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);padding:12px 24px;z-index:10000;font-size:0.85rem;font-family:var(--font-serif);border-radius:0px;animation:staggerFadeIn 0.3s ease both;pointer-events:none;white-space:nowrap;';
   if (type === 'success') {
     toast.style.cssText += 'background:var(--accent-primary);color:white;border:1px solid var(--accent-primary);';
   } else if (type === 'error') {
@@ -1479,6 +1479,7 @@ function renderFilteredNovelList(novels) {
 function renderNovelList() {
   let novels = [...currentCategory.novels];
   if (currentAuthorFilter) novels = novels.filter(n => n.author === currentAuthorFilter);
+  if (currentSort === 'default') novels.sort((a, b) => sortAscending ? b.title.localeCompare(a.title, 'zh-CN') : a.title.localeCompare(b.title, 'zh-CN'));
   if (currentSort === 'date') novels.sort((a, b) => sortAscending ? new Date(a.date) - new Date(b.date) : new Date(b.date) - new Date(a.date));
   if (currentSort === 'words') novels.sort((a, b) => sortAscending ? a.wordCount - b.wordCount : b.wordCount - a.wordCount);
   renderFilteredNovelList(novels);
