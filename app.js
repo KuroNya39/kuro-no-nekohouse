@@ -96,7 +96,7 @@ function showToast(message, type) {
   const toast = document.createElement('div');
   toast.className = 'toast-notification toast-' + type;
   toast.textContent = message;
-  toast.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);padding:12px 24px;z-index:10000;font-size:0.85rem;font-family:var(--font-serif);border-radius:0px;animation:staggerFadeIn 0.3s ease both;pointer-events:none;white-space:nowrap;';
+  toast.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);padding:12px 24px;z-index:10000;font-size:0.85rem;font-family:var(--font-serif);border-radius:0px;opacity:0;animation:toastFadeIn 0.3s ease forwards;pointer-events:none;white-space:nowrap;';
   if (type === 'success') {
     toast.style.cssText += 'background:var(--accent-primary);color:white;border:1px solid var(--accent-primary);';
   } else if (type === 'error') {
@@ -1406,6 +1406,13 @@ function showCategory(catId, shouldPushState) {
   authorWidget.appendChild(authorList);
   sidebar.appendChild(authorWidget);
 
+  // Sync sort button states with current sort settings
+  document.querySelectorAll('.sort-btn[data-sort]').forEach(b => {
+    b.classList.toggle('active', b.dataset.sort === currentSort);
+  });
+  const orderBtn = document.getElementById('sortOrderBtn');
+  if (orderBtn) orderBtn.textContent = sortAscending ? '↑ 升序' : '↓ 降序';
+
   renderNovelList();
   showPage('category', false);
   if (shouldPushState) {
@@ -1444,8 +1451,8 @@ function renderFilteredNovelList(novels) {
     div.onclick = () => showNovel(currentCategory.novels.findIndex(n => n.id === novel.id));
     div.onkeydown = (e) => { if (e.key === 'Enter') showNovel(currentCategory.novels.findIndex(n => n.id === novel.id)); };
 
-    // Calculate reading time
-    const readTime = Math.max(1, Math.round(novel.wordCount / 300));
+    // Calculate reading time (Chinese reading speed ~400 chars/min)
+    const readTime = Math.max(1, Math.round(novel.wordCount / 400));
 
     div.innerHTML = `
       <div class="novel-number">${String(i + 1).padStart(2, '0')}</div>
@@ -1516,8 +1523,8 @@ function showNovel(index, chapterIdx, shouldPushState) {
   document.getElementById('readerCategory').onclick = () => showCategory(currentCategory.id);
   document.getElementById('readerTitle').textContent = novel.title;
 
-  // Calculate reading time
-  const readTime = Math.max(1, Math.round(novel.wordCount / 300));
+  // Calculate reading time (Chinese reading speed ~400 chars/min)
+  const readTime = Math.max(1, Math.round(novel.wordCount / 400));
   document.getElementById('readerMeta').textContent = `${novel.date} · ${novel.wordCount} 字 · 约 ${readTime} 分钟 · ${Math.max(1, (novel.chapters || []).length)} 章 · ${novel.tags.join(' / ')}`;
   document.getElementById('readerAuthor').textContent = `作者：${novel.author}`;
 
