@@ -442,7 +442,28 @@ body::before {
 }
 
 [data-theme="dark"] body::before {
-  opacity: 0.04;
+  opacity: 0.06;
+}
+
+/* Miku light: teal on near-white needs stronger opacity */
+[data-color-scheme="miku"]:not([data-theme="dark"]) body::before {
+  opacity: 0.12;
+}
+/* Rose light: pink on near-white */
+[data-color-scheme="rose"]:not([data-theme="dark"]) body::before {
+  opacity: 0.12;
+}
+/* Coral light: orange on near-white */
+[data-color-scheme="coral"]:not([data-theme="dark"]) body::before {
+  opacity: 0.12;
+}
+/* Night light: blue on near-white */
+[data-color-scheme="night"]:not([data-theme="dark"]) body::before {
+  opacity: 0.12;
+}
+/* Mono light: black on near-white */
+[data-color-scheme="mono"]:not([data-theme="dark"]) body::before {
+  opacity: 0.10;
 }
 
 /* Dual-color dot pattern for coral & night */
@@ -572,7 +593,7 @@ body::before {
   background: var(--bg-card);
   border: 1px solid var(--border-light);
   z-index: 1001;
-  min-width: auto;
+  min-width: 110px;
   padding: 4px;
   box-shadow: var(--shadow-hover);
   border-radius: var(--radius-sm);
