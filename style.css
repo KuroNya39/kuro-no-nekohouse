@@ -445,9 +445,12 @@ body::before {
   opacity: 0.10;
 }
 
-/* Night dark: deep blue bg needs stronger dot opacity */
+/* Night dark: override dot colors to brighter versions for visibility */
 [data-color-scheme="night"][data-theme="dark"] body::before {
-  opacity: 0.16;
+  opacity: 0.12;
+  background-image:
+    radial-gradient(circle, #6a8ac8 1.5px, transparent 1.5px),
+    radial-gradient(circle, #8a5ab8 1.5px, transparent 1.5px);
 }
 
 /* Miku light & Coral light: need stronger dot opacity */
