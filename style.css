@@ -445,6 +445,11 @@ body::before {
   opacity: 0.10;
 }
 
+/* Night dark: deep blue bg needs stronger dot opacity */
+[data-color-scheme="night"][data-theme="dark"] body::before {
+  opacity: 0.16;
+}
+
 /* Miku light & Coral light: need stronger dot opacity */
 [data-color-scheme="miku"]:not([data-theme="dark"]) body::before,
 [data-color-scheme="coral"]:not([data-theme="dark"]) body::before {
