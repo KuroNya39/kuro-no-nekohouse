@@ -1618,6 +1618,15 @@ function showNovel(index, chapterIdx, shouldPushState) {
   const savedFont = localStorage.getItem('readerFont');
   if (savedFont && contentDiv) {
     contentDiv.style.fontFamily = savedFont;
+    // Restore font file loading on page revisit
+    const restoreFontMap = {
+      "'LXGWWenKai', cursive": { name: 'LXGWWenKai', url: '字体/霞鹜文楷/LXGWWenKai-Regular.ttf' },
+      "'MiSans', sans-serif": { name: 'MiSans', url: '字体/MiSans/woff2/MiSans-Regular.woff2' },
+      "'SourceHanSansCN', sans-serif": { name: 'SourceHanSansCN', url: '字体/思源黑体/SourceHanSansCN-Regular%231.otf' },
+      "'ZhuqueFangsong', serif": { name: 'ZhuqueFangsong', url: '字体/朱雀仿宋/ZhuqueFangsong-Regular.ttf' }
+    };
+    const fi = restoreFontMap[savedFont];
+    if (fi) loadFontFace(fi.name, fi.url);
   } else if (contentDiv) {
     contentDiv.style.fontFamily = '';
   }
