@@ -1051,7 +1051,7 @@ function loadGiscus() {
   scriptEl.setAttribute('data-input-position', 'top');
   scriptEl.setAttribute('data-theme', theme);
   scriptEl.setAttribute('data-lang', 'zh-CN');
-  scriptEl.setAttribute('data-loading', 'lazy');
+  scriptEl.setAttribute('data-loading', 'eager');
   scriptEl.crossOrigin = 'anonymous';
   container.appendChild(scriptEl);
   giscusLoaded = true;
