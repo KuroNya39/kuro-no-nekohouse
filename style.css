@@ -1547,13 +1547,6 @@ body::before {
   padding: var(--space-lg);
   background: var(--bg-card);
 }
-#giscusWrapper.giscus-hidden {
-  visibility: hidden;
-  height: 0;
-  padding: 0;
-  overflow: hidden;
-  border: none;
-}
 [data-theme="dark"] .giscus-wrapper {
   background: var(--bg-primary);
 }
