@@ -155,13 +155,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   initHashRouter();
   initTypewriterEffect();
   initSwipeNavigation();
-  // 初始化 Giscus — 必须在首次加载时就加载
-  loadGiscus();
-  // 根据当前页面设置 Giscus 显隐
-  const hash = window.location.hash;
-  const isGuestbook = hash.includes('guestbook') || sessionStorage.getItem('kuro_page') === 'guestbook';
-  const giscusEl = document.getElementById('giscusWrapper');
-  if (giscusEl) giscusEl.classList.toggle('visible', isGuestbook);
   updateSyncUI();
   hideLoading();
   } catch(err) {
@@ -1013,8 +1006,6 @@ function renderGuestbookIntro() {
 }
 
 // ===== GUESTBOOK (Giscus) =====
-let giscusLoaded = false;
-
 function getGiscusTheme() {
   const theme = document.documentElement.getAttribute('data-theme');
   if (theme === 'dark') return 'dark';
@@ -1027,18 +1018,7 @@ function loadGiscus() {
   const container = document.getElementById('giscusWrapper');
   if (!container) return;
 
-  // 只加载一次，不销毁重建
-  if (giscusLoaded) {
-    updateGiscusTheme();
-    return;
-  }
-
-  // 如果容器里已经有内容（被 Giscus 填充过），也跳过
-  if (container.children.length > 0) {
-    giscusLoaded = true;
-    updateGiscusTheme();
-    return;
-  }
+  container.innerHTML = '';
 
   const theme = getGiscusTheme();
 
@@ -1049,17 +1029,16 @@ function loadGiscus() {
   scriptEl.setAttribute('data-repo-id', 'R_kgDOS6pURQ');
   scriptEl.setAttribute('data-category', 'General');
   scriptEl.setAttribute('data-category-id', 'DIC_kwDOS6pURc4C_Jv6');
-  scriptEl.setAttribute('data-mapping', 'pathname');
+  scriptEl.setAttribute('data-mapping', 'url');
   scriptEl.setAttribute('data-strict', '0');
   scriptEl.setAttribute('data-reactions-enabled', '1');
   scriptEl.setAttribute('data-emit-metadata', '0');
   scriptEl.setAttribute('data-input-position', 'top');
   scriptEl.setAttribute('data-theme', theme);
   scriptEl.setAttribute('data-lang', 'zh-CN');
-  scriptEl.setAttribute('data-loading', 'eager');
+  scriptEl.setAttribute('data-loading', 'lazy');
   scriptEl.crossOrigin = 'anonymous';
   container.appendChild(scriptEl);
-  giscusLoaded = true;
 }
 
 function updateGiscusTheme() {
@@ -1257,10 +1236,6 @@ function observeScrollReveal() {
 function showPage(name, pushState, animate) {
   if (pushState === undefined) pushState = true;
   if (animate === undefined) animate = true;
-
-  // 保存当前页面到 sessionStorage，用于 Giscus OAuth 登录回跳后恢复
-  sessionStorage.setItem('kuro_page', name);
-  sessionStorage.setItem('kuro_page_time', Date.now());
   
   const oldPage = document.querySelector('.page.active');
   const targetPage = document.getElementById('page-' + name);
@@ -1273,9 +1248,10 @@ function showPage(name, pushState, animate) {
     // Use instant scroll when called from popstate (pushState=false), smooth otherwise
     window.scrollTo({ top: 0, behavior: pushState ? 'smooth' : 'auto' });
 
-    // Giscus 始终在 DOM 中，切换页面时控制显隐
-    const giscusEl = document.getElementById('giscusWrapper');
-    if (giscusEl) giscusEl.classList.toggle('visible', name === 'guestbook');
+    // Load Giscus when guestbook page is shown
+    if (name === 'guestbook') {
+      loadGiscus();
+    }
 
     // Update page title
     document.title = (PAGE_TITLES[name] || '首页') + ' - ' + (siteConfig.siteName || '黒の猫窝');
@@ -1368,19 +1344,6 @@ function initHashRouter() {
       showPage(page, false);
       document.querySelectorAll('.nav-btn').forEach(b => {
         b.classList.toggle('active', b.dataset.page === page);
-      });
-    }
-  }
-
-  // Giscus OAuth 回跳修复：无 hash 时恢复之前访问的页面
-  if (!hash || !hash.startsWith('#/')) {
-    const savedPage = sessionStorage.getItem('kuro_page');
-    const savedTime = parseInt(sessionStorage.getItem('kuro_page_time') || '0');
-    // 只在 1 分钟内有效，防止普通刷新时误恢复
-    if (savedPage && savedPage !== 'home' && PAGE_TITLES[savedPage] && Date.now() - savedTime < 60000) {
-      showPage(savedPage, false);
-      document.querySelectorAll('.nav-btn').forEach(b => {
-        b.classList.toggle('active', b.dataset.page === savedPage);
       });
     }
   }
