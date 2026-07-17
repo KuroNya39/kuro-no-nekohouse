@@ -1546,6 +1546,22 @@ body::before {
   border: 1px solid var(--border-light);
   padding: var(--space-lg);
   background: var(--bg-card);
+  /* 默认隐藏但保留在 DOM 中，确保 Giscus iframe 能正常加载 */
+  visibility: hidden;
+  height: 0;
+  overflow: hidden;
+  border: none;
+  padding: 0;
+  margin: 0;
+  transition: visibility 0.2s, height 0.2s;
+}
+.giscus-wrapper.visible {
+  visibility: visible;
+  height: auto;
+  overflow: visible;
+  border: 1px solid var(--border-light);
+  padding: var(--space-lg);
+  margin: initial;
 }
 [data-theme="dark"] .giscus-wrapper {
   background: var(--bg-primary);
