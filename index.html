@@ -420,7 +420,6 @@
       <p id="guestbookIntroText"></p>
       <p id="guestbookLoginStatus" style="font-size:0.8rem;color:var(--text-muted);display:none;"></p>
     </div>
-    <div class="giscus-wrapper" id="giscusWrapper"></div>
   </section>
 
   <!-- ===== LINKS PAGE ===== -->
@@ -441,6 +440,8 @@
     <p id="footerText">黒の猫窝 · 收藏每一个故事</p>
     <p class="footer-stars" aria-hidden="true">&#10022; &#10022; &#10022;</p>
   </footer>
+  <!-- Giscus 评论区 — 在 page 元素外，避免 display:none 影响 -->
+  <div class="giscus-wrapper" id="giscusWrapper" style="border-top: none;"></div>
 </div>
 
 
