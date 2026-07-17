@@ -1006,6 +1006,8 @@ function renderGuestbookIntro() {
 }
 
 // ===== GUESTBOOK (Giscus) =====
+let giscusLoaded = false;
+
 function getGiscusTheme() {
   const theme = document.documentElement.getAttribute('data-theme');
   if (theme === 'dark') return 'dark';
@@ -1018,7 +1020,18 @@ function loadGiscus() {
   const container = document.getElementById('giscusWrapper');
   if (!container) return;
 
-  container.innerHTML = '';
+  // 只加载一次，不销毁重建
+  if (giscusLoaded) {
+    updateGiscusTheme();
+    return;
+  }
+
+  // 如果容器里已经有内容（被 Giscus 填充过），也跳过
+  if (container.children.length > 0) {
+    giscusLoaded = true;
+    updateGiscusTheme();
+    return;
+  }
 
   const theme = getGiscusTheme();
 
@@ -1039,6 +1052,7 @@ function loadGiscus() {
   scriptEl.setAttribute('data-loading', 'lazy');
   scriptEl.crossOrigin = 'anonymous';
   container.appendChild(scriptEl);
+  giscusLoaded = true;
 }
 
 function updateGiscusTheme() {
