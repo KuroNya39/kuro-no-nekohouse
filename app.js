@@ -155,16 +155,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   initHashRouter();
   initTypewriterEffect();
   initSwipeNavigation();
-  // 初始化 Giscus — 必须在首次加载时就加载，否则 OAuth 回跳时无法处理授权
+  // 初始化 Giscus — 必须在首次加载时就加载，并且始终可见
   loadGiscus();
-  // Giscus 初始加载后，如果不在留言页则隐藏（用 visibility 而非 display:none）
-  setTimeout(function() {
-    const giscusWrapper = document.getElementById('giscusWrapper');
-    if (giscusWrapper) {
-      const hash = window.location.hash;
-      giscusWrapper.classList.toggle('giscus-hidden', !hash.includes('guestbook'));
-    }
-  }, 500);
   updateSyncUI();
   hideLoading();
   } catch(err) {
@@ -1276,11 +1268,7 @@ function showPage(name, pushState, animate) {
     // Use instant scroll when called from popstate (pushState=false), smooth otherwise
     window.scrollTo({ top: 0, behavior: pushState ? 'smooth' : 'auto' });
 
-    // Giscus 在首次加载时已初始化，无需在此重复加载，只需控制显隐
-    const giscusWrapper = document.getElementById('giscusWrapper');
-    if (giscusWrapper) {
-      giscusWrapper.classList.toggle('giscus-hidden', name !== 'guestbook');
-    }
+    // Giscus 在首次加载时已初始化，无需在此重复加载
 
     // Update page title
     document.title = (PAGE_TITLES[name] || '首页') + ' - ' + (siteConfig.siteName || '黒の猫窝');
