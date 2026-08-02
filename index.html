@@ -296,7 +296,7 @@
   <nav class="nav-bar" role="navigation" aria-label="主导航">
     <button class="nav-btn active" data-page="home">首页</button>
     <button class="nav-btn" data-page="timeline">时间轴</button>
-    
+    <button class="nav-btn random-btn" onclick="goToRandomNovel()" title="随机文章">🎲</button>
     <button class="nav-btn" data-page="links">友链</button>
     <button class="nav-btn" data-page="about">关于</button>
   </nav>
@@ -353,6 +353,13 @@
   <!-- ===== READER PAGE ===== -->
   <section class="page" id="page-reader" aria-label="阅读页面">
     <button class="back-btn" onclick="backToCategory()">← 返回</button>
+    <div class="reading-progress-ring" id="readingProgressRing" onclick="document.getElementById('readerContent').scrollTo({top:0,behavior:'smooth'})" title="回到顶部">
+      <svg viewBox="0 0 40 40" class="ring-svg">
+        <circle class="ring-bg" cx="20" cy="20" r="17"/>
+        <circle class="ring-fg" id="ringFg" cx="20" cy="20" r="17" style="stroke-dasharray:106.8;stroke-dashoffset:106.8"/>
+      </svg>
+      <span class="ring-label" id="ringLabel">0%</span>
+    </div>
     <div class="reader-container">
       <div class="reader-header">
         <span class="reader-category-tag" id="readerCategory"></span>

@@ -527,7 +527,17 @@ function initTheme() {
 
 // ===== COLOR SCHEME =====
 function setColorScheme(scheme) {
-  document.documentElement.setAttribute('data-color-scheme', scheme);
+  const applyScheme = () => {
+    document.documentElement.setAttribute('data-color-scheme', scheme);
+    updateBackgroundPattern();
+  };
+
+  if (!window.__reducedMotion && document.startViewTransition) {
+    const transition = document.startViewTransition(applyScheme);
+  } else {
+    applyScheme();
+  }
+
   localStorage.setItem('colorScheme', scheme);
   // Update active option and current dot
   document.querySelectorAll('.scheme-option').forEach(btn => {
@@ -543,11 +553,6 @@ function setColorScheme(scheme) {
   // Close the dropdown menu
   const menu = document.getElementById('colorSchemeMenu');
   if (menu) menu.classList.remove('active');
-  // Brief flash transition for background pattern
-  document.body.style.opacity = '0.98';
-  setTimeout(() => { document.body.style.opacity = '1'; }, 50);
-  // Update background pattern color
-  updateBackgroundPattern();
 }
 
 function initColorScheme() {
@@ -1090,11 +1095,12 @@ function renderStats() {
       item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
       item.style.opacity = '1';
       item.style.transform = 'translateY(0)';
-      // Count-up animation
-      const numEl = item.querySelector('.stat-number');
-      if (numEl) animateCountUp(numEl);
     }, 100 + i * 80);
   });
+  // Observe stat items for scroll-triggered count-up
+  setTimeout(() => {
+    document.querySelectorAll('.stat-item:not(.visible)').forEach(el => scrollRevealObserver.observe(el));
+  }, 600);
 }
 
 function animateCountUp(el) {
@@ -1182,13 +1188,33 @@ function renderCategories() {
 
 // ===== NAVIGATION =====
 function initNav() {
-  document.querySelectorAll('.nav-btn').forEach(btn => {
+  document.querySelectorAll('.nav-btn:not(.random-btn)').forEach(btn => {
     btn.addEventListener('click', () => {
       showPage(btn.dataset.page);
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
     });
   });
+}
+
+// Random article
+function goToRandomNovel() {
+  const allNovels = [];
+  categories.forEach((cat, catIdx) => {
+    cat.novels.forEach((novel, novelIdx) => {
+      allNovels.push({ catId: cat.id, catIdx, novelIdx });
+    });
+  });
+  if (allNovels.length === 0) return;
+  const pick = allNovels[Math.floor(Math.random() * allNovels.length)];
+  const cat = categories[pick.catIdx];
+  if (cat) {
+    currentCategory = cat;
+    showCategory(pick.catId, true);
+    showNovel(pick.novelIdx, 0, true);
+    // Update nav active state
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  }
 }
 
 const PAGE_TITLES = {
@@ -1200,17 +1226,27 @@ const PAGE_TITLES = {
   about: '关于'
 };
 
-// Scroll reveal observer
+// Scroll reveal observer for entrance animations + stat counters
 const scrollRevealObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
+      const el = entry.target;
+      if (el.classList.contains('stat-item')) {
+        // Trigger count-up animation for stats
+        const numEl = el.querySelector('.stat-number');
+        if (numEl) animateCountUp(numEl);
+        el.classList.add('visible');
+      } else {
+        el.classList.add('visible');
+      }
     }
   });
 }, { threshold: 0.1 });
 
 function observeScrollReveal() {
   document.querySelectorAll('.scroll-reveal').forEach(el => scrollRevealObserver.observe(el));
+  // Also observe stat items for scroll-triggered count-up
+  document.querySelectorAll('.stat-item:not(.visible)').forEach(el => scrollRevealObserver.observe(el));
 }
 
 function showPage(name, pushState, animate) {
@@ -1251,26 +1287,39 @@ function showPage(name, pushState, animate) {
   };
 
   if (animate && oldPage && targetPage && oldPage !== targetPage && !window.__reducedMotion) {
-    // Old page fades out
-    oldPage.style.transition = 'opacity 0.15s ease';
-    oldPage.style.opacity = '0';
-    setTimeout(() => {
-      doSwitch();
-      // New page fades in
+    if (document.startViewTransition) {
+      // View Transitions API: browser-native crossfade
+      oldPage.style.pointerEvents = 'none';
+      const transition = document.startViewTransition(() => {
+        doSwitch();
+      });
+      transition.finished.finally(() => {
+        if (oldPage) oldPage.style.pointerEvents = '';
+      });
+    } else {
+      // Fallback: simple opacity crossfade
+      oldPage.style.pointerEvents = 'none';
+      targetPage.style.display = 'block';
       targetPage.style.opacity = '0';
+
+      oldPage.style.transition = 'opacity 0.2s ease';
       targetPage.style.transition = 'opacity 0.2s ease';
-      // Force reflow
-      void targetPage.offsetWidth;
-      targetPage.style.opacity = '1';
+
+      requestAnimationFrame(() => {
+        oldPage.style.opacity = '0';
+        targetPage.style.opacity = '1';
+      });
+
       setTimeout(() => {
+        doSwitch();
         oldPage.style.transition = '';
         oldPage.style.opacity = '';
-        oldPage.style.transform = '';
-        targetPage.style.transition = '';
+        oldPage.style.pointerEvents = '';
+        targetPage.style.display = '';
         targetPage.style.opacity = '';
-        targetPage.style.transform = '';
-      }, 200);
-    }, 150);
+        targetPage.style.transition = '';
+      }, 220);
+    }
   } else {
     doSwitch();
   }
@@ -1651,6 +1700,40 @@ function showNovel(index, chapterIdx, shouldPushState) {
   }
   // Set title AFTER showPage to avoid being overwritten
   document.title = novel.title + ' - ' + siteConfig.siteName;
+
+  // Reading progress ring
+  setupReadingProgressRing();
+}
+
+function setupReadingProgressRing() {
+  const ring = document.getElementById('readingProgressRing');
+  const fg = document.getElementById('ringFg');
+  const label = document.getElementById('ringLabel');
+  const content = document.getElementById('readerContent');
+  if (!ring || !fg || !label || !content) return;
+
+  // Reset on new novel
+  ring.classList.remove('visible');
+  fg.style.strokeDashoffset = '106.8';
+  label.textContent = '0%';
+
+  // Remove old listener
+  if (content._ringHandler) {
+    content.removeEventListener('scroll', content._ringHandler);
+  }
+
+  const circumference = 106.8; // 2 * PI * 17
+  content._ringHandler = () => {
+    const scrollTop = content.scrollTop;
+    const scrollHeight = content.scrollHeight - content.clientHeight;
+    if (scrollHeight <= 0) return;
+    const progress = Math.min(scrollTop / scrollHeight, 1);
+    const offset = circumference * (1 - progress);
+    fg.style.strokeDashoffset = offset;
+    label.textContent = Math.round(progress * 100) + '%';
+    ring.classList.toggle('visible', progress > 0.02);
+  };
+  content.addEventListener('scroll', content._ringHandler, { passive: true });
 }
 
 function toggleReaderEdit() {
