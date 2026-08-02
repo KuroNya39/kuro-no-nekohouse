@@ -107,6 +107,7 @@
       <button class="admin-tab" onclick="switchAdminTab(this, 'about')">关于页</button>
       <button class="admin-tab" onclick="switchAdminTab(this, 'timeline')">时间轴</button>
       <button class="admin-tab" onclick="switchAdminTab(this, 'links')">友链</button>
+      <button class="admin-tab" onclick="switchAdminTab(this, 'chars')">属性</button>
     </div>
     <div class="admin-io-bar">
       <span id="githubSyncStatus" style="font-size:0.75rem;color:var(--text-muted);">○ 未同步</span>
@@ -283,6 +284,18 @@
       </div>
     </div>
 
+    <!-- Tab: 属性 -->
+    <div class="admin-tab-content" id="adminTabChars">
+      <div id="adminCharsList"></div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-light);">
+        <div class="admin-section-title" style="margin-bottom:12px;">添加新角色</div>
+        <div class="admin-about-section"><label>角色名</label><input type="text" id="newCharName" placeholder="角色名称"></div>
+        <div class="admin-about-section"><label>图片链接 <span style="color:var(--text-muted);font-size:0.7rem;">图片URL或本地文件名</span></label><input type="text" id="newCharImage" placeholder="miku.jpg"></div>
+        <div class="admin-about-section"><label>跳转链接</label><input type="text" id="newCharUrl" placeholder="https://..."></div>
+        <button class="admin-btn" onclick="addChar()">添加角色</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -298,6 +311,7 @@
     <button class="nav-btn" data-page="timeline">时间轴</button>
     <button class="nav-btn random-btn" onclick="goToRandomNovel()" title="随机文章">♫</button>
     <button class="nav-btn" data-page="links">友链</button>
+    <button class="nav-btn" data-page="chars">属性</button>
     <button class="nav-btn" data-page="about">关于</button>
   </nav>
 
@@ -438,6 +452,13 @@
   <section class="page" id="page-links" aria-label="友情链接">
     <div class="section-title">友情链接</div>
     <div class="links-grid" id="linksGrid"></div>
+  </section>
+
+  <!-- ===== CHARACTERS PAGE ===== -->
+  <section class="page" id="page-chars" aria-label="属性">
+    <div class="section-title">属性</div>
+    <p class="chars-intro" id="charsIntro">我喜欢的角色们</p>
+    <div class="chars-grid" id="charsGrid"></div>
   </section>
 
   <!-- ===== ABOUT PAGE - New Profile Style ===== -->

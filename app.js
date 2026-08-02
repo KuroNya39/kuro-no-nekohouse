@@ -70,6 +70,10 @@ let linksData = safeJSONParse('linksData', [
   { icon: '<span aria-hidden="true">Wiki</span>', title: 'Vocaloid Wiki', desc: 'Vocaloid 中文维基', url: 'https://w.atwiki.jp/vocaloid/' }
 ]);
 
+let charactersData = safeJSONParse('charactersData', [
+  { name: '初音ミク', image: 'miku.jpg', url: '#' }
+]);
+
 // ===== STATE =====
 let currentCategory = null;
 let currentNovelIndex = 0;
@@ -148,6 +152,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderCategories();
   renderTimeline();
   renderLinks();
+  renderCharacters();
   renderAboutPage();
   initNav();
   initReaderSettings();
@@ -177,6 +182,7 @@ function saveAllData() {
   safeJSONStringify('siteConfig', siteConfig);
   safeJSONStringify('timelineData', timelineData);
   safeJSONStringify('linksData', linksData);
+  safeJSONStringify('charactersData', charactersData);
   debouncedSyncToGitHub();
 }
 
@@ -228,7 +234,8 @@ function buildSiteData() {
     aboutData: aboutData,
     siteConfig: siteConfigWithoutColorScheme,
     timelineData: timelineData,
-    linksData: linksData
+    linksData: linksData,
+    charactersData: charactersData
   };
 }
 
@@ -252,6 +259,7 @@ function loadSiteData(data) {
   
   if (data.timelineData) { timelineData = data.timelineData; safeJSONStringify('timelineData', timelineData); }
   if (data.linksData) { linksData = data.linksData; safeJSONStringify('linksData', linksData); }
+  if (data.charactersData) { charactersData = data.charactersData; safeJSONStringify('charactersData', charactersData); }
   
   return true;
 }
@@ -382,7 +390,8 @@ async function loadFromGitHub() {
           siteConfig: JSON.parse(localStorage.getItem('siteConfig') || 'null'),
           aboutData: JSON.parse(localStorage.getItem('aboutData') || 'null'),
           timelineData: JSON.parse(localStorage.getItem('timelineData') || 'null'),
-          linksData: JSON.parse(localStorage.getItem('linksData') || 'null')
+          linksData: JSON.parse(localStorage.getItem('linksData') || 'null'),
+          charactersData: JSON.parse(localStorage.getItem('charactersData') || 'null')
         });
       }
     } catch (fallbackErr) {
@@ -432,6 +441,7 @@ function exportData() {
     siteConfig: siteConfig,
     timelineData: timelineData,
     linksData: linksData,
+    charactersData: charactersData,
     theme: localStorage.getItem('theme') || ''
   };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -461,6 +471,7 @@ function importData(event) {
       if (data.siteConfig) { siteConfig = data.siteConfig; safeJSONStringify('siteConfig', siteConfig); }
       if (data.timelineData) { timelineData = data.timelineData; safeJSONStringify('timelineData', timelineData); }
       if (data.linksData) { linksData = data.linksData; safeJSONStringify('linksData', linksData); }
+      if (data.charactersData) { charactersData = data.charactersData; safeJSONStringify('charactersData', charactersData); }
       if (data.theme) { localStorage.setItem('theme', data.theme); }
       saveData();
       // Re-render everything
@@ -470,6 +481,7 @@ function importData(event) {
       renderAdminEditNovelList();
       renderTimeline();
       renderLinks();
+      renderCharacters();
       // Re-apply theme
       if (data.theme === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
@@ -592,7 +604,7 @@ function updateBackgroundPattern() {
   // Background pattern now uses CSS variables, no JS update needed
 }
 
-// ===== TYPEWRITER EFFECT =====
+// ===== KINETIC TEXT (Typewriter Entrance + Hover Weight Effect) =====
 function initTypewriterEffect() {
   const title = document.getElementById('siteTitleEl');
   if (!title) return;
@@ -608,14 +620,39 @@ function initTypewriterEffect() {
     if (i < text.length) {
       title.textContent += text.charAt(i);
       i++;
-      setTimeout(type, 150);
+      setTimeout(type, 120);
     } else {
       title.style.borderRight = 'none';
       title.style.animation = 'none';
       title.style.whiteSpace = 'normal';
+      title.style.overflow = 'visible';
+      // After typewriter finishes, convert to Kinetic Text spans
+      setTimeout(() => setupKineticText(title), 300);
     }
   }
   setTimeout(type, 800);
+}
+
+function setupKineticText(el) {
+  const text = el.textContent;
+  el.textContent = '';
+  el.classList.add('kinetic-text');
+  text.split('').forEach(char => {
+    const span = document.createElement('span');
+    span.textContent = char === ' ' ? '\u00A0' : char;
+    el.appendChild(span);
+  });
+  const spans = el.querySelectorAll('span');
+  spans.forEach((span, i) => {
+    span.addEventListener('mouseenter', () => {
+      if (i > 0) spans[i - 1].style.fontWeight = '600';
+      if (i < spans.length - 1) spans[i + 1].style.fontWeight = '600';
+    });
+    span.addEventListener('mouseleave', () => {
+      if (i > 0) spans[i - 1].style.fontWeight = '';
+      if (i < spans.length - 1) spans[i + 1].style.fontWeight = '';
+    });
+  });
 }
 
 // ===== SCROLL PROGRESS =====
@@ -1223,6 +1260,7 @@ const PAGE_TITLES = {
   reader: '阅读中',
   timeline: '时间轴',
   links: '友情链接',
+  chars: '属性',
   about: '关于'
 };
 
@@ -1991,6 +2029,30 @@ function renderLinks() {
   });
 }
 
+// ===== CHARACTERS =====
+function renderCharacters() {
+  const grid = document.getElementById('charsGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  charactersData.forEach((item, i) => {
+    const card = document.createElement('div');
+    card.className = 'char-card';
+    card.addEventListener('click', () => {
+      if (item.url) window.open(item.url, '_blank', 'noopener noreferrer');
+    });
+    if (!window.__reducedMotion) {
+      card.style.animation = `staggerFadeIn 0.5s ease ${i * 0.1}s both`;
+    }
+    card.innerHTML = `
+      <div class="char-card-image" style="background-image: url(${escapeHTML(item.image)})"></div>
+      <div class="char-card-overlay">
+        <span class="char-card-name">${escapeHTML(item.name)}</span>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
 // ===== ABOUT DATA =====
 const defaultAboutData = {
   circleName: '黒 / 黑喵子',
@@ -2101,7 +2163,8 @@ function switchAdminTab(btn, tabName) {
     'edit': ['adminTabEdit', () => renderAdminEditNovelList()],
     'about': ['adminTabAbout', () => loadAboutForm()],
     'timeline': ['adminTabTimeline', () => renderAdminTimelineList()],
-    'links': ['adminTabLinks', () => renderAdminLinksList()]
+    'links': ['adminTabLinks', () => renderAdminLinksList()],
+    'chars': ['adminTabChars', () => renderAdminCharsList()]
   };
   if (tabMap[tabName]) {
     document.getElementById(tabMap[tabName][0]).classList.add('active');
@@ -2776,6 +2839,86 @@ function deleteLink(index) {
   renderAdminLinksList();
   renderLinks();
   showToast('友链已删除');
+}
+
+// ===== ADMIN: Characters =====
+function renderAdminCharsList() {
+  const list = document.getElementById('adminCharsList');
+  list.innerHTML = '';
+  charactersData.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'admin-list-item';
+    if (item._editing) {
+      div.innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:8px;width:100%;">
+          <input type="text" id="editCH-name" value="${escapeHTML(item.name)}" placeholder="角色名" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);">
+          <input type="text" id="editCH-image" value="${escapeHTML(item.image)}" placeholder="图片链接" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);">
+          <input type="text" id="editCH-url" value="${escapeHTML(item.url || '')}" placeholder="跳转链接" style="padding:6px 10px;border:1px solid var(--border-light);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-serif);">
+          <div style="display:flex;gap:6px;">
+            <button class="admin-small-btn" onclick="saveCharEdit(${i})">保存</button>
+            <button class="admin-small-btn cancel" onclick="renderAdminCharsList()">取消</button>
+          </div>
+        </div>`;
+    } else {
+      div.innerHTML = `
+        <div style="display:flex;align-items:center;gap:12px;flex:1;">
+          <div style="width:40px;height:40px;border-radius:4px;background:var(--bg-secondary);background-image:url(${escapeHTML(item.image)});background-size:cover;background-position:center;flex-shrink:0;"></div>
+          <div style="flex:1;">
+            <div style="font-weight:600;font-family:var(--font-serif);color:var(--text-primary);font-size:0.9rem;">${escapeHTML(item.name)}</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);word-break:break-all;">${escapeHTML(item.url || '未设置链接')}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0;">
+          <button class="admin-small-btn" onclick="editChar(${i})">编辑</button>
+          <button class="admin-small-btn cancel" onclick="deleteChar(${i})">删除</button>
+        </div>`;
+    }
+    list.appendChild(div);
+  });
+}
+
+function editChar(index) {
+  charactersData[index]._editing = true;
+  renderAdminCharsList();
+}
+
+function saveCharEdit(index) {
+  const item = charactersData[index];
+  const name = document.getElementById('editCH-name').value.trim();
+  const image = document.getElementById('editCH-image').value.trim();
+  const url = document.getElementById('editCH-url').value.trim();
+  if (!name || !image) { showToast('角色名和图片链接不能为空', 'error'); return; }
+  item.name = name;
+  item.image = image;
+  item.url = url || '#';
+  item._editing = false;
+  saveData();
+  renderAdminCharsList();
+  renderCharacters();
+  showToast('角色已更新');
+}
+
+function deleteChar(index) {
+  charactersData.splice(index, 1);
+  saveData();
+  renderAdminCharsList();
+  renderCharacters();
+  showToast('角色已删除');
+}
+
+function addChar() {
+  const name = document.getElementById('newCharName').value.trim();
+  const image = document.getElementById('newCharImage').value.trim();
+  const url = document.getElementById('newCharUrl').value.trim();
+  if (!name || !image) { showToast('角色名和图片链接不能为空', 'error'); return; }
+  charactersData.push({ name, image, url: url || '#' });
+  saveData();
+  renderAdminCharsList();
+  renderCharacters();
+  showToast('角色已添加');
+  document.getElementById('newCharName').value = '';
+  document.getElementById('newCharImage').value = '';
+  document.getElementById('newCharUrl').value = '';
 }
 
 
