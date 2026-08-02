@@ -1125,7 +1125,7 @@ function renderCategories() {
   grid.innerHTML = '';
   categories.forEach((cat, i) => {
     const div = document.createElement('div');
-    div.className = 'category-card card-shine';
+    div.className = 'category-card';
     div.setAttribute('role', 'button');
     div.setAttribute('tabindex', '0');
     div.setAttribute('aria-label', `${cat.name}分类，${cat.novels.length}篇文章`);
@@ -1700,40 +1700,6 @@ function showNovel(index, chapterIdx, shouldPushState) {
   }
   // Set title AFTER showPage to avoid being overwritten
   document.title = novel.title + ' - ' + siteConfig.siteName;
-
-  // Reading progress ring
-  setupReadingProgressRing();
-}
-
-function setupReadingProgressRing() {
-  const ring = document.getElementById('readingProgressRing');
-  const fg = document.getElementById('ringFg');
-  const label = document.getElementById('ringLabel');
-  const content = document.getElementById('readerContent');
-  if (!ring || !fg || !label || !content) return;
-
-  // Reset on new novel
-  ring.classList.remove('visible');
-  fg.style.strokeDashoffset = '106.8';
-  label.textContent = '0%';
-
-  // Remove old listener
-  if (content._ringHandler) {
-    content.removeEventListener('scroll', content._ringHandler);
-  }
-
-  const circumference = 106.8; // 2 * PI * 17
-  content._ringHandler = () => {
-    const scrollTop = content.scrollTop;
-    const scrollHeight = content.scrollHeight - content.clientHeight;
-    if (scrollHeight <= 0) return;
-    const progress = Math.min(scrollTop / scrollHeight, 1);
-    const offset = circumference * (1 - progress);
-    fg.style.strokeDashoffset = offset;
-    label.textContent = Math.round(progress * 100) + '%';
-    ring.classList.toggle('visible', progress > 0.02);
-  };
-  content.addEventListener('scroll', content._ringHandler, { passive: true });
 }
 
 function toggleReaderEdit() {
@@ -2008,7 +1974,7 @@ function renderLinks() {
   linksData.forEach((item, i) => {
     const a = document.createElement('a');
     a.href = item.url;
-    a.className = 'link-card card-shine';
+    a.className = 'link-card';
     a.target = '_blank';
     a.rel = 'noopener noreferrer';
     if (window.__reducedMotion) {

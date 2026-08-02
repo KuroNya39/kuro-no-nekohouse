@@ -847,14 +847,6 @@ body::before {
   100% { opacity: 1; transform: scale(1); }
 }
 
-/* Novel number bounce on hover */
-@keyframes novelNumBounce {
-  0% { transform: scale(1); }
-  30% { transform: scale(1.25); }
-  60% { transform: scale(0.9); }
-  100% { transform: scale(1.1); }
-}
-
 /* Rotate decoration */
 @keyframes slowRotate {
   from { transform: rotate(0deg); }
@@ -862,24 +854,6 @@ body::before {
 }
 
 /* ===== NEW ANIMATIONS ===== */
-
-/* Card shine sweep on hover */
-.card-shine { position: relative; overflow: hidden; }
-.card-shine::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%; width: 60%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-  transition: none;
-  z-index: 1;
-  pointer-events: none;
-}
-.card-shine:hover::before {
-  animation: shineSweep 0.6s ease forwards;
-}
-@keyframes shineSweep {
-  to { left: 150%; }
-}
 
 /* Nav button ripple effect */
 .nav-btn { overflow: hidden; }
@@ -908,36 +882,6 @@ body::before {
 .stat-number {
   display: inline-block;
   font-variant-numeric: tabular-nums;
-}
-
-/* Novel item hover effects */
-.novel-item { position: relative; overflow: hidden; }
-/* Left accent bar */
-.novel-item::after {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; width: 3px; height: 100%;
-  background: var(--accent-primary);
-  transform: scaleY(0);
-  transform-origin: top;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.novel-item:hover::after {
-  transform: scaleY(1);
-}
-/* Bottom glow sweep */
-.novel-item::before {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
-  transform: translateX(-100%);
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  opacity: 0.6;
-}
-.novel-item:hover::before {
-  transform: translateX(100%);
 }
 
 /* Category card tilt effect */
@@ -984,6 +928,14 @@ body::before {
   color: #6a4a8a;
   background: rgba(70, 38, 110, 0.08);
 }
+[data-color-scheme="mono"] .novel-tag:nth-child(even) {
+  color: #666;
+  background: rgba(200, 200, 200, 0.1);
+}
+[data-color-scheme="mono"][data-theme="dark"] .novel-tag:nth-child(even) {
+  color: #aaa;
+  background: rgba(80, 80, 80, 0.2);
+}
 .novel-tag {
   transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
@@ -1005,61 +957,10 @@ body::before {
   opacity: 0.6;
 }
 
-/* Reading progress ring - desktop only */
-@media (min-width: 768px) {
-  .reading-progress-ring {
-    position: sticky;
-    float: right;
-    top: 100px;
-    width: 44px; height: 44px;
-    margin-top: -54px;
-    margin-right: -60px;
-    cursor: pointer;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 10;
-  }
-  .reading-progress-ring.visible {
-    opacity: 0.7;
-  }
-  .reading-progress-ring:hover {
-    opacity: 1;
-  }
-  .ring-svg {
-    width: 100%; height: 100%;
-    transform: rotate(-90deg);
-  }
-  .ring-bg {
-    fill: none;
-    stroke: var(--border-light);
-    stroke-width: 2;
-  }
-  .ring-fg {
-    fill: none;
-    stroke: var(--accent-primary);
-    stroke-width: 2;
-    stroke-linecap: round;
-    transition: stroke-dashoffset 0.15s ease;
-  }
-  .ring-label {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 0.6rem;
-    color: var(--text-muted);
-    font-family: var(--font-mono, monospace);
-    pointer-events: none;
-  }
-}
-
-/* Random article button */
-.random-btn {
-  font-size: 0.95rem;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-}
-.random-btn:hover {
-  transform: rotate(30deg) scale(1.1);
-}
+/* Random article button - consistent with nav buttons */
+.random-btn { font-size: 0.95rem; }
+.random-btn:hover { color: var(--text-primary); }
+.random-btn:hover::after { width: 80%; }
 
 /* Back to top button appear animation */
 .back-to-top {
@@ -1283,24 +1184,12 @@ button:active,
   border-color: var(--accent-primary);
   box-shadow: 0 2px 12px var(--accent-miku-glow);
 }
-.novel-item:hover .novel-number { background: var(--accent-primary); color: white; border-color: var(--accent-primary); animation: novelNumBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+.novel-item:hover .novel-number { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
 .novel-item:hover .novel-arrow { transform: translateX(6px); opacity: 1; }
 .novel-item:hover .novel-title { color: var(--accent-primary); }
 .novel-number { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: var(--accent-primary); border: 1px solid var(--border-light); flex-shrink: 0; transition: var(--transition); border-radius: var(--radius-sm); }
 .novel-info { flex: 1; }
-.novel-title { font-size: 1.05rem; color: var(--text-primary); margin-top: 0; margin-bottom: var(--space-xs); font-weight: 500; transition: color 0.3s; line-height: 1.5; word-break: break-all; position: relative; display: inline; }
-/* Title underline expand on hover */
-.novel-title::after {
-  content: '';
-  position: absolute;
-  bottom: -2px; left: 50%;
-  width: 0; height: 1px;
-  background: var(--accent-primary);
-  transition: width 0.3s ease, left 0.3s ease;
-}
-.novel-item:hover .novel-title::after {
-  width: 100%; left: 0;
-}
+.novel-title { font-size: 1.05rem; color: var(--text-primary); margin-top: 0; margin-bottom: var(--space-xs); font-weight: 500; transition: color 0.3s; line-height: 1.5; word-break: break-all; }
 .novel-author { font-size: 0.8rem; color: var(--accent-pink); margin-top: 0; margin-bottom: var(--space-xs); }
 .novel-meta { font-size: 0.75rem; color: var(--text-muted); display: flex; gap: 14px; flex-wrap: wrap; }
 .novel-tags { display: flex; gap: 6px; margin-top: var(--space-sm); flex-wrap: wrap; }
