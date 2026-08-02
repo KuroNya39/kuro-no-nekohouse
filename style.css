@@ -720,6 +720,8 @@ body::before {
 }
 .nav-btn {
   padding: 6px 16px;
+  width: 5rem;
+  text-align: center;
   background: none;
   border: none;
   color: var(--text-muted);
