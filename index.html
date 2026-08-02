@@ -29,7 +29,35 @@
 </head>
 <body>
 <div class="loading-overlay" id="loadingOverlay">
-  <div class="loading-ring"></div>
+  <div class="loading-stars" id="loadingStars">
+    <span class="star">⋆</span>
+    <span class="star"> </span>
+    <span class="star">˚</span>
+    <span class="star"> </span>
+    <span class="star">✩</span>
+    <span class="star"> </span>
+    <span class="star">｡</span>
+    <span class="star">˚</span>
+    <span class="star"> </span>
+    <span class="star">˚</span>
+    <span class="star">☽</span>
+    <span class="star">⋆</span>
+    <span class="star"> </span>
+    <span class="star">˚</span>
+    <span class="star"> </span>
+    <span class="star">✩</span>
+    <span class="star"> </span>
+    <span class="star">｡</span>
+    <span class="star">˚</span>
+    <span class="star"> </span>
+    <span class="star">˚</span>
+  </div>
+  <div class="loading-text">LOADING</div>
+  <div class="loading-ellipsis">
+    <span class="ellipsis-dot">.</span>
+    <span class="ellipsis-dot">.</span>
+    <span class="ellipsis-dot">.</span>
+  </div>
 </div>
 <div class="scroll-progress" id="scrollProgress"></div>
 <div class="top-toolbar">
@@ -127,11 +155,7 @@
           <label>留言板介绍</label>
           <textarea id="cfgGbIntro" placeholder="留言板介绍文字" style="min-height:40px;resize:vertical;"></textarea>
         </div>
-        <div class="admin-about-section">
-          <label>留言板提示</label>
-          <input type="text" id="cfgGbHint" placeholder="提示文字">
         </div>
-      </div>
       <button class="admin-btn" onclick="saveSiteConfig()">保存站点设置</button>
     </div>
 
@@ -418,9 +442,15 @@
   <section class="page" id="page-guestbook" aria-label="留言板">
     <div class="guestbook-intro" id="guestbookIntroArea">
       <p id="guestbookIntroText"></p>
-      <p id="guestbookLoginStatus" style="font-size:0.8rem;color:var(--text-muted);display:none;"></p>
     </div>
-    <div class="giscus-wrapper" id="giscusWrapper"></div>
+    <div class="guestbook-form" id="guestbookForm">
+      <input type="text" id="gbNameInput" placeholder="称呼（可选）" maxlength="20">
+      <textarea id="gbMessageInput" placeholder="写下你的留言..." rows="3" maxlength="500"></textarea>
+      <button class="gb-submit-btn" onclick="submitGuestbookMessage()">发送留言</button>
+      <p id="gbTokenHint" style="font-size:0.7rem;color:var(--text-muted);margin:0;">发留言需在管理面板设置 GitHub Token</p>
+    </div>
+    <div class="guestbook-loading" id="guestbookLoading" style="display:none;text-align:center;padding:var(--space-xl);color:var(--text-muted);">加载留言中...</div>
+    <div class="guestbook-messages" id="guestbookMessages"></div>
   </section>
 
   <!-- ===== LINKS PAGE ===== -->

@@ -6,7 +6,6 @@ const GITHUB_CONFIG = {
   owner: 'KuroNya39',
   repo: 'kuro-no-nekohouse',
   dataFile: 'data.json',
-  guestbookFile: 'guestbook.json',
   branch: 'main'
 };
 
@@ -164,6 +163,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     hideLoading();
   }
 });
+function escapeHtml(str) {
+  var div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
 function hideLoading() {
   document.getElementById('loadingOverlay').classList.add('hidden');
 }
@@ -505,7 +509,6 @@ function initTheme() {
       document.getElementById('themeToggle').textContent = '☀';
     }
     updateBackgroundPattern();
-    updateGiscusTheme();
   });
 
   // Real-time system theme listener
@@ -519,7 +522,6 @@ function initTheme() {
         document.getElementById('themeToggle').textContent = '☾';
       }
       updateBackgroundPattern();
-      updateGiscusTheme();
     }
   });
 }
@@ -547,7 +549,6 @@ function setColorScheme(scheme) {
   setTimeout(() => { document.body.style.opacity = '1'; }, 50);
   // Update background pattern color
   updateBackgroundPattern();
-  updateGiscusTheme();
 }
 
 function initColorScheme() {
@@ -1058,70 +1059,158 @@ function renderGuestbookIntro() {
   if (introEl) introEl.textContent = siteConfig.guestbookIntro || '';
 }
 
-// ===== GUESTBOOK (Giscus) =====
-function getGiscusTheme() {
-  const theme = document.documentElement.getAttribute('data-theme');
-  if (theme === 'dark') return 'dark';
-  const scheme = document.documentElement.getAttribute('data-color-scheme');
-  if (scheme === 'night') return 'dark';
-  return 'light';
+// ===== GUESTBOOK (GitHub Issues API) =====
+const GB_REPO_OWNER = 'KuroNya39';
+const GB_REPO_NAME = 'kuro-no-nekohouse';
+const GB_LABEL = 'guestbook';
+
+function getGitHubToken() {
+  return localStorage.getItem('githubToken') || '';
 }
 
-function loadGiscus() {
-  const container = document.getElementById('giscusWrapper');
+async function fetchGuestbookMessages() {
+  try {
+    const url = 'https://api.github.com/repos/' + GB_REPO_OWNER + '/' + GB_REPO_NAME + '/issues?labels=' + GB_LABEL + '&state=all&sort=created&direction=desc&per_page=100';
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const issues = await res.json();
+    return issues.map(function(issue) {
+      return {
+        id: issue.number,
+        name: issue.title || '匿名',
+        text: issue.body || '',
+        time: issue.created_at,
+        canDelete: !!getGitHubToken()
+      };
+    });
+  } catch (e) {
+    console.error('[Guestbook] Failed to fetch messages:', e);
+    return null;
+  }
+}
+
+async function renderGuestbookMessages() {
+  const container = document.getElementById('guestbookMessages');
+  const loadingEl = document.getElementById('guestbookLoading');
   if (!container) return;
 
+  // Show loading state
+  if (loadingEl) loadingEl.style.display = 'block';
   container.innerHTML = '';
 
-  const theme = getGiscusTheme();
+  const messages = await fetchGuestbookMessages();
 
-  const scriptEl = document.createElement('script');
-  scriptEl.src = 'https://giscus.app/client.js';
-  scriptEl.async = true;
-  scriptEl.setAttribute('data-repo', 'KuroNya39/kuro-no-nekohouse');
-  scriptEl.setAttribute('data-repo-id', 'R_kgDOS6pURQ');
-  scriptEl.setAttribute('data-category', 'General');
-  scriptEl.setAttribute('data-category-id', 'DIC_kwDOS6pURc4C_Jv6');
-  scriptEl.setAttribute('data-mapping', 'url');
-  scriptEl.setAttribute('data-strict', '0');
-  scriptEl.setAttribute('data-reactions-enabled', '1');
-  scriptEl.setAttribute('data-emit-metadata', '0');
-  scriptEl.setAttribute('data-input-position', 'top');
-  scriptEl.setAttribute('data-theme', theme);
-  scriptEl.setAttribute('data-lang', 'zh-CN');
-  scriptEl.setAttribute('data-loading', 'lazy');
-  scriptEl.crossOrigin = 'anonymous';
-  container.appendChild(scriptEl);
+  if (loadingEl) loadingEl.style.display = 'none';
+
+  if (messages === null) {
+    container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:var(--space-2xl);font-size:0.85rem;">加载留言失败，请稍后重试</p>';
+    return;
+  }
+
+  if (messages.length === 0) {
+    container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:var(--space-2xl);font-size:0.85rem;">还没有留言，来写下第一条吧 ✦</p>';
+    return;
+  }
+
+  var html = '';
+  for (var i = 0; i < messages.length; i++) {
+    var msg = messages[i];
+    var time = new Date(msg.time).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
+    var deleteBtn = msg.canDelete
+      ? '<button class="msg-delete-btn" onclick="deleteGuestbookMessage(' + msg.id + ')" title="删除">✕</button>'
+      : '';
+    html += '<div class="guestbook-message">' +
+      deleteBtn +
+      '<div class="msg-header">' +
+        '<span class="msg-author">' + escapeHtml(msg.name) + '</span>' +
+        '<span class="msg-time">' + time + '</span>' +
+      '</div>' +
+      '<div class="msg-body">' + escapeHtml(msg.text) + '</div>' +
+    '</div>';
+  }
+  container.innerHTML = html;
 }
 
-function updateGiscusTheme() {
-  const theme = getGiscusTheme();
-  const iframe = document.querySelector('iframe.giscus-frame');
-  if (iframe) {
-    iframe.contentWindow.postMessage({ giscus: { setConfig: { theme } } }, 'https://giscus.app');
+async function submitGuestbookMessage() {
+  var nameInput = document.getElementById('gbNameInput');
+  var msgInput = document.getElementById('gbMessageInput');
+  var submitBtn = document.querySelector('.gb-submit-btn');
+  if (!nameInput || !msgInput) return;
+
+  var name = (nameInput.value || '').trim();
+  var text = (msgInput.value || '').trim();
+  if (!text) {
+    showToast('请输入留言内容');
+    return;
+  }
+
+  var token = getGitHubToken();
+  if (!token) {
+    showToast('请先在管理面板设置 GitHub Token');
+    return;
+  }
+
+  // Disable button during submit
+  if (submitBtn) submitBtn.disabled = true;
+
+  try {
+    var res = await fetch('https://api.github.com/repos/' + GB_REPO_OWNER + '/' + GB_REPO_NAME + '/issues', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'token ' + token,
+        'Content-Type': 'application/json',
+        'Accept': 'application/vnd.github.v3+json'
+      },
+      body: JSON.stringify({
+        title: name || '匿名',
+        body: text,
+        labels: [GB_LABEL]
+      })
+    });
+
+    if (!res.ok) {
+      var errData = await res.json().catch(function() { return null; });
+      throw new Error(errData ? errData.message : 'HTTP ' + res.status);
+    }
+
+    nameInput.value = '';
+    msgInput.value = '';
+    showToast('留言已发送 ♥');
+    await renderGuestbookMessages();
+  } catch (e) {
+    console.error('[Guestbook] Failed to submit:', e);
+    showToast('发送失败: ' + e.message);
+  } finally {
+    if (submitBtn) submitBtn.disabled = false;
   }
 }
 
-// 监听 Giscus 消息，更新留言板登录状态
-window.addEventListener('message', function(event) {
-  if (event.origin !== 'https://giscus.app') return;
-  if (!(typeof event.data === 'object' && event.data.giscus)) return;
-  const giscusData = event.data.giscus;
-  if ('discussion' in giscusData && giscusData.viewer) {
-    updateGuestbookLoginStatus(giscusData.viewer);
+async function deleteGuestbookMessage(issueNumber) {
+  if (!confirm('确定删除这条留言吗？')) return;
+  var token = getGitHubToken();
+  if (!token) {
+    showToast('需要 Token 才能删除');
+    return;
   }
-});
 
+  try {
+    var res = await fetch('https://api.github.com/repos/' + GB_REPO_OWNER + '/' + GB_REPO_NAME + '/issues/' + issueNumber, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': 'token ' + token,
+        'Content-Type': 'application/json',
+        'Accept': 'application/vnd.github.v3+json'
+      },
+      body: JSON.stringify({ state: 'closed' })
+    });
 
+    if (!res.ok) throw new Error('HTTP ' + res.status);
 
-function updateGuestbookLoginStatus(viewer) {
-  const statusEl = document.getElementById('guestbookLoginStatus');
-  if (!statusEl) return;
-  if (viewer && viewer.login) {
-    statusEl.textContent = '当前已登录：' + viewer.login;
-    statusEl.style.display = 'block';
-  } else {
-    statusEl.style.display = 'none';
+    showToast('留言已删除');
+    await renderGuestbookMessages();
+  } catch (e) {
+    console.error('[Guestbook] Failed to delete:', e);
+    showToast('删除失败: ' + e.message);
   }
 }
 
@@ -1301,9 +1390,9 @@ function showPage(name, pushState, animate) {
     // Use instant scroll when called from popstate (pushState=false), smooth otherwise
     window.scrollTo({ top: 0, behavior: pushState ? 'smooth' : 'auto' });
 
-    // Load Giscus when guestbook page is shown
+    // Load guestbook messages when guestbook page is shown
     if (name === 'guestbook') {
-      loadGiscus();
+      renderGuestbookMessages();
     }
 
     // Update page title
@@ -1329,20 +1418,19 @@ function showPage(name, pushState, animate) {
   };
 
   if (animate && oldPage && targetPage && oldPage !== targetPage && !window.__reducedMotion) {
-    // Old page fades out + moves up slightly
+    // Old page fades out
     oldPage.style.transition = 'opacity 0.15s ease, transform 0.15s ease';
     oldPage.style.opacity = '0';
     oldPage.style.transform = 'translateY(-4px) scale(0.98)';
     setTimeout(() => {
       doSwitch();
-      // New page enters from below with spring
+      // New page fades in smoothly, no bounce
       targetPage.style.opacity = '0';
-      targetPage.style.transform = 'translateY(12px) scale(0.98)';
-      targetPage.style.transition = 'opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)';
-      // Force reflow so the browser picks up initial state before animating
+      targetPage.style.transform = 'translateY(0) scale(1)';
+      targetPage.style.transition = 'opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+      // Force reflow
       void targetPage.offsetWidth;
       targetPage.style.opacity = '1';
-      targetPage.style.transform = 'translateY(0) scale(1)';
       setTimeout(() => {
         oldPage.style.transition = '';
         oldPage.style.opacity = '';
@@ -1350,7 +1438,7 @@ function showPage(name, pushState, animate) {
         targetPage.style.transition = '';
         targetPage.style.opacity = '';
         targetPage.style.transform = '';
-      }, 350);
+      }, 300);
     }, 150);
   } else {
     doSwitch();
@@ -2058,8 +2146,8 @@ const defaultSiteConfig = {
   heroDesc: '这里是我收藏的同人文章集，主要收录 VOCALOID、偶像梦幻祭等作品的优秀创作。每一篇都是精心挑选，希望能给你带来美好的阅读体验。',
   heroTags: ['VOCALOID', '偶像梦幻祭', 'ES', '同人文章', '狮心', '零凛'],
   footerText: '黒の猫窝 · 收藏每一个故事',
-  guestbookIntro: '欢迎留下你的想法和建议！评论通过 GitHub Discussions 存储，所有人都能看到。',
-  guestbookHint: '首次留言需要登录 GitHub 账号授权。',
+  guestbookIntro: '欢迎留下你的想法和建议！所有留言通过 GitHub Issues 存储，所有人都能看到。',
+  
   colorScheme: 'miku',
 };
 
@@ -2425,7 +2513,7 @@ function loadSiteConfigForm() {
   document.getElementById('cfgHeroTags').value = (siteConfig.heroTags || []).join(',');
   document.getElementById('cfgFooterText').value = siteConfig.footerText || '';
   document.getElementById('cfgGbIntro').value = siteConfig.guestbookIntro || '';
-  document.getElementById('cfgGbHint').value = siteConfig.guestbookHint || '';
+  
 }
 
 function saveSiteConfig() {
@@ -2436,7 +2524,7 @@ function saveSiteConfig() {
   siteConfig.heroTags = document.getElementById('cfgHeroTags').value.split(',').map(t => t.trim()).filter(t => t);
   siteConfig.footerText = document.getElementById('cfgFooterText').value.trim() || defaultSiteConfig.footerText;
   siteConfig.guestbookIntro = document.getElementById('cfgGbIntro').value.trim() || defaultSiteConfig.guestbookIntro;
-  siteConfig.guestbookHint = document.getElementById('cfgGbHint').value.trim() || defaultSiteConfig.guestbookHint;
+  
   siteConfig._lastSync = new Date().toISOString();
   safeJSONStringify('siteConfig', siteConfig);
   saveData();
