@@ -2817,18 +2817,23 @@ function initCoolMode() {
     return container;
   }
 
-  function getAccentColor() {
+  function getThemeColors() {
     const style = getComputedStyle(document.documentElement);
-    return style.getPropertyValue('--accent-primary').trim() || '#39c5bb';
+    const primary = style.getPropertyValue('--accent-primary').trim() || '#39c5bb';
+    const secondary = style.getPropertyValue('--accent-secondary').trim();
+    return { primary, secondary };
   }
 
   function gen(x, y) {
     const size = sizes[Math.floor(Math.random() * sizes.length)];
     const el = document.createElement('div');
-    // Read theme color fresh each time for real-time adaptation
-    const base = getAccentColor();
-    const variants = [base, base + 'cc', base + '99', base + '66'];
-    const color = variants[Math.floor(Math.random() * variants.length)];
+    // Read theme colors fresh each time for real-time adaptation
+    const { primary, secondary } = getThemeColors();
+    let colorPool = [primary, primary + 'cc', primary + '99', primary + '66'];
+    if (secondary) {
+      colorPool = colorPool.concat([secondary, secondary + 'cc', secondary + '99', secondary + '66']);
+    }
+    const color = colorPool[Math.floor(Math.random() * colorPool.length)];
     el.style.cssText = `position:absolute;pointer-events:none;width:${size}px;height:${size}px;border-radius:50%;background:${color};`;
     const left = x - size / 2, top = y - size / 2;
     el.style.transform = `translate3d(${left}px,${top}px,0)`;
