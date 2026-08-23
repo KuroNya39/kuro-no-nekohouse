@@ -1265,6 +1265,8 @@ const scrollRevealObserver = new IntersectionObserver((entries) => {
       } else {
         el.classList.add('visible');
       }
+      // Play only once per page render; re-render (navigation/refresh) re-observes fresh elements
+      scrollRevealObserver.unobserve(el);
     }
   });
 }, { threshold: 0.1 });
@@ -2872,8 +2874,10 @@ function initCoolMode() {
   }
 
   document.querySelectorAll('.hero-avatar, .about-avatar').forEach(el => {
-    let iv;
+    let iv = null, holdTimer = null;
     const start = e => {
+      if (e.button !== undefined && e.button !== 0) return;
+      e.preventDefault();
       const r = el.getBoundingClientRect();
       const x = e.clientX || r.left + r.width / 2;
       const y = e.clientY || r.top + r.height / 2;
@@ -2882,14 +2886,20 @@ function initCoolMode() {
         if (particles.length < 30) gen(x + (Math.random() - 0.5) * 40, y + (Math.random() - 0.5) * 20);
       }, 40);
       if (!animating) { animating = true; loop(); }
+      // Safety: force-stop even if mouseup is missed (long press / drag / release outside)
+      holdTimer = setTimeout(stop, 1500);
     };
     const stop = () => {
-      clearInterval(iv);
-      setTimeout(() => { if (!particles.length) animating = false; }, 2000);
+      if (iv) { clearInterval(iv); iv = null; }
+      if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
+      if (animating) setTimeout(() => { if (!particles.length) animating = false; }, 2000);
     };
     el.addEventListener('mousedown', start);
     el.addEventListener('mouseup', stop);
     el.addEventListener('mouseleave', stop);
+    el.addEventListener('dragstart', e => e.preventDefault());
+    // Catch-all: release may happen outside the element (drag / long press)
+    window.addEventListener('mouseup', stop);
   });
 }
 
