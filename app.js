@@ -2874,7 +2874,7 @@ function initCoolMode() {
   }
 
   document.querySelectorAll('.hero-avatar, .about-avatar').forEach(el => {
-    let iv = null, holdTimer = null;
+    let iv = null;
     const start = e => {
       if (e.button !== undefined && e.button !== 0) return;
       e.preventDefault();
@@ -2886,12 +2886,9 @@ function initCoolMode() {
         if (particles.length < 30) gen(x + (Math.random() - 0.5) * 40, y + (Math.random() - 0.5) * 20);
       }, 40);
       if (!animating) { animating = true; loop(); }
-      // Safety: force-stop even if mouseup is missed (long press / drag / release outside)
-      holdTimer = setTimeout(stop, 1500);
     };
     const stop = () => {
       if (iv) { clearInterval(iv); iv = null; }
-      if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
       if (animating) setTimeout(() => { if (!particles.length) animating = false; }, 2000);
     };
     el.addEventListener('mousedown', start);
