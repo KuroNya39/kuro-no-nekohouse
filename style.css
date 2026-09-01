@@ -1788,6 +1788,7 @@ button:active,
   font-family: 'Courier New', 'Noto Sans SC', monospace;
   font-size: 0.75rem;
   letter-spacing: 6px;
+  margin-right: -6px; /* offset trailing letter-spacing so text stays visually centered */
   color: var(--text-muted);
   user-select: none;
 }
