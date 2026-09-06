@@ -562,7 +562,7 @@ body::before {
   border-radius: var(--radius-sm);
   flex-shrink: 0;
 }
-.theme-toggle:hover { background: var(--accent-primary); color: white; border-color: var(--accent-primary); transform: scale(1.1); }
+.theme-toggle:hover { background: var(--accent-primary); color: white; border-color: var(--accent-primary); transform: scale(1.06); }
 
 /* Top Toolbar */
 .top-toolbar {
@@ -582,7 +582,7 @@ body::before {
   border-radius: var(--radius-sm);
   flex-shrink: 0;
 }
-.color-scheme-toggle:hover { background: var(--accent-primary); color: white; border-color: var(--accent-primary); transform: scale(1.1); }
+.color-scheme-toggle:hover { background: var(--accent-primary); color: white; border-color: var(--accent-primary); transform: scale(1.06); }
 .scheme-current-dot {
   display: block; width: 14px; height: 14px;
   border-radius: 50%;
@@ -638,7 +638,7 @@ body::before {
   border-radius: var(--radius-sm);
   flex-shrink: 0;
 }
-.admin-toggle:hover { background: var(--accent-primary); color: white; transform: scale(1.1); }
+.admin-toggle:hover { background: var(--accent-primary); color: white; transform: scale(1.06); }
 .admin-toggle.active { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
 
 
@@ -890,7 +890,7 @@ body::before {
 
 /* Avatar hover animation (黑喵子) */
 .hero-avatar, .about-avatar { transition: transform 0.5s var(--ease-spring), box-shadow 0.5s ease, border-color 0.5s ease; }
-.hero-avatar:hover, .about-header-card .about-avatar:hover { transform: translateY(-5px) rotate(6deg) scale(1.08); border-color: var(--accent-primary); box-shadow: 0 10px 30px var(--accent-miku-glow); }
+.hero-avatar:hover, .about-header-card .about-avatar:hover { transform: translateY(-5px) scale(1.05); border-color: var(--accent-primary); box-shadow: 0 10px 30px var(--accent-miku-glow); }
 
 /* Stat number count-up animation */
 .stat-number {
@@ -1010,7 +1010,7 @@ body::before {
 
 /* ===== END NEW ANIMATIONS ===== */
 
-/* Active press feedback */
+/* Active press feedback — 标准控件档（0.98） */
 button:active,
 .nav-btn:active,
 .scheme-option:active,
@@ -1020,9 +1020,14 @@ button:active,
 .reader-nav-btn:active,
 .back-btn:active,
 .back-to-top:active,
-.social-link:active,
-.category-card:active {
-  transform: scale(0.96) !important;
+.social-link:active {
+  transform: scale(0.98) !important;
+  transition: transform 0.1s var(--ease-spring-sm) !important;
+}
+/* Active press feedback — 大尺寸/通栏元素档（0.99，宽元素视觉收缩更明显，按压幅度更小） */
+.category-card:active,
+.custom-select .select-trigger:active {
+  transform: scale(0.99) !important;
   transition: transform 0.1s var(--ease-spring-sm) !important;
 }
 
