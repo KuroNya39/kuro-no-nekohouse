@@ -6,7 +6,7 @@
       "id": "miku",
       "name": "初音未来",
       "desc": "VOCALOID 相关创作",
-      "image": "miku.jpg",
+      "image": "images/miku.jpg",
       "novels": [
         {
           "id": "miku-1",
@@ -38,7 +38,7 @@
       "id": "izuleo",
       "name": "狮心",
       "desc": "濑名泉 × 月永雷欧",
-      "image": "izumileo.jpg",
+      "image": "images/izumileo.jpg",
       "novels": [
         {
           "id": "leo-1",
@@ -58,7 +58,7 @@
       "id": "reiritsu",
       "name": "零凛",
       "desc": "朔间零 × 朔间凛月",
-      "image": "reiritsu.jpg",
+      "image": "images/reiritsu.jpg",
       "novels": [
         {
           "id": "rei-1",
@@ -128,7 +128,7 @@
       "id": "rokkoota",
       "name": "六甲央田",
       "desc": "六甲绫人 × 央田寻",
-      "image": "rokkoota.jpg",
+      "image": "images/vol6.jpg",
       "novels": [
         {
           "id": "rokkoota-1782244652823",
@@ -159,7 +159,7 @@
       "id": "togomishima",
       "name": "海岛统吾",
       "desc": "高江统吾 × 海岛涟",
-      "image": "togomishima.jpg",
+      "image": "images/vol15.jpg",
       "novels": []
     }
   ],

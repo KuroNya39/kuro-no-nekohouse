@@ -252,7 +252,7 @@ function safeJSONStringify(key, value) {
 let categories = safeJSONParse('categories', [
   {
     id: 'miku', name: '初音未来', desc: 'VOCALOID 相关创作',
-    image: 'miku.jpg',
+    image: 'images/miku.jpg',
     novels: [
       { id: 'miku-1', title: '星之声', author: '星夜', date: '2026-06-10', wordCount: 2800, tags: ['甜文', '短篇'], content: `这是初音未来分类下的示例文章内容。\n\n在这个示例中，你可以看到文章的排版效果。正文使用首字下沉的设计，段落之间有舒适的间距。\n\n当你提供真实的文章内容后，只需替换这里的文本即可。每一段会自动首行缩进，营造传统书籍的阅读体验。` },
       { id: 'miku-2', title: '虚拟歌姬的梦境', author: '月见', date: '2026-06-08', wordCount: 1500, tags: ['幻想', '中篇'], content: `这是另一篇示例文章。\n\n你可以为每个分类添加任意数量的文章。每篇文章都有独立的阅读页面，支持上一篇/下一篇导航。` }
@@ -260,14 +260,14 @@ let categories = safeJSONParse('categories', [
   },
   {
     id: 'izuleo', name: '狮心', desc: '濑名泉 × 月永雷欧',
-    image: 'izumileo.jpg',
+    image: 'images/izumileo.jpg',
     novels: [
       { id: 'leo-1', title: '骑士与王子', author: '蔷薇', date: '2026-06-05', wordCount: 3200, tags: ['甜文', '长篇'], content: `这是狮心分类下的示例文章。\n\n濑名泉与月永雷欧的故事将在这里展开。你可以将真实的文章内容替换这段占位文本。` }
     ]
   },
   {
     id: 'reiritsu', name: '零凛', desc: '朔间零 × 朔间凛月',
-    image: 'reiritsu.jpg',
+    image: 'images/reiritsu.jpg',
     novels: [
       { id: 'rei-1', title: '月夜下的兄弟', author: '黑羽', date: '2026-06-01', wordCount: 4100, tags: ['虐文', '中篇'], content: `这是零凛分类下的示例文章。\n\n朔间兄弟的故事在这里等待被阅读。提供你的文章文本后，这里将展示真实的内容。` }
     ]
@@ -353,9 +353,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   // Update category images
   const imageMap = {
-    '六甲央田': 'vol6.jpg',
-    '什三地球': 'vol13.jpg',
-    '海岛统吾': 'vol15.jpg'
+    '六甲央田': 'images/vol6.jpg',
+    '什三地球': 'images/vol13.jpg',
+    '海岛统吾': 'images/vol15.jpg'
 };
   categories.forEach(c => {
     if (imageMap[c.name] && c.image !== imageMap[c.name]) c.image = imageMap[c.name];
@@ -1277,7 +1277,7 @@ function renderHomePage() {
       }
 
       requestAnimationFrame(() => {
-        heroSection.style.transition = 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+        heroSection.style.transition = 'opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
         heroSection.style.opacity = '1';
 
         if (heroAvatar) {
@@ -1288,7 +1288,7 @@ function renderHomePage() {
           setTimeout(() => {
             heroAvatar.style.transform = '';
             heroAvatar.style.transition = '';
-          }, 650);
+          }, 550);
         }
 
         setTimeout(() => {
@@ -1750,7 +1750,7 @@ function renderFilteredNovelList(novels) {
         </div>
         <div class="novel-tags">${novel.tags.map(t => `<span class="novel-tag">${escapeHTML(t)}</span>`).join('')}</div>
       </div>
-      <div class="novel-arrow">${icon('chevron_right', 16)}</div>
+      <div class="novel-arrow">${icon('arrow_forward', 16)}</div>
     `;
     list.appendChild(div);
   });
@@ -1759,7 +1759,7 @@ function renderFilteredNovelList(novels) {
     item.style.opacity = '0';
     item.style.transform = 'translateX(-10px)';
     setTimeout(() => {
-      item.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      item.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
       item.style.opacity = '1';
       item.style.transform = 'translateX(0)';
     }, 50 + i * 60);
@@ -1926,8 +1926,8 @@ function showNovel(index, chapterIdx, shouldPushState) {
     nextBtn.style.visibility = currentChapterIndex < chapters.length - 1 ? 'visible' : 'hidden';
     prevBtn.onclick = () => { if (currentChapterIndex > 0) { scrollBehavior = 'topOfContent'; showNovel(currentNovelIndex, currentChapterIndex - 1); } };
     nextBtn.onclick = () => { if (currentChapterIndex < chapters.length - 1) { scrollBehavior = 'topOfContent'; showNovel(currentNovelIndex, currentChapterIndex + 1); } };
-    prevBtn.textContent = '\u2190 \u4e0a\u4e00\u7ae0';
-    nextBtn.textContent = '\u4e0b\u4e00\u7ae0 \u2192';
+    prevBtn.innerHTML = icon('chevron_left', 14) + ' 上一章';
+    nextBtn.innerHTML = '下一章 ' + icon('chevron_right', 14);
   } else {
     // 单章节小说：切换不同小说
     prevBtn.style.visibility = index > 0 ? 'visible' : 'hidden';
@@ -2105,6 +2105,60 @@ function initReaderSettings() {
     document.getElementById('readerContent').style.setProperty('--reader-line-height', localStorage.getItem('readerLineHeight'));
     document.getElementById('lineHeightValue').textContent = localStorage.getItem('readerLineHeight');
   }
+
+  // 点击滑条轨道：300ms easeOutCubic 平滑滑动（与预设动画共用 settingsAnimId 令牌互相取消）
+  const setupTrackClick = (slider, unit) => {
+    const isFont = unit === 'px';
+    const valueEl = document.getElementById(isFont ? 'fontSizeValue' : 'lineHeightValue');
+    const readerContent = document.getElementById('readerContent');
+    const cssVar = isFont ? '--reader-font-size' : '--reader-line-height';
+    const storageKey = isFont ? 'readerFontSize' : 'readerLineHeight';
+    slider.addEventListener('pointerdown', (e) => {
+      const rect = slider.getBoundingClientRect();
+      const min = parseFloat(slider.min);
+      const max = parseFloat(slider.max);
+      const cur = parseFloat(slider.value);
+      const thumbX = rect.left + ((cur - min) / (max - min)) * rect.width;
+      if (Math.abs(e.clientX - thumbX) <= 10) return; // 点在滑块上，交给原生拖动
+      const target = parseFloat((min + ((e.clientX - rect.left) / rect.width) * (max - min)).toFixed(1));
+      e.preventDefault();
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        slider.value = target;
+        valueEl.textContent = target + unit;
+        readerContent.style.setProperty(cssVar, target + unit);
+        localStorage.setItem(storageKey, target);
+        return;
+      }
+      const start = parseFloat(slider.value);
+      const animId = ++settingsAnimId;
+      const duration = 300;
+      const startTime = performance.now();
+      const oldStep = slider.step;
+      slider.step = isFont ? '0.1' : '0.01';
+      readerContent.classList.add('reader-slider-animating');
+      readerContent.style.setProperty(cssVar, target + unit);
+      const finish = () => {
+        if (animId !== settingsAnimId) return;
+        slider.step = oldStep;
+        slider.value = target;
+        valueEl.textContent = target + unit;
+        readerContent.classList.remove('reader-slider-animating');
+      };
+      function frame(now) {
+        if (animId !== settingsAnimId) return;
+        const t = Math.min((now - startTime) / duration, 1);
+        const e = 1 - Math.pow(1 - t, 3);
+        const v = start + (target - start) * e;
+        slider.value = v;
+        valueEl.textContent = isFont ? Math.round(v) + unit : v.toFixed(1);
+        if (t < 1) requestAnimationFrame(frame);
+        else finish();
+      }
+      requestAnimationFrame(frame);
+    });
+  };
+  setupTrackClick(fontSlider, 'px');
+  setupTrackClick(lineSlider, '');
 }
 
 function toggleSettings() {
@@ -2385,7 +2439,7 @@ function renderAboutPage() {
   const headerCard = document.createElement('div');
     headerCard.className = 'about-header-card';
     headerCard.innerHTML = `
-    <img class="about-avatar" src="avatar.png" alt="头像">
+    <img class="about-avatar" src="images/avatar.png" alt="头像">
     <h2>${escapeHTML(d.circleName)}</h2>
     <p class="about-handle">${escapeHTML(d.bio)}</p>
     <div class="social-links">
@@ -2820,7 +2874,7 @@ function addCategory() {
   const catImage = (document.getElementById('newCatImage') || {}).value || '';
   if (!id || !name) { showToast('请填写分类 ID 和名称', 'error'); return; }
   if (categories.find(c => c.id === id)) { showToast('分类 ID 已存在', 'error'); return; }
-  categories.push({ id, name, desc, image: catImage || id + '.jpg', novels: [] });
+  categories.push({ id, name, desc, image: catImage || 'images/' + id + '.jpg', novels: [] });
   saveData();
   renderAdminCategoryList();
   renderStats();
