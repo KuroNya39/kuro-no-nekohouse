@@ -1269,44 +1269,6 @@ button:active,
 .reader-title { font-family: var(--font-display); font-size: 1.5rem; color: var(--text-primary); margin-top: 0; margin-bottom: var(--gap-compact); line-height: 1.6; word-break: break-all; max-width: 100%; }
 .reader-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 0; }
 .reader-author { font-size: 0.875rem; color: var(--accent-pink); margin-top: var(--space-xs); }
-
-/* Reader action buttons */
-.reader-actions {
-  display: flex;
-  justify-content: center;
-  gap: var(--space-md);
-  margin-top: 0;
-  margin-bottom: var(--space-lg);
-  flex-wrap: wrap;
-}
-.reader-action-btn {
-  padding: 6px var(--space-base);
-  border: 1px solid var(--border-light);
-  background: var(--bg-card);
-  color: var(--text-muted);
-  font-family: var(--font-serif);
-  font-size: 0.75rem;
-  cursor: pointer;
-  transition: var(--transition);
-  border-radius: var(--radius-sm);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.reader-action-btn:hover {
-  border-color: var(--accent-primary);
-  color: var(--accent-primary);
-}
-.reader-action-btn.active {
-  background: var(--accent-primary);
-  color: white;
-  border-color: var(--accent-primary);
-}
-.reader-action-btn.copied {
-  background: var(--accent-primary);
-  color: white;
-  border-color: var(--accent-primary);
-}
 .heart-icon {
   display: inline-block;
   width: 12px;

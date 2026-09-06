@@ -2049,25 +2049,6 @@ function backToCategory() {
   }
 }
 
-// ===== COPY SHARE LINK =====
-function copyShareLink() {
-  const novel = currentCategory.novels[currentNovelIndex];
-  const url = window.location.origin + window.location.pathname + '#/reader/' + currentCategory.id + '/' + currentNovelIndex + '/' + currentChapterIndex;
-  navigator.clipboard.writeText(url).then(() => {
-    const btn = document.getElementById('shareBtn');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '已复制';
-    btn.classList.add('copied');
-    announceToScreenReader('链接已复制到剪贴板');
-    setTimeout(() => {
-      btn.innerHTML = originalText;
-      btn.classList.remove('copied');
-    }, 2000);
-  }).catch(() => {
-    announceToScreenReader('复制失败，请手动复制');
-  });
-}
-
 // ===== READER SETTINGS =====
 function initReaderSettings() {
   const fontSlider = document.getElementById('fontSizeSlider');
