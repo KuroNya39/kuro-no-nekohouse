@@ -68,6 +68,11 @@ function initCustomSelect(selectEl) {
   wrap.appendChild(listbox);
   wrap.appendChild(selectEl);
 
+  listbox.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    listbox.scrollTop += e.deltaY;
+  }, { passive: false });
+
   let open = false;
   let highlighted = -1;
 
