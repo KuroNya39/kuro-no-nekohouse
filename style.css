@@ -417,11 +417,11 @@ select option:active {
 a { color: var(--accent-primary); text-decoration: none; }
 
 @media (hover: hover) and (pointer: fine) {
-/* Custom Cursor */
-html { cursor: url('cursors/Arrow.ani') 6 0, auto; }
-a, button, [onclick], select, input[type="submit"], .nav-btn, .scheme-option, .category-card, .novel-card, .link-card, .interest-card, .back-to-top, .theme-toggle, .admin-toggle, .color-scheme-toggle { cursor: url('cursors/リンクの選択.ani') 6 0, pointer; }
-input[type="text"], input[type="password"], input[type="url"], textarea, [contenteditable="true"] { cursor: url('cursors/IBeam.ani') 6 0, text; }
-.loading-screen { cursor: url('cursors/待ち状態.ani') 6 0, wait; }
+/* Custom Cursor - .cur format for cross-browser support (.ani only works in IE) */
+html { cursor: url('cursors/Arrow.cur') 6 0, auto; }
+a, button, [onclick], select, input[type="submit"], .nav-btn, .scheme-option, .category-card, .novel-card, .link-card, .interest-card, .back-to-top, .theme-toggle, .admin-toggle, .color-scheme-toggle { cursor: url('cursors/リンクの選択.cur') 6 0, pointer; }
+input[type="text"], input[type="password"], input[type="url"], textarea, [contenteditable="true"] { cursor: url('cursors/IBeam.cur') 6 0, text; }
+.loading-overlay { cursor: url('cursors/待ち状態.cur') 6 0, wait; }
 }
 html { scroll-behavior: smooth; }
 * { box-sizing: border-box; }

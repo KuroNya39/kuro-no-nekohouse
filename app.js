@@ -2060,6 +2060,11 @@ function initReaderSettings() {
   const fontSlider = document.getElementById('fontSizeSlider');
   const lineSlider = document.getElementById('lineHeightSlider');
 
+  // 手动拖动/键盘调整时取消预设动画
+  const cancelAnim = () => { settingsAnimId++; };
+  fontSlider.addEventListener('input', cancelAnim);
+  lineSlider.addEventListener('input', cancelAnim);
+
   fontSlider.addEventListener('input', () => {
     const size = fontSlider.value;
     document.getElementById('fontSizeValue').textContent = size + 'px';
@@ -2093,15 +2098,42 @@ function toggleSettings() {
   toggle.style.transform = panel.classList.contains('active') ? 'rotate(180deg)' : '';
 }
 
+let settingsAnimId = 0;
+
+function animateReaderSettings(targetFont, targetLine) {
+  const fontSlider = document.getElementById('fontSizeSlider');
+  const lineSlider = document.getElementById('lineHeightSlider');
+  const fontSizeValue = document.getElementById('fontSizeValue');
+  const lineHeightValue = document.getElementById('lineHeightValue');
+  const readerContent = document.getElementById('readerContent');
+
+  const startFont = parseFloat(fontSlider.value);
+  const startLine = parseFloat(lineSlider.value);
+  const animId = ++settingsAnimId;
+  const duration = 300;
+  const startTime = performance.now();
+
+  function frame(now) {
+    if (animId !== settingsAnimId) return;
+    const t = Math.min((now - startTime) / duration, 1);
+    const e = 1 - Math.pow(1 - t, 3);
+    const font = startFont + (targetFont - startFont) * e;
+    const line = startLine + (targetLine - startLine) * e;
+    fontSlider.value = font;
+    lineSlider.value = line;
+    fontSizeValue.textContent = Math.round(font) + 'px';
+    lineHeightValue.textContent = line.toFixed(1);
+    readerContent.style.setProperty('--reader-font-size', Math.round(font) + 'px');
+    readerContent.style.setProperty('--reader-line-height', line.toFixed(1));
+    if (t < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
 function setReaderStyle(style) {
   const presets = { default: { font: 16, line: 1.9 }, compact: { font: 14, line: 1.6 }, relaxed: { font: 18, line: 2.2 } };
   const p = presets[style];
-  document.getElementById('fontSizeSlider').value = p.font;
-  document.getElementById('lineHeightSlider').value = p.line;
-  document.getElementById('fontSizeValue').textContent = p.font + 'px';
-  document.getElementById('lineHeightValue').textContent = p.line;
-  document.getElementById('readerContent').style.setProperty('--reader-font-size', p.font + 'px');
-  document.getElementById('readerContent').style.setProperty('--reader-line-height', p.line);
+  animateReaderSettings(p.font, p.line);
   localStorage.setItem('readerFontSize', p.font);
   localStorage.setItem('readerLineHeight', p.line);
 }
