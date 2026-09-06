@@ -442,45 +442,6 @@ a { color: var(--accent-primary); text-decoration: none; }
   .loading-overlay { cursor: var(--cursor-wait); }
 }
 
-/* ===== Animated Custom Cursor (JS sprite animation)
-   Active only when initCustomCursor() loads sprites.json successfully,
-   then html gets class cursor-anim-on (hides native cursor). Any JS/network
-   failure keeps the static .cur fallback above, so users never lose a cursor.
-   Sprite strips: 8 frames x 64px = 512x64 (2x source for HiDPI).
-   Displayed at 32px CSS size to match the native cursor footprint:
-   100% DPI smooth-downscales, 200% DPI maps 1:1 pixel-perfect.
-   TEMP: 雪碧图第 3-8 帧提取有蓝色污染，暂只交替前两帧（0 ↔ -32px），
-   待重新生成雪碧图后恢复 8 帧 steps() 动画。 ===== */
-#kuroCursor {
-  position: fixed;
-  top: 0; left: 0;
-  width: 32px; height: 32px;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 99999;
-  display: none;
-  will-change: transform;
-}
-html.cursor-anim-on #kuroCursor.on { display: block; }
-html.cursor-anim-on, html.cursor-anim-on * { cursor: none !important; }
-
-#kuroCursorImg {
-  display: block;
-  width: 256px; height: 32px;
-  max-width: none;
-}
-#kuroCursor.state-text #kuroCursorImg { width: 32px; height: 32px; }
-
-#kuroCursor.animating #kuroCursorImg {
-  animation: kuroCursorFrames var(--cur-dur, 1067ms) linear infinite;
-}
-@keyframes kuroCursorFrames {
-  0%, 49.9% { transform: translateX(0); }
-  50%, 100% { transform: translateX(-32px); }
-}
-@media (prefers-reduced-motion: reduce) {
-  #kuroCursor.animating #kuroCursorImg { animation: none; }
-}
 html { scroll-behavior: smooth; }
 * { box-sizing: border-box; }
 body {
