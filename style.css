@@ -441,6 +441,45 @@ a { color: var(--accent-primary); text-decoration: none; }
   [contenteditable="true"] { cursor: var(--cursor-text); }
   .loading-overlay { cursor: var(--cursor-wait); }
 }
+
+/* ===== Animated Custom Cursor (JS sprite animation)
+   Active only when initCustomCursor() loads sprites.json successfully,
+   then html gets class cursor-anim-on (hides native cursor). Any JS/network
+   failure keeps the static .cur fallback above, so users never lose a cursor.
+   Sprite strips: 8 frames x 64px = 512x64 (2x source for HiDPI).
+   Displayed at 32px CSS size to match the native cursor footprint:
+   100% DPI smooth-downscales, 200% DPI maps 1:1 pixel-perfect.
+   transform-based steps() animation is compositor-friendly. ===== */
+#kuroCursor {
+  position: fixed;
+  top: 0; left: 0;
+  width: 32px; height: 32px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 99999;
+  display: none;
+  will-change: transform;
+}
+html.cursor-anim-on #kuroCursor.on { display: block; }
+html.cursor-anim-on, html.cursor-anim-on * { cursor: none !important; }
+
+#kuroCursorImg {
+  display: block;
+  width: 256px; height: 32px;
+  max-width: none;
+}
+#kuroCursor.state-text #kuroCursorImg { width: 32px; height: 32px; }
+
+#kuroCursor.animating #kuroCursorImg {
+  animation: kuroCursorFrames var(--cur-dur, 1067ms) steps(8) infinite;
+}
+@keyframes kuroCursorFrames {
+  from { transform: translateX(0); }
+  to { transform: translateX(-256px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #kuroCursor.animating #kuroCursorImg { animation: none; }
+}
 html { scroll-behavior: smooth; }
 * { box-sizing: border-box; }
 body {

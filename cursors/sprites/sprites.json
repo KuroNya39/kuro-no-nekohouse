@@ -1,0 +1,100 @@
+﻿{
+    "sets":  {
+                 "snowmiku":  {
+                                  "busy":  {
+                                               "duration":  1067,
+                                               "hotspot":  [
+                                                               32,
+                                                               32
+                                                           ],
+                                               "frames":  8,
+                                               "src":  "cursors/sprites/snowmiku-busy.png"
+                                           },
+                                  "arrow":  {
+                                                "duration":  1067,
+                                                "hotspot":  [
+                                                                12,
+                                                                0
+                                                            ],
+                                                "frames":  8,
+                                                "src":  "cursors/sprites/snowmiku-arrow.png"
+                                            },
+                                  "link":  {
+                                               "duration":  1067,
+                                               "hotspot":  [
+                                                               12,
+                                                               0
+                                                           ],
+                                               "frames":  8,
+                                               "src":  "cursors/sprites/snowmiku-link.png"
+                                           },
+                                  "text":  {
+                                               "duration":  0,
+                                               "hotspot":  [
+                                                               30,
+                                                               30
+                                                           ],
+                                               "frames":  1,
+                                               "src":  "cursors/sprites/ibeam.png"
+                                           },
+                                  "wait":  {
+                                               "duration":  933,
+                                               "hotspot":  [
+                                                               32,
+                                                               32
+                                                           ],
+                                               "frames":  8,
+                                               "src":  "cursors/sprites/snowmiku-wait.png"
+                                           }
+                              },
+                 "miku":  {
+                              "busy":  {
+                                           "duration":  1067,
+                                           "hotspot":  [
+                                                           32,
+                                                           32
+                                                       ],
+                                           "frames":  8,
+                                           "src":  "cursors/sprites/miku-busy.png"
+                                       },
+                              "arrow":  {
+                                            "duration":  1067,
+                                            "hotspot":  [
+                                                            12,
+                                                            0
+                                                        ],
+                                            "frames":  8,
+                                            "src":  "cursors/sprites/miku-arrow.png"
+                                        },
+                              "link":  {
+                                           "duration":  1067,
+                                           "hotspot":  [
+                                                           12,
+                                                           0
+                                                       ],
+                                           "frames":  8,
+                                           "src":  "cursors/sprites/miku-link.png"
+                                       },
+                              "text":  {
+                                           "duration":  0,
+                                           "hotspot":  [
+                                                           30,
+                                                           30
+                                                       ],
+                                           "frames":  1,
+                                           "src":  "cursors/sprites/ibeam.png"
+                                       },
+                              "wait":  {
+                                           "duration":  800,
+                                           "hotspot":  [
+                                                           32,
+                                                           32
+                                                       ],
+                                           "frames":  8,
+                                           "src":  "cursors/sprites/miku-wait.png"
+                                       }
+                          }
+             },
+    "frameW":  64,
+    "frameH":  64
+}
