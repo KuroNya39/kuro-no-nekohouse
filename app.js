@@ -68,7 +68,8 @@ function initCustomSelect(selectEl) {
   wrap.appendChild(listbox);
   wrap.appendChild(selectEl);
 
-  listbox.addEventListener('wheel', (e) => {
+  wrap.addEventListener('wheel', (e) => {
+    if (!open) return;
     e.preventDefault();
     listbox.scrollTop += e.deltaY;
   }, { passive: false });
@@ -2624,7 +2625,7 @@ function renderAdminCategoryList() {
     div.style.cssText = 'padding:10px 0;border-bottom:1px solid var(--border-light);cursor:grab;display:flex;justify-content:space-between;align-items:center;';
     div.innerHTML = `
       <div style="display:flex;align-items:center;gap:8px;">
-        <span style="color:var(--text-muted);font-size:0.8rem;cursor:grab;" title="拖拽排序">⠿</span>
+        <span style="color:var(--text-muted);font-size:0.8rem;cursor:grab;">⠿</span>
         <div>
           <strong>${escapeHTML(cat.name)}</strong>
           <span style="color:var(--text-muted);font-size:0.8rem;"> (${cat.id}) · ${escapeHTML(cat.desc)} · ${cat.novels.length}篇</span>
@@ -2861,7 +2862,7 @@ function renderAdminLinksList() {
     div.style.cssText = 'padding:10px 0;border-bottom:1px solid var(--border-light);cursor:grab;display:flex;justify-content:space-between;align-items:center;';
     div.innerHTML = `
       <div style="display:flex;align-items:center;gap:8px;">
-        <span style="color:var(--text-muted);font-size:0.8rem;cursor:grab;" title="拖拽排序">⠿</span>
+        <span style="color:var(--text-muted);font-size:0.8rem;cursor:grab;">⠿</span>
         <div>
           <strong>${escapeHTML(item.title)}</strong>
           <span style="color:var(--text-muted);font-size:0.8rem;"> ${escapeHTML(item.desc)}</span>
