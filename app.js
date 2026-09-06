@@ -9,6 +9,163 @@ const GITHUB_CONFIG = {
   branch: 'main'
 };
 
+// ===== ICON SYSTEM (Material Symbols Outlined, Apache 2.0, weight 400 / optical 24) =====
+const ICON_PATHS = {
+  settings: '<path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z"/>',
+  dark_mode: '<path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Zm0-80q88 0 158-48.5T740-375q-20 5-40 8t-40 3q-123 0-209.5-86.5T364-660q0-20 3-40t8-40q-78 32-126.5 102T200-480q0 116 82 198t198 82Zm-10-270Z"/>',
+  light_mode: '<path d="M565-395q35-35 35-85t-35-85q-35-35-85-35t-85 35q-35 35-35 85t35 85q35 35 85 35t85-35Zm-226.5 56.5Q280-397 280-480t58.5-141.5Q397-680 480-680t141.5 58.5Q680-563 680-480t-58.5 141.5Q563-280 480-280t-141.5-58.5ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Zm326-268Z"/>',
+  shuffle: '<path d="M560-160v-80h104L537-367l57-57 126 126v-102h80v240H560Zm-344 0-56-56 504-504H560v-80h240v240h-80v-104L216-160Zm151-377L160-744l56-56 207 207-56 56Z"/>',
+  arrow_upward: '<path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/>',
+  arrow_back: '<path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>',
+  arrow_forward: '<path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z"/>',
+  arrow_downward: '<path d="M440-800v487L216-537l-56 57 320 320 320-320-56-57-224 224v-487h-80Z"/>',
+  close: '<path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>',
+  radio_button_unchecked: '<path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Z"/>',
+  sync: '<path d="M160-160v-80h110l-16-14q-52-46-73-105t-21-119q0-111 66.5-197.5T400-790v84q-72 26-116 88.5T240-478q0 45 17 87.5t53 78.5l10 10v-98h80v240H160Zm400-10v-84q72-26 116-88.5T720-482q0-45-17-87.5T650-648l-10-10v98h-80v-240h240v80H690l16 14q49 49 71.5 106.5T800-482q0 111-66.5 197.5T560-170Z"/>',
+  check_circle: '<path d="m424-296 282-282-56-56-226 226-114-114-56 56 170 170Zm56 216q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>',
+  auto_awesome: '<path d="m760-600-50-110-110-50 110-50 50-110 50 110 110 50-110 50-50 110Zm0 560-50-110-110-50 110-50 50-110 50 110 110 50-110 50-50 110ZM360-160 260-380 40-480l220-100 100-220 100 220 220 100-220 100-100 220Zm0-194 40-86 86-40-86-40-40-86-40 86-86 40 86 40 40 86Zm0-126Z"/>',
+  star: '<path d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-350Z"/>',
+  circle: '<path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>',
+  format_align_left: '<path d="M120-120v-80h720v80H120Zm0-160v-80h480v80H120Zm0-160v-80h720v80H120Zm0-160v-80h480v80H120Zm0-160v-80h720v80H120Z"/>',
+  format_align_center: '<path d="M120-120v-80h720v80H120Zm160-160v-80h400v80H280ZM120-440v-80h720v80H120Zm160-160v-80h400v80H280ZM120-760v-80h720v80H120Z"/>',
+  format_align_right: '<path d="M120-760v-80h720v80H120Zm240 160v-80h480v80H360ZM120-440v-80h720v80H120Zm240 160v-80h480v80H360ZM120-120v-80h720v80H120Z"/>',
+  search: '<path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>',
+  expand_more: '<path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z"/>'
+};
+
+function icon(name, size) {
+  const s = size || 20;
+  return '<svg class="ms-icon" width="' + s + '" height="' + s + '" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">' + (ICON_PATHS[name] || '') + '</svg>';
+}
+
+// ===== CUSTOM SELECT (themed dropdown, replaces native select UI) =====
+const customSelects = new Map();
+
+function initCustomSelect(selectEl) {
+  if (!selectEl || selectEl.dataset.customSelect) return;
+  selectEl.dataset.customSelect = '1';
+  selectEl.classList.add('native-hidden');
+
+  const wrap = document.createElement('div');
+  wrap.className = 'custom-select';
+
+  const trigger = document.createElement('button');
+  trigger.type = 'button';
+  trigger.className = 'select-trigger';
+  trigger.setAttribute('aria-haspopup', 'listbox');
+  trigger.setAttribute('aria-expanded', 'false');
+  trigger.innerHTML = '<span class="select-value"></span>' + icon('expand_more', 16);
+
+  const listbox = document.createElement('div');
+  listbox.className = 'select-options';
+  listbox.setAttribute('role', 'listbox');
+  const listboxId = 'listbox-' + (selectEl.id || Math.random().toString(36).slice(2, 8));
+  listbox.id = listboxId;
+  trigger.setAttribute('aria-controls', listboxId);
+
+  selectEl.parentNode.insertBefore(wrap, selectEl);
+  wrap.appendChild(trigger);
+  wrap.appendChild(listbox);
+  wrap.appendChild(selectEl);
+
+  let open = false;
+  let highlighted = -1;
+
+  function renderOptions() {
+    listbox.innerHTML = '';
+    highlighted = -1;
+    Array.from(selectEl.options).forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'select-option';
+      btn.setAttribute('role', 'option');
+      btn.setAttribute('aria-selected', opt.selected ? 'true' : 'false');
+      btn.textContent = opt.textContent;
+      btn.addEventListener('click', () => { selectOption(i); });
+      btn.addEventListener('mousemove', () => { highlighted = i; updateHighlight(); });
+      listbox.appendChild(btn);
+    });
+    updateTrigger();
+  }
+
+  function updateTrigger() {
+    const opt = selectEl.options[selectEl.selectedIndex];
+    trigger.querySelector('.select-value').textContent = opt ? opt.textContent : '';
+    Array.from(listbox.children).forEach((el, i) => {
+      el.setAttribute('aria-selected', selectEl.selectedIndex === i ? 'true' : 'false');
+    });
+  }
+
+  function updateHighlight() {
+    Array.from(listbox.children).forEach((el, i) => {
+      el.classList.toggle('highlighted', i === highlighted);
+    });
+  }
+
+  function selectOption(i) {
+    selectEl.selectedIndex = i;
+    selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+    close();
+  }
+
+  function openList() {
+    open = true;
+    wrap.classList.add('open');
+    trigger.setAttribute('aria-expanded', 'true');
+    highlighted = selectEl.selectedIndex >= 0 ? selectEl.selectedIndex : 0;
+    updateHighlight();
+    const active = listbox.children[highlighted];
+    if (active) active.scrollIntoView({ block: 'nearest' });
+  }
+
+  function close() {
+    if (!open) return;
+    open = false;
+    wrap.classList.remove('open');
+    trigger.setAttribute('aria-expanded', 'false');
+  }
+
+  trigger.addEventListener('click', () => { open ? close() : openList(); });
+
+  trigger.addEventListener('keydown', (e) => {
+    const opts = listbox.children;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (!open) { openList(); return; }
+      const delta = e.key === 'ArrowDown' ? 1 : -1;
+      highlighted = Math.max(0, Math.min(opts.length - 1, highlighted + delta));
+      updateHighlight();
+      if (opts[highlighted]) opts[highlighted].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (!open) openList();
+      else if (highlighted >= 0) selectOption(highlighted);
+    } else if (e.key === 'Escape') {
+      close();
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (open && !wrap.contains(e.target)) close();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && open) close();
+  });
+
+  selectEl.addEventListener('change', updateTrigger);
+
+  renderOptions();
+  new MutationObserver(renderOptions).observe(selectEl, { childList: true, subtree: true });
+
+  customSelects.set(selectEl, { wrap, renderOptions });
+}
+
+function refreshCustomSelect(selectEl) {
+  const entry = customSelects.get(selectEl);
+  if (entry) entry.renderOptions();
+}
+
+
 function safeJSONParse(key, defaultValue) {
   try {
     const item = localStorage.getItem(key);
@@ -151,6 +308,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderAboutPage();
   initNav();
   initReaderSettings();
+  initCustomSelect(document.getElementById('chapterSelect'));
+  initCustomSelect(document.getElementById('fontFamilySelect'));
+  initCustomSelect(document.getElementById('adminCategory'));
   initReaderAutoHide();
   initHashRouter();
   initTypewriterEffect();
@@ -411,13 +571,13 @@ function updateSyncUI() {
   const el = document.getElementById('githubSyncStatus');
   if (!el) return;
   const statusMap = {
-    idle: { text: '未同步', icon: '○' },
-    syncing: { text: '同步中...', icon: '◎' },
-    synced: { text: '已同步', icon: '●' },
-    error: { text: '同步失败', icon: '✕' }
+    idle: { text: '未同步', icon: icon('radio_button_unchecked', 14) },
+    syncing: { text: '同步中...', icon: icon('sync', 14) },
+    synced: { text: '已同步', icon: icon('check_circle', 14) },
+    error: { text: '同步失败', icon: icon('close', 14) }
   };
   const s = statusMap[githubSyncStatus] || statusMap.idle;
-  el.textContent = s.icon + ' ' + s.text;
+  el.innerHTML = s.icon + ' ' + s.text;
   el.style.color = githubSyncStatus === 'synced' ? 'var(--accent-primary)' :
                     githubSyncStatus === 'error' ? 'var(--accent-rose)' :
                     githubSyncStatus === 'syncing' ? 'var(--text-muted)' : 'var(--text-muted)';
@@ -477,7 +637,7 @@ function importData(event) {
         document.getElementById('themeToggle').textContent = '☀';
       } else {
         document.documentElement.removeAttribute('data-theme');
-        document.getElementById('themeToggle').textContent = '☾';
+        document.getElementById('themeToggle').innerHTML = icon('dark_mode', 18);
       }
       announceToScreenReader('数据导入成功');
       alert('数据导入成功！');
@@ -502,7 +662,7 @@ function initTheme() {
     if (isDark) {
       document.documentElement.removeAttribute('data-theme');
       localStorage.setItem('theme', 'light');
-      document.getElementById('themeToggle').textContent = '☾';
+      document.getElementById('themeToggle').innerHTML = icon('dark_mode', 18);
     } else {
       document.documentElement.setAttribute('data-theme', 'dark');
       localStorage.setItem('theme', 'dark');
@@ -519,7 +679,7 @@ function initTheme() {
         document.getElementById('themeToggle').textContent = '☀';
       } else {
         document.documentElement.removeAttribute('data-theme');
-        document.getElementById('themeToggle').textContent = '☾';
+        document.getElementById('themeToggle').innerHTML = icon('dark_mode', 18);
       }
       updateBackgroundPattern();
     }
@@ -777,7 +937,7 @@ function initSort() {
     btn.addEventListener('click', () => {
       if (btn.id === 'sortOrderBtn') {
         sortAscending = !sortAscending;
-        btn.textContent = sortAscending ? '↑ 升序' : '↓ 降序';
+        btn.innerHTML = sortAscending ? icon('arrow_upward', 14) + ' 升序' : icon('arrow_downward', 14) + ' 降序';
         if (currentCategory) renderNovelList();
         return;
       }
@@ -1062,6 +1222,11 @@ function renderHomePage() {
           heroAvatar.style.transition = 'opacity 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
           heroAvatar.style.opacity = '1';
           heroAvatar.style.transform = 'scale(1) rotate(0deg)';
+          // 入场结束后移交内联控制权给 CSS，保证 :hover 动效可生效
+          setTimeout(() => {
+            heroAvatar.style.transform = '';
+            heroAvatar.style.transition = '';
+          }, 650);
         }
 
         setTimeout(() => {
@@ -1175,7 +1340,7 @@ function renderCategories() {
       <div class="category-desc">${escapeHTML(cat.desc)}</div>
       <div class="category-footer">
         <span class="category-count">${cat.novels.length} 篇文章</span>
-        <span class="category-arrow">→</span>
+        <span class="category-arrow">${icon('arrow_forward', 16)}</span>
       </div>
     `;
     div.appendChild(img);
@@ -1467,7 +1632,7 @@ function showCategory(catId, shouldPushState) {
     b.classList.toggle('active', b.dataset.sort === currentSort);
   });
   const orderBtn = document.getElementById('sortOrderBtn');
-  if (orderBtn) orderBtn.textContent = sortAscending ? '↑ 升序' : '↓ 降序';
+  if (orderBtn) orderBtn.innerHTML = sortAscending ? icon('arrow_upward', 14) + ' 升序' : icon('arrow_downward', 14) + ' 降序';
 
   renderNovelList();
   showPage('category', false);
@@ -1683,6 +1848,11 @@ function showNovel(index, chapterIdx, shouldPushState) {
     };
     const fi = restoreFontMap[savedFont];
     if (fi) loadFontFace(fi.name, fi.url);
+    const fontSelect = document.getElementById('fontFamilySelect');
+    if (fontSelect && fontSelect.value !== savedFont) {
+      fontSelect.value = savedFont;
+      refreshCustomSelect(fontSelect);
+    }
   } else if (contentDiv) {
     contentDiv.style.fontFamily = '';
   }
@@ -1702,8 +1872,8 @@ function showNovel(index, chapterIdx, shouldPushState) {
     nextBtn.style.visibility = index < currentCategory.novels.length - 1 ? 'visible' : 'hidden';
     prevBtn.onclick = () => { if (index > 0) { scrollBehavior = 'topOfContent'; showNovel(index - 1); } };
     nextBtn.onclick = () => { if (index < currentCategory.novels.length - 1) { scrollBehavior = 'topOfContent'; showNovel(index + 1); } };
-    prevBtn.textContent = '\u2190 \u4e0a\u4e00\u7bc7';
-    nextBtn.textContent = '\u4e0b\u4e00\u7bc7 \u2192';
+    prevBtn.innerHTML = icon('arrow_back', 16) + ' 上一篇';
+    nextBtn.innerHTML = '下一篇 ' + icon('arrow_forward', 16);
   }
 
   // Show/hide edit button based on admin status

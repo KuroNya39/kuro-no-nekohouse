@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <!-- v2026.06.17 -->
-<html lang="zh-CN">
-<head>
+<html lang="zh-CN" data-color-scheme="miku"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/jpeg" href="favicon.jpg">
@@ -9,8 +8,8 @@
 <meta property="og:image" content="https://kuronya39.github.io/kuro-no-nekohouse/avatar.png">
 <link rel="canonical" href="https://kuronya39.github.io/kuro-no-nekohouse/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;700&family=LXGW+WenKai&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&amp;family=Noto+Sans+SC:wght@400;700&amp;family=LXGW+WenKai&amp;display=swap" rel="stylesheet">
 <noscript>
 <style>
   .loading-overlay { display: none !important; }
@@ -26,9 +25,9 @@
 </noscript>
 
 <link rel="stylesheet" href="style.css">
-</head>
+<title>黒の猫窝 - 缓慢更新中</title></head>
 <body>
-<div class="loading-overlay" id="loadingOverlay">
+<div class="loading-overlay hidden" id="loadingOverlay">
   <div class="loading-stars" id="loadingStars">
     <span class="star">⋆</span>
     <span class="star"> </span>
@@ -59,7 +58,7 @@
     <span class="ellipsis-dot">.</span>
   </div>
 </div>
-<div class="scroll-progress" id="scrollProgress"></div>
+<div class="scroll-progress" id="scrollProgress" style="width: 0%;"></div>
 <div class="top-toolbar">
   <div class="color-scheme-dropdown" id="colorSchemeDropdown">
     <button class="color-scheme-toggle" id="colorSchemeToggle" title="切换配色" aria-label="切换配色">
@@ -73,10 +72,10 @@
       <button class="scheme-option" data-scheme="night" onclick="setColorScheme('night')"><span class="scheme-dot" style="background:linear-gradient(135deg,#001E44 50%,#46266E 50%)"></span>深夜蓝</button>
     </div>
   </div>
-  <button class="admin-toggle" id="adminToggle" title="管理" aria-label="管理面板">⚙</button>
-  <button class="theme-toggle" id="themeToggle" title="切换主题" aria-label="切换主题">☾</button>
+  <button class="admin-toggle" id="adminToggle" title="管理" aria-label="管理面板"><svg class="ms-icon" width="20" height="20" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false"><path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z"/></svg></button>
+  <button class="theme-toggle" id="themeToggle" title="切换主题" aria-label="切换主题"><svg class="ms-icon" width="20" height="20" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false"><path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Zm0-80q88 0 158-48.5T740-375q-20 5-40 8t-40 3q-123 0-209.5-86.5T364-660q0-20 3-40t8-40q-78 32-126.5 102T200-480q0 116 82 198t198 82Zm-10-270Z"/></svg></button>
 </div>
-<button class="back-to-top" id="backToTop" title="返回顶部" aria-label="返回顶部">↑</button>
+<button class="back-to-top" id="backToTop" title="返回顶部" aria-label="返回顶部"><svg class="ms-icon" width="20" height="20" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg></button>
 
 <!-- ARIA Live Region for screen readers -->
 <div id="ariaLive" class="sr-only" aria-live="polite" aria-atomic="true"></div>
@@ -95,8 +94,8 @@
 <div class="admin-drawer-overlay" id="adminOverlay" onclick="closeAdmin()"></div>
 <div class="admin-drawer" id="adminDrawer" role="dialog" aria-modal="true" aria-labelledby="adminDrawerTitle">
   <div class="admin-drawer-header">
-    <h3 id="adminDrawerTitle"><span class="admin-star" aria-hidden="true"></span> 管理面板</h3>
-    <button class="admin-drawer-close" onclick="closeAdmin()" aria-label="关闭管理面板"><span class="close-x" aria-hidden="true"></span></button>
+    <h3 id="adminDrawerTitle"><svg class="ms-icon" width="16" height="16" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false"><path d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-350Z"/></svg> 管理面板</h3>
+    <button class="admin-drawer-close" onclick="closeAdmin()" aria-label="关闭管理面板"><svg class="ms-icon" width="16" height="16" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></button>
   </div>
   <div class="admin-drawer-body">
     <div class="admin-tabs" style="flex-wrap:wrap;">
@@ -109,7 +108,7 @@
       <button class="admin-tab" onclick="switchAdminTab(this, 'links')">友链</button>
     </div>
     <div class="admin-io-bar">
-      <span id="githubSyncStatus" style="font-size:0.75rem;color:var(--text-muted);">○ 未同步</span>
+      <span id="githubSyncStatus" style="font-size: 0.75rem; color: var(--accent-primary);">● 已同步</span>
       <button class="admin-btn small" onclick="exportData()">导出数据</button>
       <button class="admin-btn small secondary" onclick="document.getElementById('importFile').click()">导入数据</button>
       <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
@@ -198,7 +197,7 @@
       </div>
       <div class="admin-form-row">
         <label>字数 <span id="wordCountHint" style="color:var(--accent-primary);font-size:0.7rem;">已自动计算：0 字</span></label>
-        <input type="number" id="adminWords" placeholder="留空则自动计算" readonly style="background:var(--bg-secondary);color:var(--text-muted);">
+        <input type="number" id="adminWords" placeholder="留空则自动计算" readonly="" style="background:var(--bg-secondary);color:var(--text-muted);">
       </div>
       <!-- 章节管理区域 -->
       <div class="admin-form-row">
@@ -284,19 +283,19 @@
     </div>
 
   </div>
-</div>
+
 
 <div class="app-container">
   <header class="site-header">
-    <h1 class="site-title" id="siteTitleEl">✦黒の猫窝✦</h1>
-    <p class="site-subtitle" id="siteSubtitleEl">同人文章收藏站</p>
+    <h1 class="site-title kinetic-text" id="siteTitleEl" style="overflow: visible; white-space: normal; border-right: none; animation: auto ease 0s 1 normal none running none;"><span>✦</span><span>黒</span><span>の</span><span>猫</span><span>窝</span><span>✦</span></h1>
+    <p class="site-subtitle" id="siteSubtitleEl">缓慢更新中</p>
     <div class="site-divider"></div>
   </header>
 
   <nav class="nav-bar" role="navigation" aria-label="主导航">
     <button class="nav-btn active" data-page="home">首页</button>
     <button class="nav-btn" data-page="timeline">时间轴</button>
-    <button class="nav-btn random-btn" onclick="goToRandomNovel()" title="随机文章">♫</button>
+    <button class="nav-btn random-btn" onclick="goToRandomNovel()" title="随机文章"><svg class="ms-icon" width="18" height="18" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false"><path d="M560-160v-80h104L537-367l57-57 126 126v-102h80v240H560Zm-344 0-56-56 504-504H560v-80h240v240h-80v-104L216-160Zm151-377L160-744l56-56 207 207-56 56Z"/></svg></button>
     <button class="nav-btn" data-page="links">友链</button>
     <button class="nav-btn" data-page="about">关于</button>
   </nav>
@@ -307,22 +306,64 @@
     <div class="search-container">
       <input type="text" class="search-input" id="searchInput" placeholder="搜索文章标题、作者或内容..." aria-label="搜索文章">
       <span class="search-icon" aria-hidden="true"></span>
-      <div class="search-results" id="searchResults"></div>
+      <div class="search-results" id="searchResults"><div class="search-empty">没有找到匹配的内容</div></div>
     </div>
 
-    <div class="hero-section" id="heroSection">
-      <img class="hero-avatar avatar-wrapper" src="avatar.png" alt="头像">
-      <div class="hero-content">
-        <h2 id="heroTitle"></h2>
-        <p id="heroDesc"></p>
-        <div class="hero-tags" id="heroTags"></div>
+    <div class="hero-section" id="heroSection" style="opacity: 1; transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);">
+      <img class="hero-avatar avatar-wrapper" src="avatar.png" alt="头像" style="opacity: 1; transform: scale(1) rotate(0deg); transition: opacity 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);">
+      <div class="hero-content" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);">
+        <h2 id="heroTitle">欢迎来到黒の猫窝</h2>
+        <p id="heroDesc">目前主要用于存放小说。</p>
+        <div class="hero-tags" id="heroTags" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);"><span class="hero-tag">初音未来</span><span class="hero-tag">狮心</span><span class="hero-tag">零凛</span></div>
       </div>
     </div>
 
-    <div class="stats-row" id="statsRow"></div>
+    <div class="stats-row" id="statsRow"><div class="stat-item visible" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s, transform 0.5s;"><div class="stat-number" data-target="6" data-format="0">6</div><div class="stat-label">分类</div></div><div class="stat-item visible" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s, transform 0.5s;"><div class="stat-number" data-target="6" data-format="0">6</div><div class="stat-label">文章</div></div><div class="stat-item visible" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s, transform 0.5s;"><div class="stat-number" data-target="6" data-format="0">6</div><div class="stat-label">作者</div></div><div class="stat-item visible" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s, transform 0.5s;"><div class="stat-number" data-target="40889" data-format="1">40,889</div><div class="stat-label">总字数</div></div></div>
 
     <div class="section-title">分类</div>
-    <div class="category-grid" id="categoryGrid"></div>
+    <div class="category-grid" id="categoryGrid"><div class="category-card" role="button" tabindex="0" aria-label="初音未来分类，2篇文章" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s, transform 0.5s;"><img src="miku.jpg" alt="初音未来分类封面" class="category-image"><div class="category-body">
+      <div class="category-name">初音未来</div>
+      <div class="category-desc">VOCALOID 相关创作</div>
+      <div class="category-footer">
+        <span class="category-count">2 篇文章</span>
+        <span class="category-arrow"><svg class="ms-icon" width="16" height="16" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false"><path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z"/></svg></span>
+      </div>
+    </div></div><div class="category-card" role="button" tabindex="0" aria-label="狮心分类，1篇文章" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s, transform 0.5s;"><img src="izumileo.jpg" alt="狮心分类封面" class="category-image"><div class="category-body">
+      <div class="category-name">狮心</div>
+      <div class="category-desc">濑名泉 × 月永雷欧</div>
+      <div class="category-footer">
+        <span class="category-count">1 篇文章</span>
+        <span class="category-arrow"><svg class="ms-icon" width="16" height="16" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false"><path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z"/></svg></span>
+      </div>
+    </div></div><div class="category-card" role="button" tabindex="0" aria-label="零凛分类，2篇文章" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s, transform 0.5s;"><img src="reiritsu.jpg" alt="零凛分类封面" class="category-image"><div class="category-body">
+      <div class="category-name">零凛</div>
+      <div class="category-desc">朔间零 × 朔间凛月</div>
+      <div class="category-footer">
+        <span class="category-count">2 篇文章</span>
+        <span class="category-arrow"><svg class="ms-icon" width="16" height="16" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false"><path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z"/></svg></span>
+      </div>
+    </div></div><div class="category-card" role="button" tabindex="0" aria-label="六甲央田分类，1篇文章" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s, transform 0.5s;"><img src="vol6.jpg" alt="六甲央田分类封面" class="category-image"><div class="category-body">
+      <div class="category-name">六甲央田</div>
+      <div class="category-desc">六甲绫人 × 央田寻</div>
+      <div class="category-footer">
+        <span class="category-count">1 篇文章</span>
+        <span class="category-arrow"><svg class="ms-icon" width="16" height="16" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false"><path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z"/></svg></span>
+      </div>
+    </div></div><div class="category-card" role="button" tabindex="0" aria-label="什三地球分类，0篇文章" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s, transform 0.5s;"><img src="vol13.jpg" alt="什三地球分类封面" class="category-image"><div class="category-body">
+      <div class="category-name">什三地球</div>
+      <div class="category-desc">炼谷什三 × 山本地球</div>
+      <div class="category-footer">
+        <span class="category-count">0 篇文章</span>
+        <span class="category-arrow"><svg class="ms-icon" width="16" height="16" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false"><path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z"/></svg></span>
+      </div>
+    </div></div><div class="category-card" role="button" tabindex="0" aria-label="海岛统吾分类，0篇文章" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s, transform 0.5s;"><img src="vol15.jpg" alt="海岛统吾分类封面" class="category-image"><div class="category-body">
+      <div class="category-name">海岛统吾</div>
+      <div class="category-desc">高江统吾 × 海岛涟</div>
+      <div class="category-footer">
+        <span class="category-count">0 篇文章</span>
+        <span class="category-arrow"><svg class="ms-icon" width="16" height="16" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false"><path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z"/></svg></span>
+      </div>
+    </div></div></div>
   </section>
 
   <!-- ===== CATEGORY PAGE ===== -->
@@ -378,14 +419,14 @@
             <select id="fontFamilySelect" class="settings-select" onchange="setReaderFont(this.value)" style="flex:1;">
               <option value="">思源宋体</option>
               <option value="'LXGWWenKai', cursive">霞鹜文楷</option>
-              <option value="'MiSans', sans-serif">MiSans</option>
               <option value="'SourceHanSansCN', sans-serif">思源黑体</option>
               <option value="'ZhuqueFangsong', serif">朱雀仿宋</option>
+              <option value="'MiSans', sans-serif">MiSans</option>
             </select>
           </div>
           <div class="settings-row">
             <span class="settings-label">字号</span>
-            <input type="range" class="settings-slider" id="fontSizeSlider" min="13" max="22" value="16" aria-label="调整字号">
+            <input type="range" class="settings-slider" id="fontSizeSlider" min="14" max="24" step="1" value="16" aria-label="调整字号">
             <span class="settings-value" id="fontSizeValue">16px</span>
           </div>
           <div class="settings-row">
@@ -411,11 +452,11 @@
         <h4 style="margin-bottom:12px;font-family:var(--font-display);">编辑排版</h4>
         <input type="text" id="readerEditTitle" placeholder="章节标题" style="width:100%;padding:8px;border:1px solid var(--border-light);background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-serif);margin-bottom:8px;border-radius:var(--radius-sm);">
         <div style="display:flex;gap:6px;margin-bottom:8px;align-items:center;">
-          <button class="admin-small-btn" onclick="insertEditAlign('left')" title="左对齐">≡左</button>
-          <button class="admin-small-btn" onclick="insertEditAlign('center')" title="居中">≡中</button>
-          <button class="admin-small-btn" onclick="insertEditAlign('right')" title="右对齐">≡右</button>
+          <button class="admin-small-btn" onclick="insertEditAlign('left')" title="左对齐"><svg class="ms-icon" width="14" height="14" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false"><path d="M120-120v-80h720v80H120Zm0-160v-80h480v80H120Zm0-160v-80h720v80H120Zm0-160v-80h480v80H120Zm0-160v-80h720v80H120Z"/></svg>左</button>
+          <button class="admin-small-btn" onclick="insertEditAlign('center')" title="居中"><svg class="ms-icon" width="14" height="14" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false"><path d="M120-120v-80h720v80H120Zm160-160v-80h400v80H280ZM120-440v-80h720v80H120Zm160-160v-80h400v80H280ZM120-760v-80h720v80H120Z"/></svg>中</button>
+          <button class="admin-small-btn" onclick="insertEditAlign('right')" title="右对齐"><svg class="ms-icon" width="14" height="14" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false"><path d="M120-760v-80h720v80H120Zm240 160v-80h480v80H360ZM120-440v-80h720v80H120Zm240 160v-80h480v80H360ZM120-120v-80h720v80H120Z"/></svg>右</button>
         </div>
-        <textarea id="readerEditContent" rows="8" placeholder="章节内容（支持 **粗体**、*斜体*、---分隔线、<<<居中>>>、[[[右对齐]]]）" style="width:100%;padding:8px;border:1px solid var(--border-light);background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-serif);resize:vertical;margin-bottom:8px;border-radius:var(--radius-sm);"></textarea>
+        <textarea id="readerEditContent" rows="8" placeholder="章节内容（支持 **粗体**、*斜体*、---分隔线、&lt;&lt;&lt;居中&gt;&gt;&gt;、[[[右对齐]]]）" style="width:100%;padding:8px;border:1px solid var(--border-light);background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-serif);resize:vertical;margin-bottom:8px;border-radius:var(--radius-sm);"></textarea>
         <div style="display:flex;gap:8px;">
           <button class="admin-small-btn" onclick="previewMarkdown()">预览Markdown</button>
           <button class="admin-small-btn" onclick="saveReaderEdit()">保存</button>
@@ -429,7 +470,15 @@
   <!-- ===== TIMELINE PAGE ===== -->
   <section class="page" id="page-timeline" aria-label="时间轴">
     <div class="section-title">时间轴</div>
-    <div class="timeline" id="timelineList"></div>
+    <div class="timeline" id="timelineList"><div class="timeline-item" style="animation: 0.5s ease 0s 1 normal both running staggerFadeIn;">
+      <div class="timeline-date">2026-06-17</div>
+      <div class="timeline-title">修bug</div>
+      <div class="timeline-desc">把影响使用的bug基本修完了。</div>
+    </div><div class="timeline-item" style="animation: 0.5s ease 0.1s 1 normal both running staggerFadeIn;">
+      <div class="timeline-date">2026-06-10</div>
+      <div class="timeline-title">网站上线</div>
+      <div class="timeline-desc">黒の猫窝正式对外开放。</div>
+    </div></div>
   </section>
 
   
@@ -437,24 +486,57 @@
   <!-- ===== LINKS PAGE ===== -->
   <section class="page" id="page-links" aria-label="友情链接">
     <div class="section-title">友情链接</div>
-    <div class="links-grid" id="linksGrid"></div>
+    <div class="links-grid" id="linksGrid"><a href="https://www.lofter.com/" class="link-card" target="_blank" rel="noopener noreferrer" style="animation: 0.5s ease 0s 1 normal both running staggerFadeIn;">
+      <div class="link-icon" aria-hidden="true"><span aria-hidden="true">LOF</span></div>
+      <h4>LOFTER</h4>
+      <p>LOFTER 主页</p>
+    </a><a href="https://archiveofourown.org/" class="link-card" target="_blank" rel="noopener noreferrer" style="animation: 0.5s ease 0.1s 1 normal both running staggerFadeIn;">
+      <div class="link-icon" aria-hidden="true"><span aria-hidden="true">AO3</span></div>
+      <h4>AO3</h4>
+      <p>Archive of Our Own</p>
+    </a><a href="https://w.atwiki.jp/vocaloid/" class="link-card" target="_blank" rel="noopener noreferrer" style="animation: 0.5s ease 0.2s 1 normal both running staggerFadeIn;">
+      <div class="link-icon" aria-hidden="true"><span aria-hidden="true">Wiki</span></div>
+      <h4>Vocaloid Wiki</h4>
+      <p>Vocaloid 中文维基</p>
+    </a><a href="https://zh.moegirl.org.cn/" class="link-card" target="_blank" rel="noopener noreferrer" style="animation: 0.5s ease 0.3s 1 normal both running staggerFadeIn;">
+      <div class="link-icon" aria-hidden="true"><span aria-hidden="true">萌</span></div>
+      <h4>萌娘百科</h4>
+      <p>万物皆可萌的百科全书</p>
+    </a></div>
   </section>
 
   <!-- ===== ABOUT PAGE - New Profile Style ===== -->
   <section class="page" id="page-about" aria-label="关于页面">
-    <div class="about-profile" id="aboutProfile">
-      <!-- Rendered by JS from aboutData -->
+    <div class="about-profile" id="aboutProfile"><div class="about-header-card">
+    <img class="about-avatar" src="avatar.png" alt="头像">
+    <h2>黒 / 黑喵子</h2>
+    <p class="about-handle">20↑ 社畜</p>
+    <div class="social-links">
+      <a href="https://space.bilibili.com/3318554" class="social-link" target="_blank" rel="noopener noreferrer"><span class="social-icon" aria-hidden="true"><img src="https://www.bilibili.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display='none'"></span> 哔哩哔哩</a><a href="https://github.com/KuroNya39" class="social-link" target="_blank" rel="noopener noreferrer"><span class="social-icon" aria-hidden="true"><img src="https://github.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display='none'"></span> GitHub</a><a href="https://user.qzone.qq.com/1395507041" class="social-link" target="_blank" rel="noopener noreferrer"><span class="social-icon" aria-hidden="true"><img src="https://qzone.qq.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display='none'"></span> QQ空间</a><a href="https://weibo.com/u/5031602926" class="social-link" target="_blank" rel="noopener noreferrer"><span class="social-icon" aria-hidden="true"><img src="https://weibo.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display='none'"></span> 微博</a><a href="https://xhslink.com/m/7bBjGbLWBGT" class="social-link" target="_blank" rel="noopener noreferrer"><span class="social-icon" aria-hidden="true"><img src="https://www.xiaohongshu.com/favicon.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display='none'"></span> 小红书</a><a href="https://x.com/KuroNya39" class="social-link" target="_blank" rel="noopener noreferrer"><span class="social-icon" aria-hidden="true"><img src="https://abs.twimg.com/favicons/twitter.3.ico" width="16" height="16" style="vertical-align:middle;" onerror="this.style.display='none'"></span> X</a>
     </div>
+  </div><div class="interest-section"><div class="interest-card">
+      <h3>VOCALOID</h3>
+      <div class="interest-content"><div><span class="label">声库</span><span class="value">miku &gt; &gt; &gt; 音街ウナ &gt; Rana</span></div><div><span class="label">P主</span><span class="value">Mitchie M / Giga</span></div><div><span class="label">画师</span><span class="value">ixima</span></div></div>
+    </div></div><div class="interest-section"><div class="interest-card">
+      <h3>偶像梦幻祭</h3>
+      <div class="interest-content"><div><span class="label">主推</span><span class="value">leo &gt; &gt; &gt; 凛月 &gt; 零=泉</span></div><div><span class="label">好感</span><span class="value">mika/夏目/晃牙/彩/宙</span></div><div><span class="label">CP</span><span class="value">狮心/零凛</span></div><div><span class="value">雷leo司/泉真，其他杂食</span></div></div>
+    </div></div><div class="interest-section"><div class="interest-card">
+      <h3>NITRO+CHiRAL</h3>
+      <div class="interest-content"><div><span class="value">主Slow Damage，towa单推</span></div><div><span class="value">系列作补完中</span></div></div>
+    </div></div><div class="interest-section"><div class="interest-card">
+      <h3>其他</h3>
+      <div class="interest-content"><div><span class="value">电子琴 / MMD / 手帐 / 爵士乐 / 普罗米亚 / 创作BL / 快新 / 梅露可物语 / 男子高校生、はじめての / 玉桂狗 / 文具 / 少女歌剧</span></div></div>
+    </div></div></div>
   </section>
   </main>
 
   <footer class="site-footer">
-    <p id="footerText">黒の猫窝 · 收藏每一个故事</p>
-    <p class="footer-stars" aria-hidden="true">&#10022; &#10022; &#10022;</p>
+    <p id="footerText">黒の猫窝 · (=・ω・=)</p>
+    <p class="footer-stars" aria-hidden="true">✦ ✦ ✦</p>
   </footer>
 </div>
 
 
 <script src="app.js"></script>
-</body>
-</html>
+
+</body></html>
