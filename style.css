@@ -1542,6 +1542,8 @@ button:active,
 .reader-nav { display: flex; justify-content: space-between; align-items: center; margin-top: var(--space-xl); padding-top: var(--space-lg); border-top: 1px solid var(--border-light); page-break-inside: avoid; break-inside: avoid; }
 .reader-nav-btn { padding: var(--space-sm) var(--space-xl); border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-secondary); font-family: var(--font-serif); font-size: 0.875rem; cursor: pointer; transition: var(--transition); letter-spacing: 0.5px; border-radius: var(--radius-sm); display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 .reader-nav-btn:hover { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
+/* 箭头图标视觉偏高，向下微调与文字居中对齐 */
+.reader-nav-btn svg { transform: translateY(1px); }
 
 /* ===== Admin Panel - Floating Drawer Style ===== */
 .admin-drawer {
@@ -1737,6 +1739,8 @@ button:active,
 /* Back Button */
 .back-btn { display: inline-flex; align-items: center; gap: 6px; padding: var(--space-sm) var(--space-lg); margin-top: 0; margin-bottom: var(--space-md); border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-secondary); font-family: var(--font-serif); font-size: 0.75rem; cursor: pointer; transition: var(--transition); border-radius: var(--radius-sm); }
 .back-btn:hover { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
+/* 箭头图标视觉偏高，向下微调与文字居中对齐 */
+.back-btn svg { transform: translateY(1px); }
 
 /* Footer with rose divider */
 .site-footer {
