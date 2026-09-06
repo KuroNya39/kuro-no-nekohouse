@@ -30,7 +30,10 @@ const ICON_PATHS = {
   format_align_center: '<path d="M120-120v-80h720v80H120Zm160-160v-80h400v80H280ZM120-440v-80h720v80H120Zm160-160v-80h400v80H280ZM120-760v-80h720v80H120Z"/>',
   format_align_right: '<path d="M120-760v-80h720v80H120Zm240 160v-80h480v80H360ZM120-440v-80h720v80H120Zm240 160v-80h480v80H360ZM120-120v-80h720v80H120Z"/>',
   search: '<path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>',
-  expand_more: '<path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z"/>'
+  expand_more: '<path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z"/>',
+  chevron_left: '<path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/>',
+  chevron_right: '<path d="m504-480 184-184-56-56-240 240 240 240 56-56-184-184Z"/>',
+  music_note: '<path d="M400-120q-66 0-113-47t-47-113q0-66 47-113t113-47q23 0 42.5 5.5T480-428v-412h240v160H520v400q0 66-47 113t-113 47Z"/>'
 };
 
 function icon(name, size) {
@@ -76,6 +79,7 @@ function initCustomSelect(selectEl) {
 
   let open = false;
   let highlighted = -1;
+  let openedAt = 0;
 
   function renderOptions() {
     listbox.innerHTML = '';
@@ -116,20 +120,27 @@ function initCustomSelect(selectEl) {
 
   function onPageScroll(e) {
     if (e.target === listbox || listbox.contains(e.target)) return;
+    // 打开瞬间的布局沉降（移动端 URL 栏收起、异步 scroll/resize）不关闭下拉框
+    if (Date.now() - openedAt < 250) return;
     close();
   }
 
   function openList() {
     open = true;
+    openedAt = Date.now();
     wrap.classList.add('open');
     trigger.setAttribute('aria-expanded', 'true');
     highlighted = selectEl.selectedIndex >= 0 ? selectEl.selectedIndex : 0;
     updateHighlight();
     const active = listbox.children[highlighted];
-    if (active) active.scrollIntoView({ block: 'nearest' });
+    if (active) {
+      // 只滚动列表自身：scrollIntoView 会连带滚动页面，移动端 URL 栏收起触发 resize/scroll → 下拉框被瞬间关闭
+      const optTop = active.offsetTop, optH = active.offsetHeight, lbH = listbox.clientHeight;
+      if (optTop < listbox.scrollTop) listbox.scrollTop = Math.max(0, optTop - 4);
+      else if (optTop + optH > listbox.scrollTop + lbH) listbox.scrollTop = optTop + optH - lbH + 4;
+    }
 
     // Fixed-position portal: escape ancestor overflow clipping (e.g. .settings-panel overflow:hidden).
-    // Position after scrollIntoView so layout (scrollbar state) is stable and the list aligns with the trigger.
     const rect = trigger.getBoundingClientRect();
     const MARGIN = 8, MAX_H = 200;
     // Mobile: reserve space for fixed bottom nav (~56px)
@@ -152,7 +163,7 @@ function initCustomSelect(selectEl) {
 
     document.addEventListener('scroll', onPageScroll, true);
     window.addEventListener('scroll', onPageScroll);
-    window.addEventListener('resize', close);
+    window.addEventListener('resize', onPageScroll);
 
     // Re-align after layout settles (scrollbar toggle, font load, panel animation)
     requestAnimationFrame(() => {
@@ -172,7 +183,7 @@ function initCustomSelect(selectEl) {
     listbox.style.cssText = '';
     document.removeEventListener('scroll', onPageScroll, true);
     window.removeEventListener('scroll', onPageScroll);
-    window.removeEventListener('resize', close);
+    window.removeEventListener('resize', onPageScroll);
   }
 
   trigger.addEventListener('click', () => { open ? close() : openList(); });
@@ -1739,7 +1750,7 @@ function renderFilteredNovelList(novels) {
         </div>
         <div class="novel-tags">${novel.tags.map(t => `<span class="novel-tag">${escapeHTML(t)}</span>`).join('')}</div>
       </div>
-      <div class="novel-arrow">→</div>
+      <div class="novel-arrow">${icon('chevron_right', 16)}</div>
     `;
     list.appendChild(div);
   });
@@ -1923,8 +1934,8 @@ function showNovel(index, chapterIdx, shouldPushState) {
     nextBtn.style.visibility = index < currentCategory.novels.length - 1 ? 'visible' : 'hidden';
     prevBtn.onclick = () => { if (index > 0) { scrollBehavior = 'topOfContent'; showNovel(index - 1); } };
     nextBtn.onclick = () => { if (index < currentCategory.novels.length - 1) { scrollBehavior = 'topOfContent'; showNovel(index + 1); } };
-    prevBtn.innerHTML = icon('arrow_back', 16) + ' 上一篇';
-    nextBtn.innerHTML = '下一篇 ' + icon('arrow_forward', 16);
+    prevBtn.innerHTML = icon('arrow_back', 14) + ' 上一篇';
+    nextBtn.innerHTML = '下一篇 ' + icon('arrow_forward', 14);
   }
 
   // Show/hide edit button based on admin status
@@ -2623,7 +2634,7 @@ function renderInterestTags(section, containerId) {
     div.innerHTML = `
       <input type="text" data-section="${section}" data-field="label" data-index="${i}" value="${(item.label && item.label !== '标签') ? item.label : ''}" placeholder="标签名" style="width:80px;flex-shrink:0;">
       <input type="text" data-section="${section}" data-field="value" data-index="${i}" value="${item.value || ''}" placeholder="内容" style="flex:1;">
-      <button class="admin-btn" style="padding:4px 8px;font-size:0.75rem;flex-shrink:0;" onclick="removeInterestTag('${section}',${i})">×</button>
+      <button class="admin-btn" style="padding:4px 8px;font-size:0.75rem;flex-shrink:0;" onclick="removeInterestTag('${section}',${i})">${icon('close', 12)}</button>
     `;
     container.appendChild(div);
   });

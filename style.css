@@ -977,7 +977,7 @@ body::before {
 
 /* Random article button - consistent with nav buttons */
 .random-btn { font-size: 1rem; }
-.random-btn .music-notes { font-family: 'Segoe UI Symbol', 'Noto Sans Symbols 2', serif; font-size: 1.125rem; line-height: 1; }
+.random-btn .music-notes { display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
 .random-btn:hover { color: var(--text-primary); }
 .random-btn:hover::after { width: 80%; }
 
@@ -1131,7 +1131,7 @@ button:active,
 .category-desc { font-size: 0.75rem; color: var(--text-muted); margin-top: 0; margin-bottom: var(--space-md); }
 .category-footer { display: flex; justify-content: space-between; align-items: center; padding-top: var(--space-md); border-top: 1px solid var(--border-light); }
 .category-count { font-size: 0.75rem; color: var(--text-muted); }
-.category-arrow { color: var(--text-muted); transition: var(--transition); opacity: 0.4; }
+.category-arrow { color: var(--text-muted); transition: var(--transition); opacity: 0.4; display: flex; align-items: center; }
 .category-card:hover .category-arrow { opacity: 1; color: var(--accent-primary); transform: translateX(4px); }
 
 /* Category Page with Header Image */
@@ -1185,7 +1185,7 @@ button:active,
 /* Sort Bar */
 .sort-bar { display: flex; align-items: center; margin-top: 0; margin-bottom: var(--space-lg); padding: var(--space-md) 0; border-bottom: 1px solid var(--border-light); flex-wrap: wrap; gap: var(--gap-compact); }
 .sort-label { font-size: 0.75rem; color: var(--text-muted); margin-right: 4px; }
-.sort-btn { padding: 5px 14px; border: 1px solid var(--border-light); background: transparent; color: var(--text-muted); font-size: 0.75rem; cursor: pointer; transition: var(--transition); border-radius: var(--radius-sm); }
+.sort-btn { padding: 5px 14px; border: 1px solid var(--border-light); background: transparent; color: var(--text-muted); font-size: 0.75rem; cursor: pointer; transition: var(--transition); border-radius: var(--radius-sm); display: inline-flex; align-items: center; justify-content: center; gap: 4px; }
 .sort-btn:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
 .sort-order-btn { margin-left: auto; font-size: 0.75rem; opacity: 0.7; }
 .sort-order-btn:hover { opacity: 1; }
@@ -1216,7 +1216,7 @@ button:active,
 .novel-meta { font-size: 0.75rem; color: var(--text-muted); display: flex; gap: 14px; flex-wrap: wrap; }
 .novel-tags { display: flex; gap: 6px; margin-top: var(--space-sm); flex-wrap: wrap; }
 .novel-tag { padding: 2px 8px; background: var(--accent-tag-bg, rgba(122, 158, 138, 0.06)); font-size: 0.75rem; color: var(--accent-primary); }
-.novel-arrow { color: var(--text-muted); font-size: 1.125rem; transition: var(--transition); opacity: 0.3; align-self: center; }
+.novel-arrow { color: var(--text-muted); display: flex; align-items: center; transition: var(--transition); opacity: 0.3; align-self: center; }
 .novel-item:hover .novel-arrow { opacity: 1; color: var(--accent-primary); }
 
 /* Reading progress badge on novel list */
@@ -1404,7 +1404,7 @@ button:active,
 .select-trigger[aria-expanded="true"] .ms-icon { transform: rotate(180deg); }
 .select-value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .select-options {
-  position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 120;
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 1200;
   max-height: 200px; overflow-y: auto; display: none;
   background: var(--bg-popover); border: 1px solid var(--border-light);
   border-radius: var(--radius-sm); box-shadow: var(--shadow-card);
@@ -1556,7 +1556,7 @@ button:active,
 
 /* Reader Nav */
 .reader-nav { display: flex; justify-content: space-between; align-items: center; margin-top: var(--space-xl); padding-top: var(--space-lg); border-top: 1px solid var(--border-light); page-break-inside: avoid; break-inside: avoid; }
-.reader-nav-btn { padding: var(--space-sm) var(--space-xl); border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-secondary); font-family: var(--font-serif); font-size: 0.875rem; cursor: pointer; transition: var(--transition); letter-spacing: 0.5px; border-radius: var(--radius-sm); }
+.reader-nav-btn { padding: var(--space-sm) var(--space-xl); border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-secondary); font-family: var(--font-serif); font-size: 0.875rem; cursor: pointer; transition: var(--transition); letter-spacing: 0.5px; border-radius: var(--radius-sm); display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 .reader-nav-btn:hover { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
 
 /* ===== Admin Panel - Floating Drawer Style ===== */
@@ -1889,7 +1889,7 @@ button:active,
   min-height: 60px;
 }
 .admin-textarea:focus { outline: none; border-color: var(--accent-primary); }
-.admin-small-btn { padding: var(--space-xs) var(--space-md); font-size: 0.75rem; border: 1px solid var(--accent-primary); background: var(--accent-primary); color: white; cursor: pointer; font-family: var(--font-serif); transition: var(--transition); border-radius: var(--radius-sm); }
+.admin-small-btn { padding: var(--space-xs) var(--space-md); font-size: 0.75rem; border: 1px solid var(--accent-primary); background: var(--accent-primary); color: white; cursor: pointer; font-family: var(--font-serif); transition: var(--transition); border-radius: var(--radius-sm); display: inline-flex; align-items: center; justify-content: center; gap: 4px; }
 .admin-small-btn:hover { background: transparent; color: var(--accent-primary); }
 .admin-small-btn.cancel { border-color: var(--text-muted); color: var(--text-muted); background: none; }
 .admin-small-btn.cancel:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
