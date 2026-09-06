@@ -416,12 +416,30 @@ select option:active {
 /* Global link style - GitHub blue */
 a { color: var(--accent-primary); text-decoration: none; }
 
+/* Custom Cursor - .cur format for cross-browser support (.ani only works in IE)
+   Two Miku cursor sets: Normal Miku for light theme, Snow Miku for dark theme */
+:root {
+  --cursor-arrow: url('cursors/miku/Arrow.cur') 6 0, auto;
+  --cursor-link: url('cursors/miku/Link.cur') 6 0, pointer;
+  --cursor-text: url('cursors/miku/IBeam.cur') 15 15, text;
+  --cursor-wait: url('cursors/miku/Wait.cur') 16 16, wait;
+}
+[data-theme="dark"] {
+  --cursor-arrow: url('cursors/snowmiku/Arrow.cur') 6 0, auto;
+  --cursor-link: url('cursors/snowmiku/Link.cur') 6 0, pointer;
+  --cursor-text: url('cursors/miku/IBeam.cur') 15 15, text;
+  --cursor-wait: url('cursors/snowmiku/Wait.cur') 16 16, wait;
+}
 @media (hover: hover) and (pointer: fine) {
-/* Custom Cursor - .cur format for cross-browser support (.ani only works in IE) */
-html { cursor: url('cursors/Arrow.cur') 6 0, auto; }
-a, button, [onclick], select, input[type="submit"], .nav-btn, .scheme-option, .category-card, .novel-card, .link-card, .interest-card, .back-to-top, .theme-toggle, .admin-toggle, .color-scheme-toggle { cursor: url('cursors/リンクの選択.cur') 6 0, pointer; }
-input[type="text"], input[type="password"], input[type="url"], textarea, [contenteditable="true"] { cursor: url('cursors/IBeam.cur') 6 0, text; }
-.loading-overlay { cursor: url('cursors/待ち状態.cur') 6 0, wait; }
+  html { cursor: var(--cursor-arrow); }
+  a, button, [onclick], select, input[type="submit"], .nav-btn, .scheme-option,
+  .category-card, .novel-card, .link-card, .interest-card, .back-to-top,
+  .theme-toggle, .admin-toggle, .color-scheme-toggle, .settings-btn, .sort-btn,
+  .reader-nav-btn, .timeline-item, .social-link, .admin-tab, .select-trigger,
+  .select-option, .back-btn, .admin-small-btn { cursor: var(--cursor-link); }
+  input[type="text"], input[type="password"], input[type="url"], textarea,
+  [contenteditable="true"] { cursor: var(--cursor-text); }
+  .loading-overlay { cursor: var(--cursor-wait); }
 }
 html { scroll-behavior: smooth; }
 * { box-sizing: border-box; }
@@ -1912,7 +1930,7 @@ button:active,
 @media (max-width: 768px) {
   .app-container { padding: 0 16px; }
   .site-title { font-size: 2rem; letter-spacing: 5px; }
-  .theme-toggle, .admin-toggle, .color-scheme-toggle { top: 10px; width: 36px; height: 36px; font-size: 0.75rem; }
+  .theme-toggle, .admin-toggle, .color-scheme-toggle { top: 10px; width: 40px; height: 40px; font-size: 0.75rem; }
   .top-toolbar { top: 10px; right: 10px; gap: 4px; }
   .color-scheme-dropdown { flex-shrink: 0; }
   .admin-drawer { width: 100%; right: -100%; }
@@ -1971,6 +1989,8 @@ button:active,
 
   /* Larger tap targets for custom dropdown options on touch */
   .select-option { padding: 10px 12px; }
+  .select-trigger { min-height: 41px; }
+  .settings-btn { min-height: 41px; }
 
   .back-to-top { bottom: 68px; }
 }
