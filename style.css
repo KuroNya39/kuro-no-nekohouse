@@ -44,6 +44,7 @@ select {
   --bg-primary: #fafcfc;
   --bg-secondary: #f0f5f5;
   --bg-card: rgba(255, 255, 255, 0.7);
+  --bg-popover: color-mix(in srgb, var(--bg-primary) 97%, transparent);
   --nav-bg: rgba(250, 252, 252, 0.9);
   --bg-card-hover: rgba(255, 255, 255, 0.85);
   --text-primary: #2a3a38;
@@ -596,7 +597,7 @@ body::before {
   position: absolute;
   top: 44px;
   right: 0;
-  background: var(--bg-card);
+  background: var(--bg-popover);
   border: 1px solid var(--border-light);
   z-index: 1001;
   min-width: 110px;
@@ -1390,7 +1391,7 @@ button:active,
 .select-trigger {
   width: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm);
   padding: var(--space-xs) var(--space-sm); border: 1px solid var(--border-light);
-  background: var(--bg-card); color: var(--text-primary); font-family: var(--font-serif);
+  background: var(--bg-popover); color: var(--text-primary); font-family: var(--font-serif);
   font-size: 0.875rem; border-radius: var(--radius-sm); cursor: pointer; text-align: left;
   transition: border-color 0.2s ease, background 0.2s ease;
 }
@@ -1401,7 +1402,7 @@ button:active,
 .select-options {
   position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 120;
   max-height: 200px; overflow-y: auto; display: none;
-  background: var(--bg-card); border: 1px solid var(--border-light);
+  background: var(--bg-popover); border: 1px solid var(--border-light);
   border-radius: var(--radius-sm); box-shadow: var(--shadow-card);
 }
 .custom-select.open .select-options { display: block; }
@@ -1412,7 +1413,7 @@ button:active,
   transition: background 0.15s ease, color 0.15s ease;
 }
 .select-option:hover, .select-option.highlighted {
-  background: color-mix(in srgb, var(--accent-primary) 15%, var(--bg-card));
+  background: color-mix(in srgb, var(--accent-primary) 15%, var(--bg-popover));
 }
 .select-option[aria-selected="true"] { color: var(--accent-primary); }
 .native-hidden {
