@@ -1466,7 +1466,7 @@ function goToRandomNovel() {
   const cat = categories[pick.catIdx];
   if (cat) {
     currentCategory = cat;
-    showCategory(pick.catId, true);
+    // 直接进入阅读页：showCategory + showNovel 会连续渲染两个页面并 push 两条历史，表现为"随机两次"
     showNovel(pick.novelIdx, 0, true);
     // Update nav active state
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -3265,22 +3265,29 @@ function initAvatarTilt() {
   if (window.matchMedia('(hover: none)').matches) return;
   const avatar = document.querySelector('.hero-avatar');
   if (!avatar) return;
-  avatar.addEventListener('mousemove', (e) => {
+  // 监听 hero-section 并扩展判定范围（约一个 gap 的距离），避免鼠标刚离开头像边界就回弹
+  const section = avatar.closest('.hero-section') || avatar;
+  const EXPAND = 24;
+  const reset = () => {
+    avatar.style.transition = '';
+    avatar.style.transform = '';
+  };
+  section.addEventListener('mousemove', (e) => {
     const rect = avatar.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const cx = rect.width / 2;
-    const cy = rect.height / 2;
-    const rotateX = (y - cy) / cy * -3;
-    const rotateY = (x - cx) / cx * 3;
+    const left = rect.left - EXPAND, right = rect.right + EXPAND;
+    const top = rect.top - EXPAND, bottom = rect.bottom + EXPAND;
+    if (e.clientX < left || e.clientX > right || e.clientY < top || e.clientY > bottom) { reset(); return; }
+    const cx = (left + right) / 2;
+    const cy = (top + bottom) / 2;
+    const hw = (right - left) / 2;
+    const hh = (bottom - top) / 2;
+    const rotateX = ((e.clientY - cy) / hh) * -3;
+    const rotateY = ((e.clientX - cx) / hw) * 3;
     // 跟随期间近即时响应（0.05s），避免 0.3s 过渡追不上鼠标导致倾斜几乎不可见
     avatar.style.transition = 'transform 0.05s ease-out';
     avatar.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
   });
-  avatar.addEventListener('mouseleave', () => {
-    avatar.style.transition = '';
-    avatar.style.transform = '';
-  });
+  section.addEventListener('mouseleave', reset);
 }
 
 // ===== ERROR BOUNDARY =====
