@@ -366,6 +366,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initTypewriterEffect();
   initSwipeNavigation();
   initCoolMode();
+  initAvatarTilt();
   updateSyncUI();
   hideLoading();
   } catch(err) {
@@ -3117,6 +3118,26 @@ function initCoolMode() {
     el.addEventListener('dragstart', e => e.preventDefault());
     // Catch-all: release may happen outside the element (drag / long press)
     window.addEventListener('mouseup', stop);
+  });
+}
+
+// Mouse tilt effect for homepage avatar, same as category cards (desktop only)
+function initAvatarTilt() {
+  if (window.matchMedia('(hover: none)').matches) return;
+  const avatar = document.querySelector('.hero-avatar');
+  if (!avatar) return;
+  avatar.addEventListener('mousemove', (e) => {
+    const rect = avatar.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+    const rotateX = (y - cy) / cy * -3;
+    const rotateY = (x - cx) / cx * 3;
+    avatar.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
+  });
+  avatar.addEventListener('mouseleave', () => {
+    avatar.style.transform = '';
   });
 }
 
