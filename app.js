@@ -114,12 +114,39 @@ function initCustomSelect(selectEl) {
     close();
   }
 
+  function onPageScroll(e) {
+    if (e.target === listbox || listbox.contains(e.target)) return;
+    close();
+  }
+
   function openList() {
     open = true;
     wrap.classList.add('open');
     trigger.setAttribute('aria-expanded', 'true');
     highlighted = selectEl.selectedIndex >= 0 ? selectEl.selectedIndex : 0;
     updateHighlight();
+
+    // Fixed-position portal: escape ancestor overflow clipping (e.g. .settings-panel overflow:hidden)
+    const rect = trigger.getBoundingClientRect();
+    const MARGIN = 8, MAX_H = 200;
+    const spaceBelow = window.innerHeight - rect.bottom - MARGIN;
+    const spaceAbove = rect.top - MARGIN;
+    listbox.style.position = 'fixed';
+    listbox.style.left = Math.round(rect.left) + 'px';
+    listbox.style.width = Math.round(rect.width) + 'px';
+    if (spaceBelow >= 120 || spaceBelow >= spaceAbove) {
+      listbox.style.top = Math.round(rect.bottom + 4) + 'px';
+      listbox.style.bottom = 'auto';
+      listbox.style.maxHeight = Math.min(MAX_H, Math.max(60, spaceBelow)) + 'px';
+    } else {
+      listbox.style.top = 'auto';
+      listbox.style.bottom = Math.round(window.innerHeight - rect.top + 4) + 'px';
+      listbox.style.maxHeight = Math.min(MAX_H, Math.max(60, spaceAbove)) + 'px';
+    }
+
+    document.addEventListener('scroll', onPageScroll, true);
+    window.addEventListener('scroll', onPageScroll);
+    window.addEventListener('resize', close);
     const active = listbox.children[highlighted];
     if (active) active.scrollIntoView({ block: 'nearest' });
   }
@@ -129,6 +156,10 @@ function initCustomSelect(selectEl) {
     open = false;
     wrap.classList.remove('open');
     trigger.setAttribute('aria-expanded', 'false');
+    listbox.style.cssText = '';
+    document.removeEventListener('scroll', onPageScroll, true);
+    window.removeEventListener('scroll', onPageScroll);
+    window.removeEventListener('resize', close);
   }
 
   trigger.addEventListener('click', () => { open ? close() : openList(); });

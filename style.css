@@ -1076,7 +1076,7 @@ button:active,
 /* Hero Section */
 .hero-section { background: var(--bg-card); border: 1px solid var(--border-light); padding: var(--space-xl); margin-bottom: var(--space-2xl); display: flex; gap: var(--space-xl); align-items: center; transition: var(--transition); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5); }
 .hero-section:hover { border-color: var(--border-hover); }
-.hero-avatar { width: 100px; height: 100px; flex-shrink: 0; object-fit: cover; border: 2px solid var(--border-light); border-radius: var(--radius-sm); display: block; }
+.hero-avatar { width: 100px; height: 100px; flex-shrink: 0; object-fit: cover; border: 1px solid var(--border-light); border-radius: var(--radius-sm); display: block; }
 .hero-content { flex: 1; }
 .hero-content h2 { font-family: var(--font-display); font-size: 1.5rem; color: var(--text-primary); margin-top: 0; margin-bottom: var(--space-sm); }
 .hero-content p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.8; margin-top: 0; margin-bottom: var(--space-base); }
@@ -1709,7 +1709,7 @@ button:active,
 .about-header-card .about-avatar {
   width: 100px; height: 100px; margin: 0 auto var(--space-lg);
   object-fit: cover;
-  border: 2px solid var(--border-light);
+  border: 1px solid var(--border-light);
   border-radius: var(--radius-sm);
   display: block;
 }
