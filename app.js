@@ -685,10 +685,10 @@ function importData(event) {
       // Re-apply theme
       if (data.theme === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
-        document.getElementById('themeToggle').textContent = '☀';
+        document.getElementById('themeToggle').innerHTML = icon('light_mode', 20);
       } else {
         document.documentElement.removeAttribute('data-theme');
-        document.getElementById('themeToggle').innerHTML = icon('dark_mode', 18);
+        document.getElementById('themeToggle').innerHTML = icon('dark_mode', 20);
       }
       announceToScreenReader('数据导入成功');
       alert('数据导入成功！');
@@ -706,18 +706,18 @@ function initTheme() {
   const savedTheme = localStorage.getItem('theme');
   if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
     document.documentElement.setAttribute('data-theme', 'dark');
-    document.getElementById('themeToggle').textContent = '☀';
+    document.getElementById('themeToggle').innerHTML = icon('light_mode', 20);
   }
   document.getElementById('themeToggle').addEventListener('click', () => {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     if (isDark) {
       document.documentElement.removeAttribute('data-theme');
       localStorage.setItem('theme', 'light');
-      document.getElementById('themeToggle').innerHTML = icon('dark_mode', 18);
+      document.getElementById('themeToggle').innerHTML = icon('dark_mode', 20);
     } else {
       document.documentElement.setAttribute('data-theme', 'dark');
       localStorage.setItem('theme', 'dark');
-      document.getElementById('themeToggle').textContent = '☀';
+      document.getElementById('themeToggle').innerHTML = icon('light_mode', 20);
     }
     updateBackgroundPattern();
   });
@@ -727,10 +727,10 @@ function initTheme() {
     if (!localStorage.getItem('theme')) {
       if (e.matches) {
         document.documentElement.setAttribute('data-theme', 'dark');
-        document.getElementById('themeToggle').textContent = '☀';
+        document.getElementById('themeToggle').innerHTML = icon('light_mode', 20);
       } else {
         document.documentElement.removeAttribute('data-theme');
-        document.getElementById('themeToggle').innerHTML = icon('dark_mode', 18);
+        document.getElementById('themeToggle').innerHTML = icon('dark_mode', 20);
       }
       updateBackgroundPattern();
     }
@@ -2060,8 +2060,13 @@ function initReaderSettings() {
   const fontSlider = document.getElementById('fontSizeSlider');
   const lineSlider = document.getElementById('lineHeightSlider');
 
-  // 手动拖动/键盘调整时取消预设动画
-  const cancelAnim = () => { settingsAnimId++; };
+  // 手动拖动/键盘调整时取消预设动画并恢复滑条步长
+  const cancelAnim = () => {
+    settingsAnimId++;
+    fontSlider.step = '1';
+    lineSlider.step = '0.1';
+    document.getElementById('readerContent').classList.remove('reader-slider-animating');
+  };
   fontSlider.addEventListener('input', cancelAnim);
   lineSlider.addEventListener('input', cancelAnim);
 
@@ -2107,11 +2112,41 @@ function animateReaderSettings(targetFont, targetLine) {
   const lineHeightValue = document.getElementById('lineHeightValue');
   const readerContent = document.getElementById('readerContent');
 
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    fontSlider.value = targetFont;
+    lineSlider.value = targetLine;
+    fontSizeValue.textContent = targetFont + 'px';
+    lineHeightValue.textContent = targetLine;
+    readerContent.style.setProperty('--reader-font-size', targetFont + 'px');
+    readerContent.style.setProperty('--reader-line-height', targetLine);
+    return;
+  }
+
   const startFont = parseFloat(fontSlider.value);
   const startLine = parseFloat(lineSlider.value);
   const animId = ++settingsAnimId;
   const duration = 300;
   const startTime = performance.now();
+
+  // 正文排版由 CSS transition 一次平滑过渡（避免每帧触发大文本 reflow 造成卡顿）
+  readerContent.classList.add('reader-slider-animating');
+  readerContent.style.setProperty('--reader-font-size', targetFont + 'px');
+  readerContent.style.setProperty('--reader-line-height', targetLine);
+
+  // 动画期间放宽滑条步长，让滑块连续移动而非逐档跳变
+  fontSlider.step = '0.1';
+  lineSlider.step = '0.01';
+
+  const finish = () => {
+    if (animId !== settingsAnimId) return;
+    fontSlider.step = '1';
+    lineSlider.step = '0.1';
+    fontSlider.value = targetFont;
+    lineSlider.value = targetLine;
+    fontSizeValue.textContent = targetFont + 'px';
+    lineHeightValue.textContent = targetLine;
+    readerContent.classList.remove('reader-slider-animating');
+  };
 
   function frame(now) {
     if (animId !== settingsAnimId) return;
@@ -2123,9 +2158,8 @@ function animateReaderSettings(targetFont, targetLine) {
     lineSlider.value = line;
     fontSizeValue.textContent = Math.round(font) + 'px';
     lineHeightValue.textContent = line.toFixed(1);
-    readerContent.style.setProperty('--reader-font-size', Math.round(font) + 'px');
-    readerContent.style.setProperty('--reader-line-height', line.toFixed(1));
     if (t < 1) requestAnimationFrame(frame);
+    else finish();
   }
   requestAnimationFrame(frame);
 }
@@ -3128,23 +3162,25 @@ function initCoolMode() {
 
   document.querySelectorAll('.hero-avatar, .about-avatar').forEach(el => {
     let iv = null;
+    let curX = 0, curY = 0;
     const start = e => {
       if (e.button !== undefined && e.button !== 0) return;
       e.preventDefault();
-      const r = el.getBoundingClientRect();
-      const x = e.clientX || r.left + r.width / 2;
-      const y = e.clientY || r.top + r.height / 2;
-      for (let i = 0; i < 5; i++) gen(x, y);
+      curX = e.clientX || 0;
+      curY = e.clientY || 0;
+      for (let i = 0; i < 5; i++) gen(curX, curY);
       iv = setInterval(() => {
-        if (particles.length < 30) gen(x + (Math.random() - 0.5) * 40, y + (Math.random() - 0.5) * 20);
+        if (particles.length < 30) gen(curX + (Math.random() - 0.5) * 40, curY + (Math.random() - 0.5) * 20);
       }, 40);
       if (!animating) { animating = true; loop(); }
     };
+    const move = e => { curX = e.clientX; curY = e.clientY; };
     const stop = () => {
       if (iv) { clearInterval(iv); iv = null; }
       if (animating) setTimeout(() => { if (!particles.length) animating = false; }, 2000);
     };
     el.addEventListener('mousedown', start);
+    el.addEventListener('mousemove', move);
     el.addEventListener('mouseup', stop);
     el.addEventListener('mouseleave', stop);
     el.addEventListener('dragstart', e => e.preventDefault());
@@ -3166,9 +3202,12 @@ function initAvatarTilt() {
     const cy = rect.height / 2;
     const rotateX = (y - cy) / cy * -3;
     const rotateY = (x - cx) / cx * 3;
+    // 跟随期间近即时响应（0.05s），避免 0.3s 过渡追不上鼠标导致倾斜几乎不可见
+    avatar.style.transition = 'transform 0.05s ease-out';
     avatar.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
   });
   avatar.addEventListener('mouseleave', () => {
+    avatar.style.transition = '';
     avatar.style.transform = '';
   });
 }

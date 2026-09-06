@@ -962,6 +962,8 @@ body::before {
 /* Reader page fade transition */
 .reader-content { transition: opacity 0.3s ease; }
 .reader-content.turning { opacity: 0; }
+/* Slider preset animation: smooth font-size/line-height transition (no per-frame reflow) */
+.reader-content.reader-slider-animating { transition: opacity 0.3s ease, font-size 0.3s ease, line-height 0.3s ease; }
 
 /* Scroll progress indicator */
 .scroll-progress {
