@@ -125,15 +125,21 @@ function initCustomSelect(selectEl) {
     trigger.setAttribute('aria-expanded', 'true');
     highlighted = selectEl.selectedIndex >= 0 ? selectEl.selectedIndex : 0;
     updateHighlight();
+    const active = listbox.children[highlighted];
+    if (active) active.scrollIntoView({ block: 'nearest' });
 
-    // Fixed-position portal: escape ancestor overflow clipping (e.g. .settings-panel overflow:hidden)
+    // Fixed-position portal: escape ancestor overflow clipping (e.g. .settings-panel overflow:hidden).
+    // Position after scrollIntoView so layout (scrollbar state) is stable and the list aligns with the trigger.
     const rect = trigger.getBoundingClientRect();
     const MARGIN = 8, MAX_H = 200;
-    const spaceBelow = window.innerHeight - rect.bottom - MARGIN;
+    // Mobile: reserve space for fixed bottom nav (~56px)
+    const bottomInset = window.matchMedia('(max-width: 600px)').matches ? 64 : MARGIN;
+    const spaceBelow = window.innerHeight - rect.bottom - bottomInset;
     const spaceAbove = rect.top - MARGIN;
     listbox.style.position = 'fixed';
     listbox.style.left = Math.round(rect.left) + 'px';
     listbox.style.width = Math.round(rect.width) + 'px';
+    listbox.style.right = 'auto'; // clear CSS default (left:0;right:0) so fixed+left+width wins
     if (spaceBelow >= 120 || spaceBelow >= spaceAbove) {
       listbox.style.top = Math.round(rect.bottom + 4) + 'px';
       listbox.style.bottom = 'auto';
@@ -147,8 +153,15 @@ function initCustomSelect(selectEl) {
     document.addEventListener('scroll', onPageScroll, true);
     window.addEventListener('scroll', onPageScroll);
     window.addEventListener('resize', close);
-    const active = listbox.children[highlighted];
-    if (active) active.scrollIntoView({ block: 'nearest' });
+
+    // Re-align after layout settles (scrollbar toggle, font load, panel animation)
+    requestAnimationFrame(() => {
+      if (!open) return;
+      const r2 = trigger.getBoundingClientRect();
+      if (Math.abs(listbox.getBoundingClientRect().left - r2.left) > 1) {
+        listbox.style.left = Math.round(r2.left) + 'px';
+      }
+    });
   }
 
   function close() {
