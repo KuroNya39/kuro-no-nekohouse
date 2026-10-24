@@ -1344,7 +1344,7 @@ button:active,
 /* Reader Settings */
 .reader-settings { background: var(--bg-card); border: 1px solid var(--border-light); margin-top: 0; margin-bottom: var(--space-lg); border-radius: var(--radius-sm); }
 .settings-header { padding: var(--space-md) var(--space-base); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: var(--transition); }
-.settings-header:hover { background: color-mix(in srgb, var(--accent-primary) 6%, transparent); }
+.settings-header:hover { background: color-mix(in srgb, var(--accent-primary) 3%, transparent); }
 .settings-header:hover .settings-title,
 .settings-header:hover .settings-toggle { color: var(--accent-primary); }
 .settings-title { font-size: 0.875rem; color: var(--text-muted); }
