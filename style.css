@@ -1106,7 +1106,7 @@ button:active,
 .hero-content p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.8; margin-top: 0; margin-bottom: var(--space-base); }
 .hero-tags { display: flex; flex-wrap: wrap; gap: var(--gap-compact); }
 .hero-tag { padding: 4px 12px; border: 1px solid var(--border-light); font-size: 0.75rem; color: var(--text-muted); transition: var(--transition); border-radius: var(--radius-sm); }
-.hero-tag:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
+.hero-tag:hover { border-color: var(--border-hover); }
 
 /* Stats Row */
 .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-base); margin-bottom: var(--space-2xl); }
