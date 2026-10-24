@@ -1030,9 +1030,6 @@ body::before {
 }
 
 /* Search input focus glow */
-.search-input:focus {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-primary) 15%, transparent);
-}
 
 /* ===== END NEW ANIMATIONS ===== */
 
@@ -1065,7 +1062,7 @@ button:active,
   font-size: 1rem; transition: var(--transition);
   border-radius: var(--radius-sm);
 }
-.search-input:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 2px 12px var(--accent-miku-glow); }
+.search-input:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 2px 12px color-mix(in srgb, var(--accent-primary) 20%, transparent); }
 .search-input::placeholder { color: var(--text-muted); }
 .search-icon { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); display: flex; align-items: center; justify-content: center; pointer-events: none; }
 
@@ -1342,9 +1339,9 @@ button:active,
 }
 
 /* Reader Settings */
-.reader-settings { background: var(--bg-card); border: 1px solid var(--border-light); margin-top: 0; margin-bottom: var(--space-lg); border-radius: var(--radius-sm); }
+.reader-settings { background: var(--bg-card); border: 1px solid var(--border-light); margin-top: 0; margin-bottom: var(--space-lg); border-radius: var(--radius-sm); transition: var(--transition); }
+.reader-settings:hover { border-color: var(--accent-primary); }
 .settings-header { padding: var(--space-md) var(--space-base); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: var(--transition); }
-.settings-header:hover { background: color-mix(in srgb, var(--accent-primary) 3%, transparent); }
 .settings-header:hover .settings-title,
 .settings-header:hover .settings-toggle { color: var(--accent-primary); }
 .settings-title { font-size: 0.875rem; color: var(--text-muted); }
