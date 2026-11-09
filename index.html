@@ -148,7 +148,6 @@
           <input type="text" id="cfgFooterText" placeholder="页脚文字">
         </div>
       </div>
-      </div>
       <button class="admin-btn" onclick="saveSiteConfig()">保存站点设置</button>
     </div>
 
@@ -281,9 +280,8 @@
         <button class="admin-btn" onclick="addLink()">添加友链</button>
       </div>
     </div>
-
   </div>
-
+</div>
 
 <div class="app-container">
   <header class="site-header">
@@ -305,7 +303,7 @@
   <section class="page active" id="page-home" aria-label="首页">
     <div class="search-container">
       <input type="text" class="search-input" id="searchInput" placeholder="搜索文章标题、作者或内容..." aria-label="搜索文章">
-      <span class="search-icon" aria-hidden="true"></span>
+      <button type="button" class="search-icon" id="searchBtn" aria-label="搜索" onmousedown="event.preventDefault()" onclick="triggerSearch()"></button>
       <div class="search-results" id="searchResults"><div class="search-empty">没有找到匹配的内容</div></div>
     </div>
 
