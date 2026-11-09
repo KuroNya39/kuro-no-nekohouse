@@ -6,7 +6,10 @@
 ::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: var(--radius-sm); }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary-light); }
 * { scrollbar-width: thin; scrollbar-color: var(--accent-primary) var(--bg-primary); outline: none; }
-*:focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 2px; }
+*:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-primary) 28%, transparent);
+}
 
 /* ===== LIGHT MODE - Pixiv Style ===== */
 /* Global form element reset - consistent font and no border-radius */
