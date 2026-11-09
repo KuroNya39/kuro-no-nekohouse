@@ -921,50 +921,75 @@ function initBackToTop() {
 }
 
 // ===== SEARCH =====
+let searchDebounceTimer = null;
+
+function renderSearchResults(query) {
+  const results = document.getElementById('searchResults');
+  let matches = [];
+  categories.forEach(cat => {
+    cat.novels.forEach(novel => {
+      const content = novel.content || (novel.chapters || []).map(ch => ch.content || '').join('\n');
+      if (novel.title.toLowerCase().includes(query) || novel.author.toLowerCase().includes(query) || content.toLowerCase().includes(query)) {
+        matches.push({ ...novel, categoryName: cat.name, categoryId: cat.id });
+      }
+    });
+  });
+
+  results.classList.add('active');
+  if (matches.length === 0) {
+    results.innerHTML = `<div class="search-empty">没有找到匹配的内容</div>`;
+    return;
+  }
+  const frag = document.createDocumentFragment();
+  matches.forEach(m => {
+    const div = document.createElement('div');
+    div.className = 'search-result-item';
+    div.setAttribute('role', 'button');
+    div.setAttribute('tabindex', '0');
+    div.onclick = () => goToNovel(m.categoryId, m.id);
+    div.onkeydown = (e) => { if (e.key === 'Enter') goToNovel(m.categoryId, m.id); };
+    const h4 = document.createElement('h4');
+    h4.innerHTML = highlightText(m.title, query);
+    const p = document.createElement('p');
+    p.textContent = `作者：${m.author} · 分类：${m.categoryName} · ${m.wordCount}字`;
+    div.appendChild(h4);
+    div.appendChild(p);
+    frag.appendChild(div);
+  });
+  results.innerHTML = '';
+  results.appendChild(frag);
+}
+
+// 点击放大镜按钮：立即搜索，不等防抖
+function triggerSearch() {
+  const input = document.getElementById('searchInput');
+  const query = input.value.trim().toLowerCase();
+  if (!query) {
+    document.getElementById('searchResults').classList.remove('active');
+    input.focus();
+    return;
+  }
+  clearTimeout(searchDebounceTimer);
+  renderSearchResults(query);
+}
+
 function initSearch() {
   const input = document.getElementById('searchInput');
   const results = document.getElementById('searchResults');
-  let timeout;
+  const btn = document.getElementById('searchBtn');
+  if (btn && !btn.innerHTML.trim()) btn.innerHTML = icon('search', 20);
 
   input.addEventListener('input', () => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
+    clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = setTimeout(() => {
       const query = input.value.trim().toLowerCase();
       if (!query) { results.classList.remove('active'); return; }
-
-      let matches = [];
-      categories.forEach(cat => {
-        cat.novels.forEach(novel => {
-          if (novel.title.toLowerCase().includes(query) || novel.author.toLowerCase().includes(query) || novel.content.toLowerCase().includes(query)) {
-            matches.push({ ...novel, categoryName: cat.name, categoryId: cat.id });
-          }
-        });
-      });
-
-      results.classList.add('active');
-      if (matches.length === 0) {
-        results.innerHTML = `<div class="search-empty">没有找到匹配的内容</div>`;
-      } else {
-        const frag = document.createDocumentFragment();
-        matches.forEach(m => {
-          const div = document.createElement('div');
-          div.className = 'search-result-item';
-          div.setAttribute('role', 'button');
-          div.setAttribute('tabindex', '0');
-          div.onclick = () => goToNovel(m.categoryId, m.id);
-          div.onkeydown = (e) => { if (e.key === 'Enter') goToNovel(m.categoryId, m.id); };
-          const h4 = document.createElement('h4');
-          h4.innerHTML = highlightText(m.title, query);
-          const p = document.createElement('p');
-          p.textContent = `作者：${m.author} · 分类：${m.categoryName} · ${m.wordCount}字`;
-          div.appendChild(h4);
-          div.appendChild(p);
-          frag.appendChild(div);
-        });
-        results.innerHTML = '';
-        results.appendChild(frag);
-      }
+      renderSearchResults(query);
     }, 500);
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); triggerSearch(); }
   });
 
   input.addEventListener('blur', () => setTimeout(() => results.classList.remove('active'), 200));
@@ -1065,7 +1090,7 @@ async function doLogin() {
     openAdmin();
     announceToScreenReader('登录成功，管理面板已打开');
   } else {
-    alert('密码错误');
+    showToast('密码错误', 'error');
     document.getElementById('adminPassword').value = '';
   }
 }
@@ -1074,6 +1099,7 @@ function openAdmin() {
   document.getElementById('adminOverlay').classList.add('active');
   document.getElementById('adminDrawer').classList.add('active');
   renderAdminEditNovelList();
+  loadSiteConfigForm();
   // Focus first focusable element
   setTimeout(() => {
     const firstFocusable = document.querySelector('#adminDrawer button, #adminDrawer input, #adminDrawer select, #adminDrawer textarea');
@@ -1722,6 +1748,7 @@ function filterByTag(tag) {
 }
 
 function renderFilteredNovelList(novels) {
+  currentDisplayedNovels = novels;
   const list = document.getElementById('novelList');
   list.innerHTML = '';
   if (novels.length === 0) {
@@ -1779,6 +1806,7 @@ function renderNovelList() {
 
 // ===== READER =====
 let currentChapterIndex = 0; // 当前章节索引
+let currentDisplayedNovels = null; // 当前列表实际展示顺序（含排序/筛选），用于上一篇/下一篇
 let scrollBehavior = 'keep'; // 'keep' 保持滚动位置，'topOfContent' 滚动到阅读内容顶部
 
 function showNovel(index, chapterIdx, shouldPushState) {
@@ -1872,7 +1900,7 @@ function showNovel(index, chapterIdx, shouldPushState) {
     const trimmed = p.trim();
     // 处理对齐标记
     const centerMatch = trimmed.match(/^<<<(.+?)>>>$/);
-    const rightMatch = trimmed.match(/^\[\[(.+?)\]\]$/);
+    const rightMatch = trimmed.match(/^\[{2,3}(.+?)\]{2,3}$/);
     if (centerMatch) {
       const para = document.createElement('p');
       para.style.textAlign = 'center';
@@ -1932,10 +1960,16 @@ function showNovel(index, chapterIdx, shouldPushState) {
     nextBtn.innerHTML = '下一章 ' + icon('chevron_right', 14);
   } else {
     // 单章节小说：切换不同小说
-    prevBtn.style.visibility = index > 0 ? 'visible' : 'hidden';
-    nextBtn.style.visibility = index < currentCategory.novels.length - 1 ? 'visible' : 'hidden';
-    prevBtn.onclick = () => { if (index > 0) { scrollBehavior = 'topOfContent'; showNovel(index - 1); } };
-    nextBtn.onclick = () => { if (index < currentCategory.novels.length - 1) { scrollBehavior = 'topOfContent'; showNovel(index + 1); } };
+    // 按当前展示顺序（排序/筛选后）计算上下篇，而不是原始数组顺序
+    let order = (currentDisplayedNovels && currentDisplayedNovels.length) ? currentDisplayedNovels : currentCategory.novels;
+    let pos = order.findIndex(n => n.id === currentCategory.novels[index].id);
+    if (pos < 0) { order = currentCategory.novels; pos = index; }
+    const prevNovel = pos > 0 ? order[pos - 1] : null;
+    const nextNovel = pos < order.length - 1 ? order[pos + 1] : null;
+    prevBtn.style.visibility = prevNovel ? 'visible' : 'hidden';
+    nextBtn.style.visibility = nextNovel ? 'visible' : 'hidden';
+    prevBtn.onclick = () => { if (prevNovel) { scrollBehavior = 'topOfContent'; showNovel(currentCategory.novels.findIndex(n => n.id === prevNovel.id)); } };
+    nextBtn.onclick = () => { if (nextNovel) { scrollBehavior = 'topOfContent'; showNovel(currentCategory.novels.findIndex(n => n.id === nextNovel.id)); } };
     prevBtn.innerHTML = icon('arrow_back', 14) + ' 上一篇';
     nextBtn.innerHTML = '下一篇 ' + icon('arrow_forward', 14);
   }
@@ -1999,7 +2033,11 @@ function saveReaderEdit() {
   const newContent = document.getElementById('readerEditContent').value;
   chapters[currentChapterIndex].title = newTitle || chapters[currentChapterIndex].title;
   chapters[currentChapterIndex].content = newContent;
+  // 同步总正文与字数，保证统计和搜索使用最新内容
+  novel.content = chapters.map(ch => ch.content || '').join('\n');
+  novel.wordCount = novel.content.replace(/\s/g, '').length;
   saveData();
+  renderStats();
   showToast('排版已保存');
   showNovel(currentNovelIndex, currentChapterIndex, false);
   document.getElementById('readerEditPanel').style.display = 'none';
@@ -2012,7 +2050,7 @@ function previewMarkdown() {
   content = content.replace(/^---$/gm, '<hr style="border:none;border-top:1px solid var(--border-light);margin:16px 0;">');
   // 处理对齐标记
   content = content.replace(/<<<(.+?)>>>/g, '<p style="text-align:center;margin:8px 0;">$1</p>');
-  content = content.replace(/\[\[(.+?)\]\]/g, '<p style="text-align:right;margin:8px 0;">$1</p>');
+  content = content.replace(/\[{2,3}(.+?)\]{2,3}/g, '<p style="text-align:right;margin:8px 0;">$1</p>');
   const preview = document.getElementById('readerEditPreview');
   if (preview) {
     preview.style.display = 'block';
@@ -2029,7 +2067,7 @@ function insertEditAlign(direction) {
   const text = selected || '居中文字';
   let prefix = '', suffix = '';
   if (direction === 'center') { prefix = '<<<'; suffix = '>>>'; }
-  else if (direction === 'right') { prefix = '[[['; suffix = ']]]'; }
+  else if (direction === 'right') { prefix = '[['; suffix = ']]'; }
   else return; // 左对齐不需要标记
   
   const scrollTop = textarea.scrollTop; // 保存滚动位置
@@ -2044,6 +2082,8 @@ function insertEditAlign(direction) {
 function backToCategory() {
   if (currentCategory) {
     showCategory(currentCategory.id, false);
+    // 同步地址栏，避免刷新后回到阅读页（不新增历史记录）
+    window.history.replaceState({ page: 'category', catId: currentCategory.id }, '', '#/category/' + currentCategory.id);
   } else {
     showPage('home', false);
   }
@@ -2495,10 +2535,8 @@ function renderAdminEditNovelList() {
   searchInput.setAttribute('oninput', 'filterAdminNovels()');
   list.appendChild(searchInput);
 
-  let hasResults = false;
   categories.forEach(cat => {
     cat.novels.forEach(novel => {
-      hasResults = true;
       const chapterCount = novel.chapters ? novel.chapters.length : 1;
       const chapterText = chapterCount > 1 ? chapterCount + ' 章' : '全文';
       const div = document.createElement('div');
@@ -2519,14 +2557,7 @@ function renderAdminEditNovelList() {
       list.appendChild(div);
     });
   });
-  if (!hasResults) {
-    const noResult = document.createElement('p');
-    noResult.style.cssText = 'color:var(--text-muted);font-size:0.85rem;';
-    noResult.textContent = '暂无文章';
-    list.appendChild(noResult);
-  }
-
-  // 渲染完成后应用搜索过滤
+  // 渲染完成后应用搜索过滤（空列表提示由 filterAdminNovels 统一处理）
   filterAdminNovels();
 
   // 恢复搜索框焦点和光标位置
@@ -2549,14 +2580,23 @@ function filterAdminNovels() {
     item.style.display = visible ? '' : 'none';
     if (visible) hasVisible = true;
   });
-  // 处理"暂无结果"提示
+  // 处理"暂无结果"提示（列表为空或搜索无匹配时都要显示）
   const list = document.getElementById('adminEditNovelList');
-  const noResultEl = list.querySelector('p:last-child');
-  if (noResultEl && !noResultEl.classList.contains('admin-novel-item')) {
-    noResultEl.style.display = (items.length > 0 && !hasVisible && query) ? '' : 'none';
-    if (query && !hasVisible) noResultEl.textContent = '没有匹配的文章';
-    else if (!query && items.length === 0) noResultEl.textContent = '暂无文章';
-    else noResultEl.style.display = 'none';
+  let noResultEl = document.getElementById('adminNovelEmpty');
+  if (!noResultEl) {
+    noResultEl = document.createElement('p');
+    noResultEl.id = 'adminNovelEmpty';
+    noResultEl.style.cssText = 'color:var(--text-muted);font-size:0.85rem;text-align:center;padding:16px 0;';
+    list.appendChild(noResultEl);
+  }
+  if (items.length === 0) {
+    noResultEl.textContent = '暂无文章';
+    noResultEl.style.display = '';
+  } else if (!hasVisible) {
+    noResultEl.textContent = '没有匹配的文章';
+    noResultEl.style.display = '';
+  } else {
+    noResultEl.style.display = 'none';
   }
 }
 
